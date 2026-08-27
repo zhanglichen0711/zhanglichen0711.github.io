@@ -56,9 +56,9 @@
     <category term="行业动态" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
     
     
-    <category term="评测" scheme="https://zhanglichen0711.github.io/tags/%E8%AF%84%E6%B5%8B/"/>
-    
     <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
+    
+    <category term="评测" scheme="https://zhanglichen0711.github.io/tags/%E8%AF%84%E6%B5%8B/"/>
     
   </entry>
   
@@ -79,9 +79,9 @@
     <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
-    
     <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
     
     <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
     
@@ -310,6 +310,25 @@
   </entry>
   
   <entry>
+    <title>工具描述质量决定调用稳定性</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-agent-tool-quality/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-agent-tool-quality/</id>
+    <published>2026-06-07T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.394Z</updated>
+    
+    
+    <summary type="html">每个应用自己写一遍说明书，质量一定漂。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Python 学习笔记：从容器语法到能写 LLM 服务</title>
     <link href="https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/"/>
     <id>https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/</id>
@@ -333,25 +352,6 @@
   </entry>
   
   <entry>
-    <title>工具描述质量决定调用稳定性</title>
-    <link href="https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-agent-tool-quality/"/>
-    <id>https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-agent-tool-quality/</id>
-    <published>2026-06-07T16:00:00.000Z</published>
-    <updated>2026-08-27T12:19:05.394Z</updated>
-    
-    
-    <summary type="html">每个应用自己写一遍说明书，质量一定漂。</summary>
-    
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-  </entry>
-  
-  <entry>
     <title>MySQL 笔记：约束、联表和分析函数怎么接到知识库</title>
     <link href="https://zhanglichen0711.github.io/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/"/>
     <id>https://zhanglichen0711.github.io/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/</id>
@@ -368,28 +368,9 @@
     <category term="数据库" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
     
-    <category term="MySQL" scheme="https://zhanglichen0711.github.io/tags/MySQL/"/>
-    
     <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Function Call：模型输出参数不是散文</title>
-    <link href="https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-fn-call/"/>
-    <id>https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-fn-call/</id>
-    <published>2026-05-19T16:00:00.000Z</published>
-    <updated>2026-08-27T12:19:05.387Z</updated>
-    
-    
-    <summary type="html">由程序执行副作用，由模型决定调不调、调哪个。</summary>
-    
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    <category term="MySQL" scheme="https://zhanglichen0711.github.io/tags/MySQL/"/>
     
   </entry>
   
@@ -402,6 +383,25 @@
     
     
     <summary type="html">The model proposes JSON. Your code executes the side effect.</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Function Call：模型输出参数不是散文</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-fn-call/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-fn-call/</id>
+    <published>2026-05-19T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.387Z</updated>
+    
+    
+    <summary type="html">由程序执行副作用，由模型决定调不调、调哪个。</summary>
     
     
     
