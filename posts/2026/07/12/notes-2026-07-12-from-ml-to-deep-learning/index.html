@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>从机器学习术语到反向传播：深度学习笔记 · 小黑程序员</title>
+  <meta name="description" content="线性回归、树模型和 KNN 解决的是「怎么学」；张量、反向传播和优化器解决的是「深层网络怎么更新」。">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="从机器学习术语到反向传播：深度学习笔记">
+  <meta property="og:description" content="线性回归、树模型和 KNN 解决的是「怎么学」；张量、反向传播和优化器解决的是「深层网络怎么更新」。">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="false">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item " href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+      
+        <a class="chip" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+      
+      <time datetime="2026-07-11T16:00:00.000Z">2026-07-12</time>
+    </div>
+    <h1>从机器学习术语到反向传播：深度学习笔记</h1>
+    <p class="lede">线性回归、树模型和 KNN 解决的是「怎么学」；张量、反向传播和优化器解决的是「深层网络怎么更新」。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">#深度学习</a>
+        
+          <a href="/tags/NLP/">#NLP</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>课堂顺序通常是：人工智能 &#x2F; 机器学习 &#x2F; 深度学习三个概念 → 线性回归与 KNN → 决策树 → PyTorch 张量 → 建网、训练、反向传播 → 正则化。做应用不必把每个公式重推一遍，但要知道自己调用的 BERT、YOLO 大致在哪一层。</p>
+<h2 id="三个词不要混"><a href="#三个词不要混" class="headerlink" title="三个词不要混"></a>三个词不要混</h2><ul>
+<li><strong>人工智能</strong>：目标是让机器完成需要智能的任务。</li>
+<li><strong>机器学习</strong>：用数据拟合可泛化的规则，而不是把规则写死。</li>
+<li><strong>深度学习</strong>：用多层可微模块自动学表示，数据量和算力是前提。</li>
+</ul>
+<p>常用术语里，先记住：样本、特征、标签、训练集 &#x2F; 验证集 &#x2F; 测试集、过拟合、欠拟合。后面所有「准确率 96%」如果没说清这三套数据如何划分，数字就不可比。</p>
+<h2 id="传统模型仍有位置"><a href="#传统模型仍有位置" class="headerlink" title="传统模型仍有位置"></a>传统模型仍有位置</h2><p>线性回归给了正规方程和梯度下降两条路，核心是「损失对参数可导就能迭代」。KNN 没有显式训练过程，贵在理解和距离；超参数 <code>k</code>、是否标准化、网格搜索，是后面调 BERT 学习率之前就该有的实验习惯。</p>
+<p>决策树和随机森林在表格数据、小样本、要可解释性时仍然好用。文本层级分类可以先拿森林和 FastText 打基线，再决定要不要上 BERT。不是所有任务第一天就必须是 Transformer。</p>
+<h2 id="张量和一层网络"><a href="#张量和一层网络" class="headerlink" title="张量和一层网络"></a>张量和一层网络</h2><p>PyTorch 里，文本、图像最后都变成张量。<code>nn.Linear</code> 就是一层仿射变换。初始化不是细节：全零会让对称神经元学到同一套更新；Kaiming &#x2F; Xavier 是为了让信号在深度里不至于一开始就消失或爆炸。</p>
+<p>建模型的固定动作：</p>
+<ol>
+<li>继承 <code>nn.Module</code></li>
+<li>在 <code>__init__</code> 里声明层</li>
+<li>在 <code>forward</code> 里写数据怎么流</li>
+<li>选损失、选优化器、写训练循环</li>
+</ol>
+<h2 id="反向传播只记一条链"><a href="#反向传播只记一条链" class="headerlink" title="反向传播只记一条链"></a>反向传播只记一条链</h2><p>前向算出损失，反向沿计算图把梯度传回每个权重。更新后再把梯度清零，否则会把上一步的梯度累加上去。</p>
+<p>优化器是在「纯 SGD 容易卡在平坦区域或鞍点」之后出现的：</p>
+<ul>
+<li>Momentum：带着历史速度走</li>
+<li>Adagrad &#x2F; RMSProp：按参数自己的历史梯度调整步长</li>
+<li>Adam：两者思路的常用组合</li>
+</ul>
+<p>学习率比换一个更花哨的网络结构更常成为成败原因。</p>
+<h2 id="正则化是上线前的刹车"><a href="#正则化是上线前的刹车" class="headerlink" title="正则化是上线前的刹车"></a>正则化是上线前的刹车</h2><p>Dropout 让网络不能依赖某个神经元。BatchNorm 让各层输入分布不至于漂移。对应到应用侧，还有更土的刹车：早停、标签清洗、把低置信度样本交给规则或 LLM 兜底。</p>
+<h2 id="接到现在的工作方式"><a href="#接到现在的工作方式" class="headerlink" title="接到现在的工作方式"></a>接到现在的工作方式</h2><p>分类任务可以先用 Scikit-learn 和 FastText 建基线，再用 BERT 微调。检测任务用 YOLO 时，先问数据集是不是和业务同分布。深度模型给出的是概率而不是业务结论；和 RAG、规则、人工复核接在一起，才是应用。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2026/07/16/notes-2026-07-16-agent-patterns/"><span>Previous</span><strong>Agent 的五种模式，以及何时不要用</strong></a>
+    
+    
+      <a href="/posts/2026/07/06/notes-2026-07-06-agent-function-call-mcp/"><span>Next</span><strong>Agent 笔记：Function Call、MCP 和五种模式</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/08/16/notes-2026-08-16-text-class-and-multimodal/">
+          <small>2026-08-16</small>
+          <strong>文本层级分类，以及和检测结果怎么融合</strong>
+        </a>
+      
+        <a href="/posts/2026/08/10/notes-2026-08-10-nlp-token-to-transformer/">
+          <small>2026-08-10</small>
+          <strong>NLP 笔记：从分词、词向量到 Transformer</strong>
+        </a>
+      
+        <a href="/posts/2025/08/16/notes-2025-08-16-nlp-hierarchical-fusion/">
+          <small>2025-08-16</small>
+          <strong>Hierarchical Text Classification and Multimodal Tie-break</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+  <section class="comments" id="comments">
+    <h2>Comments</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="zhanglichen0711/zhanglichen0711.github.io"
+      data-repo-id=""
+      data-category="Announcements"
+      data-category-id=""
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="bottom"
+      data-theme="light"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+    <p class="wechat-hint">把 <code>source/img/wechat-qr.jpg</code> 换成你的真实二维码</p>
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>小黑程序员</title>
+  
+  <subtitle>AI大模型应用开发</subtitle>
+  <link href="https://zhanglichen0711.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://zhanglichen0711.github.io/"/>
+  <updated>2026-08-27T05:04:03.929Z</updated>
+  <id>https://zhanglichen0711.github.io/</id>
+  
+  <author>
+    <name>Eason</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>应用开发岗位在增加什么、减少什么</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/26/thoughts-2026-08-26-job-trend-app-dev/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/26/thoughts-2026-08-26-job-trend-app-dev/</id>
+    <published>2026-08-25T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.929Z</updated>
+    
+    
+    <summary type="html">纯页面封装和只会调聊天 API 都在被压价。中间态是系统集成、评测和数据闭环。</summary>
+    
+    
+    
+    <category term="行业思考" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/"/>
+    
+    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
+    
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/tags/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>新模型发布时，我只看这五个问题</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/23/thoughts-2026-08-23-read-new-model-release/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/23/thoughts-2026-08-23-read-new-model-release/</id>
+    <published>2026-08-22T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.929Z</updated>
+    
+    
+    <summary type="html">发布会默认会赢自己的榜。应用开发者要看上下文、工具调用、价格、开放程度，以及自己那 30 道题。</summary>
+    
+    
+    
+    <category term="行业思考" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/"/>
+    
+    <category term="行业动态" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
+    
+    
+    <category term="评测" scheme="https://zhanglichen0711.github.io/tags/%E8%AF%84%E6%B5%8B/"/>
+    
+    <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>先用平台验证，再把链路拿回自己手里</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/22/thoughts-2026-08-22-lowcode-then-rebuild/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/22/thoughts-2026-08-22-lowcode-then-rebuild/</id>
+    <published>2026-08-21T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.929Z</updated>
+    
+    
+    <summary type="html">低代码适合证明有人真的会用。自研适合证明你能改切分、加评测、做隔离。两者是阶段，不是站队。</summary>
+    
+    
+    
+    <category term="行业思考" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/"/>
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RAG 工程闭环：从切分、混合检索到评测和隔离</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/21/notes-2026-08-21-rag-engineering-loop/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/21/notes-2026-08-21-rag-engineering-loop/</id>
+    <published>2026-08-20T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.897Z</updated>
+    
+    
+    <summary type="html">最小闭环是「切得可引用、找得回来、必须带出处」。可上线的闭环还要加上意图、版本、隔离、评测和观测。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="RAG" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/RAG/"/>
+    
+    
+    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
+    
+    <category term="FastAPI" scheme="https://zhanglichen0711.github.io/tags/FastAPI/"/>
+    
+    <category term="Milvus" scheme="https://zhanglichen0711.github.io/tags/Milvus/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从哪里开始学 AI 应用开发</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/18/thoughts-2026-08-18-how-to-start-ai-app/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/18/thoughts-2026-08-18-how-to-start-ai-app/</id>
+    <published>2026-08-17T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.913Z</updated>
+    
+    
+    <summary type="html">不要从论文目录学起。先选一条能上线的链路：数据、检索、调用、评测。低代码可以验证价值，但不能代替对链路的理解。</summary>
+    
+    
+    
+    <category term="行业思考" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/"/>
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/tags/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>文本层级分类，以及和检测结果怎么融合</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/16/notes-2026-08-16-text-class-and-multimodal/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/16/notes-2026-08-16-text-class-and-multimodal/</id>
+    <published>2026-08-15T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.897Z</updated>
+    
+    
+    <summary type="html">先用 FastText / 随机森林打基线，再用 BERT 做层级分类；和视觉结果冲突时，用置信度决策，而不是让生成模型仲裁一切。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="NLP" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/NLP/"/>
+    
+    
+    <category term="深度学习" scheme="https://zhanglichen0711.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>哪些岗位在增加，哪些在变便宜</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/12/thoughts-2026-08-12-jobs-now/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/12/thoughts-2026-08-12-jobs-now/</id>
+    <published>2026-08-11T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.454Z</updated>
+    
+    
+    <summary type="html">中间态是集成、评测和成本控制。</summary>
+    
+    
+    
+    <category term="Job-Trends" scheme="https://zhanglichen0711.github.io/categories/Job-Trends/"/>
+    
+    
+    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/tags/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>NLP 笔记：从分词、词向量到 Transformer</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/10/notes-2026-08-10-nlp-token-to-transformer/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/10/notes-2026-08-10-nlp-token-to-transformer/</id>
+    <published>2026-08-09T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.897Z</updated>
+    
+    
+    <summary type="html">预处理决定模型吃进什么；RNN 解决序列；Attention 和 Transformer 解决长距离依赖。BERT 和 GPT 是同一骨架的两种用法。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="NLP" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/NLP/"/>
+    
+    
+    <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
+    
+    <category term="Transformer" scheme="https://zhanglichen0711.github.io/tags/Transformer/"/>
+    
+    <category term="BERT" scheme="https://zhanglichen0711.github.io/tags/BERT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>先看调用轨迹，再调 Prompt</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/08/06/notes-2026-08-06-agent-debug/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/08/06/notes-2026-08-06-agent-debug/</id>
+    <published>2026-08-05T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.413Z</updated>
+    
+    
+    <summary type="html">落盘 thought、tool、observation，问题会从「模型不行」变成可修的步骤。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Agent 的五种模式，以及何时不要用</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/07/16/notes-2026-07-16-agent-patterns/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/07/16/notes-2026-07-16-agent-patterns/</id>
+    <published>2026-07-15T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.406Z</updated>
+    
+    
+    <summary type="html">自主程度不是职称。能写死的顺序就不要自由规划。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从机器学习术语到反向传播：深度学习笔记</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/07/12/notes-2026-07-12-from-ml-to-deep-learning/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/07/12/notes-2026-07-12-from-ml-to-deep-learning/</id>
+    <published>2026-07-11T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.882Z</updated>
+    
+    
+    <summary type="html">线性回归、树模型和 KNN 解决的是「怎么学」；张量、反向传播和优化器解决的是「深层网络怎么更新」。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="深度学习" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="深度学习" scheme="https://zhanglichen0711.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Agent 笔记：Function Call、MCP 和五种模式</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/07/06/notes-2026-07-06-agent-function-call-mcp/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/07/06/notes-2026-07-06-agent-function-call-mcp/</id>
+    <published>2026-07-05T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.882Z</updated>
+    
+    
+    <summary type="html">Function Call 解决「模型如何提出一次调用」；MCP 解决「工具如何描述自己」；Agent 模式决定要不要规划、反思和协作。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+    <category term="MCP" scheme="https://zhanglichen0711.github.io/tags/MCP/"/>
+    
+    <category term="工具调用" scheme="https://zhanglichen0711.github.io/tags/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MCP：让工具自己描述自己</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/06/22/notes-2026-06-22-agent-mcp/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/06/22/notes-2026-06-22-agent-mcp/</id>
+    <published>2026-06-21T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.400Z</updated>
+    
+    
+    <summary type="html">工具作者最清楚输入输出，不应由每个调用方重写卡片。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+    <category term="MCP" scheme="https://zhanglichen0711.github.io/tags/MCP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 学习笔记：从容器语法到能写 LLM 服务</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/</id>
+    <published>2026-06-07T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.866Z</updated>
+    
+    
+    <summary type="html">把基础语法课里真正会反复用到的部分抽出来：容器、函数、面向对象、并发和数据分析三件套。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="Python" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Python/"/>
+    
+    
+    <category term="Python" scheme="https://zhanglichen0711.github.io/tags/Python/"/>
+    
+    <category term="Pandas" scheme="https://zhanglichen0711.github.io/tags/Pandas/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>工具描述质量决定调用稳定性</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-agent-tool-quality/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/06/08/notes-2026-06-08-agent-tool-quality/</id>
+    <published>2026-06-07T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.394Z</updated>
+    
+    
+    <summary type="html">每个应用自己写一遍说明书，质量一定漂。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL 笔记：约束、联表和分析函数怎么接到知识库</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/</id>
+    <published>2026-05-25T16:00:00.000Z</published>
+    <updated>2026-08-27T05:04:03.866Z</updated>
+    
+    
+    <summary type="html">DDL / DML / DQL 背再多也不如先想清楚：文档、切片、权限和引用主键分别放哪。</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="数据库" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+    <category term="MySQL" scheme="https://zhanglichen0711.github.io/tags/MySQL/"/>
+    
+    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Function Call：模型输出参数不是散文</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-fn-call/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-fn-call/</id>
+    <published>2026-05-19T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.387Z</updated>
+    
+    
+    <summary type="html">由程序执行副作用，由模型决定调不调、调哪个。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Function Call Outputs Arguments, Not Prose</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-function-call/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-function-call/</id>
+    <published>2026-05-19T16:00:00.000Z</published>
+    <updated>2026-08-27T05:46:24.350Z</updated>
+    
+    
+    <summary type="html">The model proposes JSON. Your code executes the side effect.</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to Learn AI App Development in 2026</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/06/thoughts-2026-05-06-how-to-learn-2026/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/06/thoughts-2026-05-06-how-to-learn-2026/</id>
+    <published>2026-05-05T16:00:00.000Z</published>
+    <updated>2026-08-27T05:46:24.404Z</updated>
+    
+    
+    <summary type="html">Do not collect frameworks. Collect a path you can replay.</summary>
+    
+    
+    
+    <category term="How-to-Learn" scheme="https://zhanglichen0711.github.io/categories/How-to-Learn/"/>
+    
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2026 年还该把时间花在哪</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/06/thoughts-2026-05-06-learn-2026/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/06/thoughts-2026-05-06-learn-2026/</id>
+    <published>2026-05-05T16:00:00.000Z</published>
+    <updated>2026-08-27T12:19:05.448Z</updated>
+    
+    
+    <summary type="html">框架清单会过期。评测和数据闭环不会。</summary>
+    
+    
+    
+    <category term="How-to-Learn" scheme="https://zhanglichen0711.github.io/categories/How-to-Learn/"/>
+    
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+</feed>
