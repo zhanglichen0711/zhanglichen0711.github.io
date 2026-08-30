@@ -56,9 +56,9 @@
     <category term="行业动态" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
     
     
-    <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
-    
     <category term="评测" scheme="https://zhanglichen0711.github.io/tags/%E8%AF%84%E6%B5%8B/"/>
+    
+    <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
     
   </entry>
   
@@ -79,9 +79,9 @@
     <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
     <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
     
     <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
     
@@ -368,28 +368,9 @@
     <category term="数据库" scheme="https://zhanglichen0711.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
     
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
-    
     <category term="MySQL" scheme="https://zhanglichen0711.github.io/tags/MySQL/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Function Call Outputs Arguments, Not Prose</title>
-    <link href="https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-function-call/"/>
-    <id>https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-function-call/</id>
-    <published>2026-05-19T16:00:00.000Z</published>
-    <updated>2026-08-27T05:46:24.350Z</updated>
-    
-    
-    <summary type="html">The model proposes JSON. Your code executes the side effect.</summary>
-    
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
     
   </entry>
   
@@ -402,6 +383,25 @@
     
     
     <summary type="html">由程序执行副作用，由模型决定调不调、调哪个。</summary>
+    
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Function Call Outputs Arguments, Not Prose</title>
+    <link href="https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-function-call/"/>
+    <id>https://zhanglichen0711.github.io/posts/2026/05/20/notes-2026-05-20-agent-function-call/</id>
+    <published>2026-05-19T16:00:00.000Z</published>
+    <updated>2026-08-27T05:46:24.350Z</updated>
+    
+    
+    <summary type="html">The model proposes JSON. Your code executes the side effect.</summary>
     
     
     

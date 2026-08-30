@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>MySQL 函数分析 · 小黑程序员</title>
+  <meta name="description" content="函数分析">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="MySQL 函数分析">
+  <meta property="og:description" content="函数分析">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item " href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item active" href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/MySQL/">MySQL</a>
+      
+      <time datetime="2023-10-24T16:00:00.000Z">2023-10-25</time>
+    </div>
+    <h1>MySQL 函数分析</h1>
+    <p class="lede">函数分析</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/MySQL/">#MySQL</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h2 id="1-MySQL常用内置函数"><a href="#1-MySQL常用内置函数" class="headerlink" title="1. MySQL常用内置函数"></a>1. MySQL常用内置函数</h2><p>​		在MySQL中有很多内置函数，除了之前学习的聚合函数之外，还有很多其他内置函数：数值函数、字符串函数、时间日期函数、流程控制函数、加解密函数、开窗函数等。</p>
+<p>​		问题：内置函数该如何学习？</p>
+<p>​		熟悉常用的内置函数，其他用到再查帮助文档</p>
+<p>​		官网文档：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/functions.html">https://dev.mysql.com/doc/refman/8.0/en/functions.html</a></p>
+<p>​		在mysql命令行或DataGrip软件中通过 HELP ‘函数名’ 查看指定函数的帮助文档 。</p>
+<h3 id="1-1-数值函数"><a href="#1-1-数值函数" class="headerlink" title="1.1 数值函数"></a>1.1 数值函数</h3><p>在编写SQL对数据处理和开发的过程中，经常需要对数字类型的数据进行处理操作。</p>
+<p>数值函数分类：</p>
+<ul>
+<li><p>小数位数处理</p>
+<p><strong>ROUND</strong>、FORMAT、TRUNCATE、FLOOR、<strong>CEIL</strong></p>
+</li>
+<li><p>求余数、求幂、随机数</p>
+<p><strong>MOD</strong>、POW、RAND</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs sql">导入资料中的tb_sales(每月销售表)<br>需求:<br>	计算每个月的销量占所有月份销量之和百分比(保留<span class="hljs-number">2</span>位小数)<br>	查询结果字段: <span class="hljs-keyword">month</span>、sales、<span class="hljs-built_in">sum</span>(所有月份销售之和)、ratio(每月销量占所有月份销量之和的百分比)<br><br><span class="hljs-comment">-- 数值函数:</span><br><span class="hljs-comment">-- 四舍五入函数, 保留小数位: round</span><br><span class="hljs-keyword">select</span> round(<span class="hljs-number">3.123</span>,<span class="hljs-number">2</span>);<br><br><span class="hljs-comment">-- 小数截断: TRUNCATE(X,D)</span><br><span class="hljs-keyword">select</span> <span class="hljs-keyword">truncate</span>(<span class="hljs-number">3.451</span>,<span class="hljs-number">1</span>); <span class="hljs-comment">-- 返回 3.4  不进行四舍五入 直接截取指定的小数位</span><br><br><br><span class="hljs-comment">-- 向上取整函数: ceil()   向下取整函数: floor()</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">ceil</span>(<span class="hljs-number">3.000001</span>); # 取这个小数最近的一个大于本身的整数, 如果本身就是一个整数,那么就是它自己<br><span class="hljs-keyword">select</span> <span class="hljs-built_in">floor</span>(<span class="hljs-number">3.9999999</span>); # 取这个小数最近的一个小于本身的整数, 如果本身就是一个整数,那么就是它自己<br><br><span class="hljs-comment">-- 求几次幂: 例如 3的2次方   pow(底数,指数)</span><br><span class="hljs-keyword">select</span> pow(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>);<br><br><span class="hljs-comment">-- 随机值: RAND([N])  获取  0~1的随机数 如果传入N 会导致随时数固定</span><br><span class="hljs-keyword">select</span> rand();<br><br><span class="hljs-comment">-- 场景 可以实现数据打散 然后通过 limit 取样</span><br><span class="hljs-comment">-- SELECT * FROM tbl_name ORDER BY RAND();</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="1-2-字符串函数"><a href="#1-2-字符串函数" class="headerlink" title="1.2 字符串函数"></a>1.2 字符串函数</h3><p>在编写SQL对数据处理和开发的过程中，也经常需要对字符串类型的数据进行处理操作。</p>
+<p>字符串函数分类：</p>
+<ul>
+<li><p>大小写转换</p>
+<p><strong>LOWER</strong>、<strong>UPPER</strong></p>
+</li>
+<li><p>字符串反转、拼接、局部替换</p>
+<p>REVERSE、 REPEAT、<strong>CONCAT</strong>、<strong>CONCAT_WS</strong>、<strong>REPLACE</strong></p>
+</li>
+<li><p>字符串截取</p>
+<p><strong>SUBSTR</strong>、SUBSTRING、<strong>LEFT</strong>、<strong>RIGHT</strong></p>
+</li>
+<li><p>字符串的字符个数以及存储长度</p>
+<p>CHAR_LENGTH、LENGTH</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs mysql">-- Mysql的内置函数:<br>-- 字符串(文本)函数<br><br>-- 字符串的截取函数: SUBSTRING(字符串,起始值,获取多少个) SUBSTR()  起始值  1表示第一个  -1 表示倒数第一个<br>select substr(&#x27;abcdefg&#x27;,2); -- bcdefg  表示从第二个开始, 将后面的全部都获取<br>select substring(&#x27;abcdefg&#x27;,2,5); -- bcdef  表示从第二个开始,往后获取五个<br>select substring(&#x27;abcdefg&#x27;,-3); -- efg   表示从倒数的第三个开始,将后面的所有都获取<br>select substring(&#x27;abcdefg&#x27;,-6,2); -- bc 表示从倒数的第六个开始,将后面的所有都获取<br><br>-- 支持 从左侧 和 从右侧直接截取N个元素 left() right()<br>select left(&#x27;abcdefg&#x27;,3);  -- abc  从左侧直接获取3个元素<br>select right(&#x27;abcdefg&#x27;,3); -- efg  从右侧直接截取3个元素<br><br><br>-- 字符串转大写 和 小写的函数:   UPPER() 转换为大写   LOWER() 转换为小写<br>select upper(&#x27;AbcDefG&#x27;); -- ABCDEFG<br>select lower(&#x27;AbcDefG&#x27;); -- abcdefg<br><br>-- 将指定位置的数据替换为目标值: INSERT()<br>select insert(&#x27;AbcDefG&#x27;,3,2,&#x27;123&#x27;); -- 从第三个位置往后的2个,将其替换为123 (将 cD 更换为了 123)<br><br>-- 替换操作: REPLACE(str,from_str,to_str)  将字符串中指定元素替换为另一个元素<br>select replace(&#x27;http://www.itcast.cn&#x27;,&#x27;t&#x27;,&#x27;A&#x27;); -- hAAp://www.iAcasA.cn<br><br>-- 字符串的反转操作: REVERSE(str)<br>select REVERSE(&#x27;http://www.itcast.cn&#x27;); -- nc.tsacti.www//:ptth<br><br>-- 删除 字符串 左右二边的空内容(空格):  TRIM()  还有二个  LTRIM() 和 RTRIM 分别用于删除左侧或者右侧的空格<br>select trim(&#x27; a b c &#x27;); -- a b c  只删除 字符串左右二端空格 其他不关心<br>select ltrim(&#x27; a b c &#x27;); -- a b c   只删除了左侧的空格<br><br>-- 返回字符串的长度<br>select length(&#x27;abc&#x27;); -- 3<br><br>-- 返回指定字符在字符串的位置: INSTR()<br>select instr(&#x27;abcdecfg&#x27;,&#x27;c&#x27;); -- 3  告知第一次出现该元素的位置<br><br>-- 字符串拼接函数: concat  CONCAT_WS<br>select concat(&#x27;abc&#x27;,&#x27;-&#x27;,&#x27;123&#x27;,&#x27;-&#x27;,&#x27;efg&#x27;); -- abc123efg 将给定几个字符串拼接在一起<br>select concat_ws(&#x27;-&#x27;,&#x27;abc&#x27;,&#x27;123&#x27;,&#x27;efg&#x27;); -- abc-123-efg  根据给定的字符串 将后面的几个字符串拼接在一起<br><br>-- 导入资料中的users表<br>drop database if exists day06_fun;<br>create database day06_fun;<br>use day06_fun;<br>-- 需求: 编写一个 SQL 查询来修复名字，使得只有第一个字符是大写的，其余都是小写的<br><br>select<br>    user_id,<br>    concat(<br>        UPPER(left(name,1)),  -- 第一个字符<br>        LOWER(substring(name,2)) -- 其余的字符<br>    ) as name<br>from day06_fun.users;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-时间日期函数"><a href="#1-3-时间日期函数" class="headerlink" title="1.3 时间日期函数"></a>1.3 时间日期函数</h3><p>在编写SQL对数据处理和开发的过程中，也经常需要对时间日期类型的数据进行操作</p>
+<p>时间日期函数分类：</p>
+<ul>
+<li><p>获取当前时间的函数，比如当前的年月日</p>
+<p><strong>NOW</strong>、CURRENT_DATE、CURRENT_TIME</p>
+</li>
+<li><p>计算时间差的函数，比如两个日期之间相差多少天，一个日期90天后是几月几号</p>
+<p><strong>DATE_ADD</strong>、<strong>DATE_SUB</strong>、<strong>DATEDIFF</strong>、TIMESTAMPDIFF</p>
+</li>
+<li><p>获取年月日的函数，从一个时间中提取具体的年份、月份等</p>
+<p><strong>YEAR</strong>、<strong>MONTH</strong>、<strong>DAY</strong>、HOUR、MINUTE、SECOND、WEEKDAY</p>
+</li>
+<li><p>时间转换的函数，比如将2021-10-05转换为时间戳</p>
+<p>字符串和时间的转换： <strong>DATE_FORMAT</strong>、STR_TO_DATE</p>
+<p>时间戳和时间的转换： UNIX_TIMESTAMP、FROM_UNIXTIME</p>
+<p>​	时间戳（数字）：某个时间距离UTC时区的1970-01-01 00:00:00 过去了多久（通常以秒或毫秒为单位）。</p>
+<p>​	比如：东八区的2023-06-01 17:20:44距离UTC时区的1970-01-01 00:00:00 已经过去了 1685611244 秒</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 时间 日期的函数:</span><br><span class="hljs-comment">-- 如何分别获取 年year()  月month()  日day()  时hour()  分minute() 秒second() 星期几 weekday()  年月日: date  时分秒:time 当前时间 NOW()</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">YEAR</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">MONTH</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DAY</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">HOUR</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">MINUTE</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">SECOND</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> WEEKDAY(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);  <span class="hljs-comment">-- 0~6 0表示周一  6 周日</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-type">DATE</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-keyword">SELECT</span> <span class="hljs-type">TIME</span>(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><br><span class="hljs-comment">-- 日期转换:  日期转换为时间戳 UNIX_TIMESTAMP()</span><br><span class="hljs-keyword">select</span> unix_timestamp(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>); <span class="hljs-comment">-- 1762654970</span><br><br><span class="hljs-comment">-- 日期转换:  从时间戳 转换为 日期 FROM_UNIXTIME</span><br><br><span class="hljs-keyword">select</span> from_unixtime(<span class="hljs-number">1762654970</span>); <span class="hljs-comment">-- 2025-11-09 10:22:50</span><br><br><span class="hljs-comment">-- 如何转换为指定格式呢?</span><br><span class="hljs-keyword">select</span> from_unixtime(<span class="hljs-number">1762654970</span>,<span class="hljs-string">&#x27;%Y/%m/%d %H:%i:%s&#x27;</span>); <span class="hljs-comment">-- 2025/11/09 10:22:50</span><br><br><span class="hljs-comment">-- 将日期 转换为指定格式的字符串 DATE_FORMAT(date,format)</span><br><span class="hljs-keyword">select</span> date_format(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>,<span class="hljs-string">&#x27;%Y/%m/%d %H:%i:%s&#x27;</span>); <span class="hljs-comment">-- 2025/11/09 10:22:50</span><br><br><span class="hljs-comment">-- 将字符串转换日期类型: 参数2 传入字符串日期类型的格式</span><br><span class="hljs-keyword">select</span> str_to_date(<span class="hljs-string">&#x27;2025/11/09 10:22:50&#x27;</span>,<span class="hljs-string">&#x27;%Y/%m/%d %H:%i:%s&#x27;</span>);<br><br><span class="hljs-comment">-- 日期的计算操作: 如何增减时间   DATE_ADD()  如果 数字为负数 表示减少指定单位时间  或  TIMESTAMPADD(MINUTE, 1, &#x27;2003-01-02&#x27;);</span><br><span class="hljs-comment">-- 增加一年</span><br><span class="hljs-keyword">select</span> DATE_ADD(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>,<span class="hljs-type">interval</span> <span class="hljs-number">1</span> <span class="hljs-keyword">year</span> );<br><span class="hljs-keyword">select</span> timestampadd(<span class="hljs-keyword">year</span> ,<span class="hljs-number">1</span> ,<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span> );<br><span class="hljs-comment">-- 增加 1小时</span><br><span class="hljs-keyword">select</span> DATE_ADD(<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>,<span class="hljs-type">interval</span> <span class="hljs-number">1</span> <span class="hljs-keyword">hour</span> );<br><span class="hljs-keyword">select</span> timestampadd(<span class="hljs-keyword">hour</span>,<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span> );<br><span class="hljs-comment">-- 减少1个月</span><br><span class="hljs-keyword">select</span> DATE_ADD(<span class="hljs-string">&#x27;2025-10-31 10:22:50&#x27;</span>,<span class="hljs-type">interval</span> <span class="hljs-number">-1</span> <span class="hljs-keyword">month</span> );<br><span class="hljs-keyword">select</span> timestampadd(<span class="hljs-keyword">month</span> ,<span class="hljs-number">-1</span>,<span class="hljs-string">&#x27;2025-10-31 10:22:50&#x27;</span> );<br><br><span class="hljs-comment">-- 日期直接的比较: TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2)</span><br><span class="hljs-comment">-- 计算二个日期相差了多少天</span><br><span class="hljs-keyword">select</span> timestampdiff(<span class="hljs-keyword">day</span>,<span class="hljs-string">&#x27;2025-10-28 10:22:50&#x27;</span>,<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><span class="hljs-comment">-- 计算相差了多少小时呢?</span><br><span class="hljs-keyword">select</span> timestampdiff(<span class="hljs-keyword">hour</span> ,<span class="hljs-string">&#x27;2025-10-28 10:22:50&#x27;</span>,<span class="hljs-string">&#x27;2025-11-09 10:22:50&#x27;</span>);<br><br><span class="hljs-comment">-- 需求1: 查询在 2020 年登录过的每个用户的本年度 最后一次 登录时间(导入资料中的logins表)</span><br><span class="hljs-comment">-- 思路：</span><br><span class="hljs-comment">-- 筛选出 2020 年的登录记录</span><br><span class="hljs-comment">-- 按照用户id进行分组，获取最近一次的登录时间</span><br><span class="hljs-keyword">select</span><br>    user_id,<br>    <span class="hljs-built_in">max</span>(time_stamp) <span class="hljs-keyword">as</span> max_time<br><span class="hljs-keyword">from</span> day06_fun.logins <span class="hljs-keyword">where</span> <span class="hljs-keyword">year</span>(time_stamp) <span class="hljs-operator">=</span> <span class="hljs-number">2020</span><br><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id;<br><br><span class="hljs-comment">-- 需求2: 查询温度比前一天（昨天）温度高的记录id (导入资料中的weather表)  交叉连接 找相关数据 建议使用Excel 演示一下</span><br><span class="hljs-keyword">select</span><br>    a.id<br><span class="hljs-keyword">from</span> day06_fun.weather a <span class="hljs-keyword">join</span> day06_fun.weather b  <span class="hljs-keyword">on</span> date_add(a.recordDate,<span class="hljs-type">interval</span> <span class="hljs-number">-1</span> <span class="hljs-keyword">day</span>) <span class="hljs-operator">=</span> b.recordDate<br><span class="hljs-keyword">where</span> a.temperature <span class="hljs-operator">&gt;</span> b.temperature;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-4-条件判断"><a href="#1-4-条件判断" class="headerlink" title="1.4 条件判断"></a>1.4 条件判断</h3><p>在编写SQL对数据处理和开发的过程中，经常需要对数据进行条件判断操作。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ini">if(expr,v1,v2): 表达式结果为true返回v1,否则返回v2<br><br>case when <br>	用法1: CASE SCORE WHEN &#x27;A&#x27; THEN &#x27;优&#x27; ELSE &#x27;不及格&#x27; END<br>	用法2: <br>	     CASE <br>	     	WHEN condition THEN result<br>         	<span class="hljs-section">[WHEN...THEN...]</span><br>         	ELSE result<br>         END<br>    用法3: 配合聚合函数根据条件统计.count(case when <span class="hljs-attr">tpye</span>=<span class="hljs-number">1</span> then <span class="hljs-number">1</span> else <span class="hljs-number">0</span> end)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 条件函数:</span><br><span class="hljs-comment">-- if函数</span><br><span class="hljs-comment">-- 需求:</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> (导入: tb_score表)</span><br><span class="hljs-comment">需求：查询学生的成绩信息，并将学生的成绩分成5个等级，结果中需要有一个学生成绩等级列:  基于IF 和 case when实现</span><br><span class="hljs-comment">成绩等级如下：</span><br><span class="hljs-comment">优秀：90分及以上</span><br><span class="hljs-comment">良好：80-90，包含80</span><br><span class="hljs-comment">中等：70-80，包含70</span><br><span class="hljs-comment">及格：60-70，包含60</span><br><span class="hljs-comment">不及格：60分以下</span><br><span class="hljs-comment">查询结果字段：</span><br><span class="hljs-comment">	name(姓名)、course(科目)、score(成绩)、grade(成绩等级)</span><br><span class="hljs-comment">*/</span><br><span class="hljs-comment">-- 演示 if如何使用</span><br><span class="hljs-keyword">select</span><br>    name,<br>    course,<br>    score,<br>    if(score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">90</span>,<span class="hljs-string">&#x27;优秀&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;级别&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.tb_score;<br><br><span class="hljs-comment">-- if 支持 嵌套使用 : 实现了最终的需求</span><br><span class="hljs-keyword">select</span><br>    name,<br>    course,<br>    score,<br>    if(<br>        score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">90</span>,<br>        <span class="hljs-string">&#x27;优秀&#x27;</span>,<br>        if(<br>            score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">80</span>,<br>            <span class="hljs-string">&#x27;良好&#x27;</span>,<br>            if(<br>                score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">70</span>,<br>                <span class="hljs-string">&#x27;中等&#x27;</span>,<br>               if(score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">60</span>,<span class="hljs-string">&#x27;及格&#x27;</span>,<span class="hljs-string">&#x27;不及格&#x27;</span>)<br>            )<br>        )<br>    ) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;级别&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.tb_score;<br><br><span class="hljs-comment">-- if 一般不会嵌套太多的层数, 一般建议在3层以内即可, 如果层数太多, 请使用 case  when 方案</span><br><br><span class="hljs-comment">-- 基于 case when 实现刚刚需求</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    满足哪个条件 就执行哪个条件, 一旦进入其中一个条件 其他就不会执行了</span><br><span class="hljs-comment">    语法1:</span><br><span class="hljs-comment">        case</span><br><span class="hljs-comment">            when 条件1 then 成立返回结果</span><br><span class="hljs-comment">            when 条件2 then 成立返回结果</span><br><span class="hljs-comment">            when 条件3 then 成立返回结果</span><br><span class="hljs-comment">            when 条件4 then 成立返回结果</span><br><span class="hljs-comment">            ......</span><br><span class="hljs-comment">            else</span><br><span class="hljs-comment">                以上条件都不满足, 执行的内容</span><br><span class="hljs-comment">        end</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">    语法2: 判断某一个字段的值, 要根据不同的值要执行不同的操作 可以使用下列语法</span><br><span class="hljs-comment">        case  条件</span><br><span class="hljs-comment">            when 值1  then 成立返回结果</span><br><span class="hljs-comment">            when 值2  then 成立返回结果</span><br><span class="hljs-comment">            when 值3  then 成立返回结果</span><br><span class="hljs-comment">            .....</span><br><span class="hljs-comment">            else</span><br><span class="hljs-comment">                以上条件都不满足, 执行的内容</span><br><span class="hljs-comment">        end</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">select</span><br>    name,<br>    course,<br>    score,<br>    <span class="hljs-keyword">case</span><br>        <span class="hljs-keyword">when</span> score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">90</span> <span class="hljs-keyword">then</span> <span class="hljs-string">&#x27;优秀&#x27;</span><br>        <span class="hljs-keyword">when</span> score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">80</span>  <span class="hljs-keyword">then</span> <span class="hljs-string">&#x27;良好&#x27;</span><br>        <span class="hljs-keyword">when</span> score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">70</span> <span class="hljs-keyword">then</span> <span class="hljs-string">&#x27;中等&#x27;</span><br>        <span class="hljs-keyword">when</span> score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">60</span> <span class="hljs-keyword">then</span> <span class="hljs-string">&#x27;及格&#x27;</span><br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-string">&#x27;不及格&#x27;</span><br><br>    <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;级别&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.tb_score;<br><br># 需求: 对student表中性别进行处理, 如果性别为 Male 转换为 男  如果为Female 转换为 女 否则返回 <span class="hljs-keyword">NULL</span><br><span class="hljs-keyword">select</span><br>    ID,<br>    Name,<br>    <span class="hljs-keyword">case</span> Gender<br>        <span class="hljs-keyword">when</span> <span class="hljs-string">&#x27;Male&#x27;</span> <span class="hljs-keyword">then</span> <span class="hljs-string">&#x27;男&#x27;</span><br>        <span class="hljs-keyword">when</span> <span class="hljs-string">&#x27;Female&#x27;</span> <span class="hljs-keyword">then</span> <span class="hljs-string">&#x27;女&#x27;</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">NULL</span><br>    <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> Gender,<br>    Score<br><span class="hljs-keyword">from</span> day06_fun.students;<br><br><span class="hljs-comment">-- 其他的判断语法:</span><br><span class="hljs-comment">-- ifnull(参数1,参数2) 判断参数1是否为NULL , 如果为null就返回参数2的值, 如果不为NULL 就返回参数1的值</span><br><span class="hljs-keyword">select</span> ifnull(<span class="hljs-keyword">NULL</span>,<span class="hljs-number">1</span>);<br><br><span class="hljs-comment">-- nullif() # 判断参数的两个参数是否一致, 如果一致返回NULL , 如果不一致 返回第一个参数的值</span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">nullif</span>(<span class="hljs-string">&#x27;李四&#x27;</span>,<span class="hljs-keyword">NULL</span>); <br><br>help <span class="hljs-string">&#x27;nullif&#x27;</span><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">需求2: 统计不同科目中，成绩在90分以上(包含90)和90分以下的人数各有多少</span><br><span class="hljs-comment">查询结果字段：</span><br><span class="hljs-comment">	course(科目)、gte_90(该科目90分以上是学生人数)、lt_90(该科目90分以下的学生人数)</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">    聚合函数, 会忽略NULL值</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">select</span><br>    course,<br>    <span class="hljs-built_in">count</span>(if(score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">90</span>,score,<span class="hljs-keyword">NULL</span>)) <span class="hljs-keyword">as</span> gt90_cnt,<br>    <span class="hljs-built_in">count</span>(if(score <span class="hljs-operator">&lt;</span> <span class="hljs-number">90</span>,score,<span class="hljs-keyword">NULL</span>)) <span class="hljs-keyword">as</span> lt90_cnt<br><span class="hljs-keyword">from</span> day06_fun.tb_score<br><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> course;<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-经典面试题（类似于项目）"><a href="#2-经典面试题（类似于项目）" class="headerlink" title="2. 经典面试题（类似于项目）"></a>2. 经典面试题（类似于项目）</h2><h3 id="2-1-行转列-多行变一行"><a href="#2-1-行转列-多行变一行" class="headerlink" title="2.1 行转列(多行变一行)"></a>2.1 行转列(多行变一行)</h3><p>需求：通过SELECT查询，将左边的数据转换为右边的形式</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 采用表:score  演示 行 转 列</span><br><span class="hljs-comment">-- 解决思路: 基于 group by + sum/max聚合函数内部套IF方案解决</span><br><br><span class="hljs-comment">-- 行 转 列:</span><br><span class="hljs-comment">-- 技巧: group by +  sum/max 聚合函数 + if判断</span><br><span class="hljs-keyword">select</span><br>    `学号`,<br>    <span class="hljs-built_in">sum</span>(if(`科目` <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;语文&#x27;</span>,`成绩`,<span class="hljs-number">0</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;语文&#x27;</span>,<br>    <span class="hljs-built_in">max</span>(if(`科目` <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;数学&#x27;</span>,`成绩`,<span class="hljs-number">0</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;数学&#x27;</span>,<br>    <span class="hljs-built_in">max</span>(if(`科目` <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;英语&#x27;</span>,`成绩`,<span class="hljs-number">0</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;英语&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.score<br><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> `学号`;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-列转行-一行变多行"><a href="#2-2-列转行-一行变多行" class="headerlink" title="2.2 列转行(一行变多行)"></a>2.2 列转行(一行变多行)</h3><p>需求：通过SELECT查询，将左边的数据转换为右边的形式</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 采用表: w_score 演示 列 转 行</span><br><span class="hljs-comment">-- 思路: 分段形成每一块内容  + union all 合并即可</span><br><span class="hljs-comment">-- 列 转 行:  分段实现 + union all</span><br><span class="hljs-comment">-- 语文</span><br><span class="hljs-keyword">select</span><br>    `学号`,<br>    <span class="hljs-string">&#x27;语文&#x27;</span><span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;科目&#x27;</span>,<br>    `语文` <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;成绩&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.w_score<br><span class="hljs-keyword">union</span> <span class="hljs-keyword">all</span><br><span class="hljs-comment">-- 数学:</span><br><span class="hljs-keyword">select</span><br>    `学号`,<br>    <span class="hljs-string">&#x27;数学&#x27;</span><span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;科目&#x27;</span>,<br>    `数学` <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;成绩&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.w_score<br><span class="hljs-keyword">union</span> <span class="hljs-keyword">all</span><br><span class="hljs-comment">-- 英语:</span><br><span class="hljs-keyword">select</span><br>    `学号`,<br>    <span class="hljs-string">&#x27;英语&#x27;</span><span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;科目&#x27;</span>,<br>    `英语` <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;成绩&#x27;</span><br><span class="hljs-keyword">from</span> day06_fun.w_score;<br></code></pre></td></tr></table></figure>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2024/04/18/notes-2024-04-18-redis-structures/"><span>Previous</span><strong>Redis 常用结构对照 LLM 应用</strong></a>
+    
+    
+      <a href="/posts/2023/10/20/notes-2023-10-20-mysql-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/"><span>Next</span><strong>MySQL 连接查询</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/2023/10/20/notes-2023-10-20-mysql-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">
+          <small>2023-10-20</small>
+          <strong>MySQL 连接查询</strong>
+        </a>
+      
+        <a href="/posts/2023/10/16/notes-2023-10-16-mysql-%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/">
+          <small>2023-10-16</small>
+          <strong>MySQL 多表查询</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

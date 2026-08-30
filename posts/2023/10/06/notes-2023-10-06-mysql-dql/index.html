@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Mysql DQL · 小黑程序员</title>
+  <meta name="description" content="Mysql DQL操作">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="Mysql DQL">
+  <meta property="og:description" content="Mysql DQL操作">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item " href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item active" href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/MySQL/">MySQL</a>
+      
+      <time datetime="2023-10-05T16:00:00.000Z">2023-10-06</time>
+    </div>
+    <h1>Mysql DQL</h1>
+    <p class="lede">Mysql DQL操作</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/MySQL/">#MySQL</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h2 id="DQL数据库查询语言"><a href="#DQL数据库查询语言" class="headerlink" title="DQL数据库查询语言"></a>DQL数据库查询语言</h2><p>DQL语句对表中原始数据不会产生任何的影响</p>
+<h3 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 创建数据库<br><span class="hljs-keyword">drop</span> database if <span class="hljs-keyword">exists</span> day04_dql;<br><span class="hljs-keyword">create</span> database day04_dql;<br>use day04_dql;<br>#创建商品表：<br><span class="hljs-keyword">create table</span> day04_dql.product(<br> pid <span class="hljs-type">int</span> <span class="hljs-keyword">primary key</span>,<br> pname <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br> price <span class="hljs-type">decimal</span>(<span class="hljs-number">10</span>,<span class="hljs-number">2</span>),<br> category_id <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>)<br>);<br># 多行书写: alt <span class="hljs-operator">+</span> 鼠标左键选择<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;联想&#x27;</span>,<span class="hljs-number">5000</span>,<span class="hljs-string">&#x27;c001&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;海尔&#x27;</span>,<span class="hljs-number">3000</span>,<span class="hljs-string">&#x27;c001&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;雷神&#x27;</span>,<span class="hljs-number">5000</span>,<span class="hljs-string">&#x27;c001&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;杰克琼斯&#x27;</span>,<span class="hljs-number">800</span>,<span class="hljs-string">&#x27;c002&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;真维斯&#x27;</span>,<span class="hljs-number">200</span>,<span class="hljs-string">&#x27;c002&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">6</span>,<span class="hljs-string">&#x27;花花公子&#x27;</span>,<span class="hljs-number">440</span>,<span class="hljs-string">&#x27;c002&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">7</span>,<span class="hljs-string">&#x27;劲霸&#x27;</span>,<span class="hljs-number">2000</span>,<span class="hljs-string">&#x27;c002&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;香奈儿&#x27;</span>,<span class="hljs-number">800</span>,<span class="hljs-string">&#x27;c003&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">9</span>,<span class="hljs-string">&#x27;相宜本草&#x27;</span>,<span class="hljs-number">200</span>,<span class="hljs-string">&#x27;c003&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">10</span>,<span class="hljs-string">&#x27;面霸&#x27;</span>,<span class="hljs-number">50</span>,<span class="hljs-string">&#x27;c003&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">11</span>,<span class="hljs-string">&#x27;好想你枣&#x27;</span>,<span class="hljs-number">56</span>,<span class="hljs-string">&#x27;c004&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">12</span>,<span class="hljs-string">&#x27;香飘飘奶茶&#x27;</span>,<span class="hljs-number">12</span>,<span class="hljs-string">&#x27;c005&#x27;</span>);<br><span class="hljs-keyword">INSERT INTO</span> day04_dql.product(pid,pname,price,category_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-number">13</span>,<span class="hljs-string">&#x27;海澜之家&#x27;</span>,<span class="hljs-number">128</span>,<span class="hljs-string">&#x27;c002&#x27;</span>);<br><br><span class="hljs-comment">-- 校验:</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> day04_dql.product;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-简单查询"><a href="#2-简单查询" class="headerlink" title="2. 简单查询"></a>2. 简单查询</h3><p>语法:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> [<span class="hljs-keyword">distinct</span>]<br><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> 列名 [<span class="hljs-keyword">as</span> 别名],列名 [<span class="hljs-keyword">as</span> 别名]<br><span class="hljs-keyword">from</span> 表;<br><br>说明:<br>	<span class="hljs-keyword">distinct</span> : 表示 去重,  对输出的结果进行去重操作<br>	<span class="hljs-operator">*</span> :  表示所有的字段<br>	<span class="hljs-operator">|</span> : 表示 或者的意思, 左边 和 右边的内容 不能再一个表中重复出现<br></code></pre></td></tr></table></figure>
+
+<p>需求说明:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 简单查询:</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">   语法:</span><br><span class="hljs-comment">      select [distinct]</span><br><span class="hljs-comment">        * | 列名1 [as 别名1] ,列名2 [as 别名2] ....</span><br><span class="hljs-comment">      from 表;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">   说明:</span><br><span class="hljs-comment">     * : 所有的字段</span><br><span class="hljs-comment">     | : 或者的关系, 表示要不就写左边语法 要不就写右边的语法 只能二选一</span><br><span class="hljs-comment">    distinct : 用于去重的操作.针对行与行之间如果有重复 可以通过该关键词去重</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">-- 1 查询所有的商品.</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product;<br><span class="hljs-comment">-- 2 查询商品名和商品价格.</span><br><span class="hljs-keyword">select</span><br>  pname,<br>  price<br><span class="hljs-keyword">from</span> day04_dql.product;<br><span class="hljs-comment">-- 3 别名查询.使用的关键字是as（as可以省略的）.</span><br><span class="hljs-comment">-- 3.1 表别名: 为表起一个别名 p   在单表查询中 无意义</span><br><span class="hljs-keyword">select</span><br>  p.pname,<br>  p.price<br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">as</span> p ;<br><br><span class="hljs-keyword">select</span><br>  p.pname,<br>  p.price<br><span class="hljs-keyword">from</span> day04_dql.product p ;<br><span class="hljs-comment">-- 在实践应用中 表别名 建议省略 as 书写</span><br><span class="hljs-comment">-- 3.2 列别名: 将表中所有的字段在展示的时候全部使用中文</span><br><span class="hljs-keyword">select</span><br> pid <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;商品编号&#x27;</span> ,<br> pname <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;商品名称&#x27;</span> ,<br> price <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;价格&#x27;</span>,<br> category_id <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;分类编号&#x27;</span><br><span class="hljs-keyword">from</span> day04_dql.product;<br><br><span class="hljs-comment">-- 在实践应用中 一般不会省略as操作</span><br><span class="hljs-comment">-- 4 去掉重复值:  查询商品分类ID , 并且去重展示</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-keyword">distinct</span>  category_id<br><span class="hljs-keyword">from</span> day04_dql.product;<br><span class="hljs-comment">-- 5 查询结果是表达式（运算查询）：将所有商品的价格+10元进行显示.</span><br><span class="hljs-keyword">select</span><br> pid,<br> category_id,<br> price <span class="hljs-operator">+</span> <span class="hljs-number">10</span> <span class="hljs-keyword">as</span> price,<br> pname<br><span class="hljs-keyword">from</span> day04_dql.product;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-条件查询"><a href="#3-条件查询" class="headerlink" title="3. 条件查询"></a>3. 条件查询</h3><table>
+<thead>
+<tr>
+<th>比较运算符</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>&gt; &lt; &lt;&#x3D;  &gt;&#x3D;  &#x3D;  &lt;&gt; !&#x3D;</td>
+<td>大于、小于、大于(小于)等于、不等于</td>
+</tr>
+<tr>
+<td></td>
+<td>BETWEEN  …AND…</td>
+<td>显示在某一区间的值(含头含尾)</td>
+</tr>
+<tr>
+<td></td>
+<td>IN(set)</td>
+<td>显示在in列表中的值，例：in(100,200)</td>
+</tr>
+<tr>
+<td></td>
+<td>LIKE ‘张%’<br />LIKE ‘%涛%’</td>
+<td>模糊查询，Like语句中，<br />%代表零个或多个任意字符，<br />_代表一个字符，<br />例如：first_name like ‘_a%’;</td>
+</tr>
+<tr>
+<td></td>
+<td>IS NULL <br />IS NOT NULL</td>
+<td>判断是否为空</td>
+</tr>
+<tr>
+<td><strong>逻辑运算符</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>and</td>
+<td>多个条件同时成立</td>
+</tr>
+<tr>
+<td></td>
+<td>or</td>
+<td>多个条件任一成立</td>
+</tr>
+<tr>
+<td></td>
+<td>not</td>
+<td>不成立，例：where not(salary&gt;100);</td>
+</tr>
+</tbody></table>
+<p>需求说明:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">/*</span><br><span class="hljs-comment">  语法:</span><br><span class="hljs-comment">      select [distinct]</span><br><span class="hljs-comment">        * | 列名1 [as 别名1] ,列名2 [as 别名2] ....</span><br><span class="hljs-comment">      from 表 [where 条件];</span><br><span class="hljs-comment">   比较运算符:</span><br><span class="hljs-comment">       &gt; &lt; &gt;= &lt;= &lt;&gt; !=</span><br><span class="hljs-comment">          条件语法格式:</span><br><span class="hljs-comment">                字段名 [&gt;|&lt;|&gt;=|&lt;=|&lt;&gt;|!=] 值</span><br><span class="hljs-comment">       between 起始值 and 结束值 : 范围查询</span><br><span class="hljs-comment">          作用: 获取某个范围内数据(包头包尾)</span><br><span class="hljs-comment">          条件语法格式:</span><br><span class="hljs-comment">                字段名 between 起始值 and 结束值</span><br><span class="hljs-comment">       in(值1,值2,值3....):</span><br><span class="hljs-comment">          作用: 用于获取某个字段的 值1,值2,值3的内容 有就显示, 没有就不显示</span><br><span class="hljs-comment">          条件语法格式:</span><br><span class="hljs-comment">               字段名 in(值1,值2,值3....)</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">       like : 模糊查询</span><br><span class="hljs-comment">          作用: 用于模糊匹配表中数据, 将匹配到的数据返回</span><br><span class="hljs-comment">          条件语法格式:</span><br><span class="hljs-comment">               字段名 like &#x27;通配符 + 要查询内容 组合&#x27;</span><br><span class="hljs-comment">          通配符有哪些?</span><br><span class="hljs-comment">             % :  表示 0~N个任意字符</span><br><span class="hljs-comment">             _ :  表示 1个任意字符</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">          例如:</span><br><span class="hljs-comment">              name like &#x27;张%&#x27; : 查询姓张用户</span><br><span class="hljs-comment">              name like &#x27;张_&#x27; : 查询姓张用户,并且名只有1个</span><br><span class="hljs-comment">              name like &#x27;%佳%&#x27; : 查询名字里面含有佳的用户</span><br><span class="hljs-comment">              name like &#x27;_佳%&#x27; : 查询名字里面第二个字为佳的用户</span><br><span class="hljs-comment">       is [not] null:  获取某列那些值为null 或者buweinull</span><br><span class="hljs-comment">           条件语法格式:</span><br><span class="hljs-comment">               字段名 is [not] null</span><br><span class="hljs-comment">   逻辑运算符:</span><br><span class="hljs-comment">       and :  多个条件必须同时都符合的情况获取出来</span><br><span class="hljs-comment">          条件语法格式:</span><br><span class="hljs-comment">               条件1 and 条件2 and 条件3 ....</span><br><span class="hljs-comment">       or  :  多个条件, 将每个条件符合的数据全部获取出来</span><br><span class="hljs-comment">          条件语法格式:</span><br><span class="hljs-comment">               条件1 or 条件2 or 条件3 ....</span><br><span class="hljs-comment">               条件1 or (条件2 and 条件3) ....</span><br><span class="hljs-comment">       not :  进行取反操作  把符合条件的反向的数据获取到</span><br><span class="hljs-comment">           条件语法格式:</span><br><span class="hljs-comment">               not (条件1 or 条件2 or 条件3 ....)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">-- 条件查询:</span><br><span class="hljs-comment">-- 查询商品名称为“花花公子”的商品所有信息：</span><br><span class="hljs-comment">-- 查询价格为800商品</span><br><span class="hljs-comment">-- 查询价格不是800的所有商品</span><br><span class="hljs-comment">-- 查询商品价格大于60元的所有商品信息</span><br><span class="hljs-comment">-- 查询商品价格在200到800之间所有商品</span><br><span class="hljs-comment">-- 查询商品价格是200或800的所有商品</span><br><span class="hljs-comment">-- 查询含有&#x27;霸&#x27;字的所有商品</span><br><span class="hljs-comment">-- 查询以&#x27;香&#x27;开头的所有商品</span><br><span class="hljs-comment">-- 查询第二个字为&#x27;想&#x27;的所有商品</span><br><span class="hljs-comment">-- 商品没有分类的商品</span><br><span class="hljs-comment">-- 查询有分类的商品</span><br></code></pre></td></tr></table></figure>
+
+<p>条件查询的课上的代码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 条件查询:</span><br><span class="hljs-comment">-- 查询商品名称为“花花公子”的商品所有信息：</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> pname <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;花花公子&#x27;</span>;<br><span class="hljs-comment">-- 查询价格为800商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-operator">=</span> <span class="hljs-number">800</span> ;<br><span class="hljs-comment">-- 查询价格不是800的所有商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-operator">!=</span> <span class="hljs-number">800</span> ;<br><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-operator">&lt;&gt;</span> <span class="hljs-number">800</span> ;<br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> <span class="hljs-keyword">not</span> price <span class="hljs-operator">=</span> <span class="hljs-number">800</span> ;<br><span class="hljs-comment">-- 查询商品价格大于60元的所有商品信息</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span>  day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-operator">&gt;</span> <span class="hljs-number">60</span> ;<br><span class="hljs-comment">-- 查询商品价格在200到800之间所有商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-keyword">between</span> <span class="hljs-number">200</span> <span class="hljs-keyword">and</span> <span class="hljs-number">800</span>;<br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-operator">&gt;=</span> <span class="hljs-number">200</span> <span class="hljs-keyword">and</span> price <span class="hljs-operator">&lt;=</span> <span class="hljs-number">800</span>;<br><span class="hljs-comment">-- 查询商品价格是200或800的所有商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-operator">=</span> <span class="hljs-number">200</span> <span class="hljs-keyword">or</span> price <span class="hljs-operator">=</span> <span class="hljs-number">800</span>;<br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> price <span class="hljs-keyword">in</span>(<span class="hljs-number">200</span>,<span class="hljs-number">800</span>);<br><span class="hljs-comment">-- 查询含有&#x27;霸&#x27;字的所有商品 : 模糊查询</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> pname <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%霸%&#x27;</span>;<br><span class="hljs-comment">-- 查询以&#x27;香&#x27;开头的所有商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> pname <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;香%&#x27;</span>;<br><span class="hljs-comment">-- 查询第二个字为&#x27;想&#x27;的所有商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> pname <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;_想%&#x27;</span>;<br><span class="hljs-comment">-- 商品没有分类的商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> category_id <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span> ;<br><span class="hljs-comment">-- 查询有分类的商品</span><br><span class="hljs-keyword">select</span><br>  <span class="hljs-operator">*</span><br><span class="hljs-keyword">from</span> day04_dql.product <span class="hljs-keyword">where</span> category_id <span class="hljs-keyword">is</span> <span class="hljs-keyword">not null</span> ;<br></code></pre></td></tr></table></figure>
+
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2023/10/11/notes-2023-10-11-mysql-%E5%8D%95%E8%A1%A8%E6%9F%A5%E8%AF%A2/"><span>Previous</span><strong>Mysql单表查询</strong></a>
+    
+    
+      <a href="/posts/2023/09/28/notes-2023-09-28-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/"><span>Next</span><strong>数据库基础知识</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/2023/10/25/notes-2023-10-25-mysql-%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/">
+          <small>2023-10-25</small>
+          <strong>MySQL 函数分析</strong>
+        </a>
+      
+        <a href="/posts/2023/10/20/notes-2023-10-20-mysql-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">
+          <small>2023-10-20</small>
+          <strong>MySQL 连接查询</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

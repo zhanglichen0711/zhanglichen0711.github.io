@@ -13,6 +13,9 @@
   <link rel="icon" href="/img/favicon.png">
   <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
   <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
   <script>
     (function () {
       try {
@@ -194,9 +197,9 @@
     
       <div class="tag-row">
         
-          <a href="/tags/RAG/">#RAG</a>
-        
           <a href="/tags/MySQL/">#MySQL</a>
+        
+          <a href="/tags/RAG/">#RAG</a>
         
       </div>
     
@@ -218,7 +221,7 @@
 </ul>
 <h2 id="单表查询是日常"><a href="#单表查询是日常" class="headerlink" title="单表查询是日常"></a>单表查询是日常</h2><p><code>WHERE</code> &#x2F; <code>LIKE</code> &#x2F; <code>IN</code> &#x2F; <code>BETWEEN</code>、去重、别名、表达式，足够支撑后台「按专业、章节、时效筛文档」。模糊检索不要指望 <code>LIKE &#39;%规范%&#39;</code> 扛住全站搜索，那是 Milvus 的事；MySQL 负责精确过滤和回表。</p>
 <p>综合案例里的员工表，换成知识库就是：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> chunk_id, doc_id, section, <span class="keyword">LEFT</span>(content, <span class="number">80</span>)</span><br><span class="line"><span class="keyword">FROM</span> kb_chunk</span><br><span class="line"><span class="keyword">WHERE</span> doc_id <span class="operator">=</span> <span class="string">&#x27;gb-50300&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> deleted <span class="operator">=</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> chunk_index;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> chunk_id, doc_id, section, <span class="hljs-keyword">LEFT</span>(content, <span class="hljs-number">80</span>)<br><span class="hljs-keyword">FROM</span> kb_chunk<br><span class="hljs-keyword">WHERE</span> doc_id <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;gb-50300&#x27;</span><br>  <span class="hljs-keyword">AND</span> deleted <span class="hljs-operator">=</span> <span class="hljs-number">0</span><br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> chunk_index;<br></code></pre></td></tr></table></figure>
 
 <h2 id="多表查询才是引用链"><a href="#多表查询才是引用链" class="headerlink" title="多表查询才是引用链"></a>多表查询才是引用链</h2><p>交叉连接只用来理解笛卡尔积。真正用的是「有条件的连接」：</p>
 <ul>
@@ -269,7 +272,7 @@
       <a href="/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/"><span>Previous</span><strong>Python 学习笔记：从容器语法到能写 LLM 服务</strong></a>
     
     
-      <a href="/posts/2026/05/20/notes-2026-05-20-agent-function-call/"><span>Next</span><strong>Function Call Outputs Arguments, Not Prose</strong></a>
+      <a href="/posts/2026/05/20/notes-2026-05-20-agent-fn-call/"><span>Next</span><strong>Function Call：模型输出参数不是散文</strong></a>
     
   </nav>
 </article>
@@ -289,9 +292,9 @@
           <strong>RAG 工程闭环：从切分、混合检索到评测和隔离</strong>
         </a>
       
-        <a href="/posts/2026/04/27/notes-2026-04-27-rag-eval-trace/">
+        <a href="/posts/2026/04/27/notes-2026-04-27-rag-eval/">
           <small>2026-04-27</small>
-          <strong>Eval Sets, Tests and Traces for RAG</strong>
+          <strong>评测集、测试和 Trace</strong>
         </a>
       
     </div>
@@ -299,25 +302,6 @@
 
 
 
-  <section class="comments" id="comments">
-    <h2>Comments</h2>
-    <script src="https://giscus.app/client.js"
-      data-repo="zhanglichen0711/zhanglichen0711.github.io"
-      data-repo-id=""
-      data-category="Announcements"
-      data-category-id=""
-      data-mapping="pathname"
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="bottom"
-      data-theme="light"
-      data-lang="zh-CN"
-      data-loading="lazy"
-      crossorigin="anonymous"
-      async>
-    </script>
-  </section>
 
 
       </main>

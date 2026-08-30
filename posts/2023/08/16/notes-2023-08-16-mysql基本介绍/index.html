@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>MySQL：基本介绍 · 小黑程序员</title>
+  <meta name="description" content="MySQL的基本概念">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="MySQL：基本介绍">
+  <meta property="og:description" content="MySQL的基本概念">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item " href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item active" href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/MySQL/">MySQL</a>
+      
+      <time datetime="2023-08-15T16:00:00.000Z">2023-08-16</time>
+    </div>
+    <h1>MySQL：基本介绍</h1>
+    <p class="lede">MySQL的基本概念</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/MySQL/">#MySQL</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h2 id="1-SQL语句的基本介绍"><a href="#1-SQL语句的基本介绍" class="headerlink" title="1. SQL语句的基本介绍"></a>1. SQL语句的基本介绍</h2><p>​		SQL全称是结构化查询语言(Structured Query Language)，是关系型数据库管理系统都需要遵循的规范，是操作关系型数据库的语言，只要是关系型数据库，都支持SQL。</p>
+<p>​		虽然所有的关系型数据库都支持SQL，但是不同的关系型数据库都会有一些特殊的东西(特有的函数或语法)。</p>
+<p>​		<strong>普通话：各数据库厂商都遵循的ISO标准。</strong></p>
+<p>​		<strong>方言：数据库特有的关键字。</strong></p>
+<p>​		SQL语句的主要作用就是对数据库中的数据进行相应的管理操作（增、删、改、查）。</p>
+<ul>
+<li>数据库的增、删、改、查</li>
+<li>数据表的增、删、改、查</li>
+<li>表记录的增、删、改、查<br>……</li>
+</ul>
+<h2 id="2-SQL语句分类"><a href="#2-SQL语句分类" class="headerlink" title="2. SQL语句分类"></a>2. SQL语句分类</h2><p>SQL分类：</p>
+<ul>
+<li><strong>数据定义语言</strong>：简称DDL(Data Definition Language)，用来定义数据库对象：数据库，表，列等。关键字：create，alter，drop等<ul>
+<li>作用： 对数据库中的  库  和 表 进行定义 （创建数据库、删除数据库、查看数据库、创建表、删除表、修改表、查询表）</li>
+<li>注意： 数据库定义语言，不涉及到对表数据处理</li>
+</ul>
+</li>
+<li><strong>数据操作语言</strong>：简称DML(Data Manipulation Language)，用来对数据库中表的记录进行更新。关键字：insert，delete，update等<ul>
+<li>作用： 对 数据库中表数据进行操作（添加数据、删除数据、修改数据）</li>
+</ul>
+</li>
+<li><strong>数据控制语言</strong>：简称DCL(Data Control Language)，用来定义数据库的访问权限和安全级别，及创建用户。（DBA工程师）<ul>
+<li>作用： 对数据库这个软件进行管理的语言。 比如 设置用户名、设置密码、设置不同用户可以访问那些库或者那些表</li>
+</ul>
+</li>
+<li><strong>数据查询语言</strong>：简称DQL(Data Query Language)，用来查询数据库中表的记录。关键字：select，from，where等<ul>
+<li>作用： 对数据库中表数据进行查询操作</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-SQL通用语法"><a href="#3-SQL通用语法" class="headerlink" title="3. SQL通用语法"></a>3. SQL通用语法</h2><p>通用语法：</p>
+<ul>
+<li>1- SQL语句可以单行或多行书写，以<strong>英文分号</strong>结尾 </li>
+<li>2- MySQL数据库的SQL语句不区分大小写，关键字建议使用大写<ul>
+<li>例如：SELECT * FROM user。</li>
+</ul>
+</li>
+<li>3- 同样可以使用&#x2F;* 注释内容 *&#x2F;、– 、# 的方式完成注释  <ul>
+<li>DataGrip快速注释&#x2F;取消注释的快捷键：ctrl + &#x2F;</li>
+</ul>
+</li>
+<li>4- 可使用空格和缩进来增强语句的可读性<ul>
+<li>DataGrip软件sql格式化快捷键： ctrl + alt + l</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2023/08/25/notes-2023-08-25-mysql-ddl/"><span>Previous</span><strong>MySQL DDL</strong></a>
+    
+    
+      <a href="/posts/2023/07/25/notes-2023-07-25-Linux%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/"><span>Next</span><strong>Linux的基本使用</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/05/26/notes-2026-05-26-mysql-for-knowledge-base/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/2023/10/25/notes-2023-10-25-mysql-%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/">
+          <small>2023-10-25</small>
+          <strong>MySQL 函数分析</strong>
+        </a>
+      
+        <a href="/posts/2023/10/20/notes-2023-10-20-mysql-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">
+          <small>2023-10-20</small>
+          <strong>MySQL 连接查询</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

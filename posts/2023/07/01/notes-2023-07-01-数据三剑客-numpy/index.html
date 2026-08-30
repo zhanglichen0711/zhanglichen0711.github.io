@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>python 数据三剑客-numpy · 小黑程序员</title>
+  <meta name="description" content="numpy的基本使用">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="python 数据三剑客-numpy">
+  <meta property="og:description" content="numpy的基本使用">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item active" href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item " href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/Python/">Python</a>
+      
+      <time datetime="2023-06-30T16:00:00.000Z">2023-07-01</time>
+    </div>
+    <h1>python 数据三剑客-numpy</h1>
+    <p class="lede">numpy的基本使用</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/Python/">#Python</a>
+        
+          <a href="/tags/Numpy/">#Numpy</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h2 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1. 基本使用"></a>1. 基本使用</h2><p>NumPy是数值<strong>计算</strong>基础库，提供高性能的多维数组对象</p>
+<p>Pandas是基于NumPy构建的数据<strong>处理和分析</strong>库，提供强大的数据结构和数据分析工具</p>
+<p>Matplotlib是数据<strong>可视化</strong>库，提供丰富的绘图功能</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 1.导包</span><br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np   <span class="hljs-comment"># 数据的生成（计算）</span><br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd  <span class="hljs-comment"># 数据的处理（贴标签，绘制）</span><br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt  <span class="hljs-comment"># 数据的展示（图像）</span><br><span class="hljs-keyword">import</span> matplotlib<br><br><span class="hljs-comment"># 2.设置matplotlib的引擎</span><br>matplotlib.use(<span class="hljs-string">&#x27;TkAgg&#x27;</span>)<br><br><span class="hljs-comment"># 3.使用数据分析三剑客</span><br><span class="hljs-comment"># 3.1 准备数据（10个随机三维数组）</span><br>data=np.random.randn(<span class="hljs-number">10</span>,<span class="hljs-number">3</span>)<br><span class="hljs-comment"># 3.2.1 处理数据</span><br>df=pd.DataFrame(data,columns=[<span class="hljs-string">&#x27;A&#x27;</span>,<span class="hljs-string">&#x27;B&#x27;</span>,<span class="hljs-string">&#x27;C&#x27;</span>])<br><span class="hljs-comment"># 3.2.2 数据的绘制</span><br>df.plot()<br><span class="hljs-comment"># 3.3 数据的可视化</span><br>plt.show()<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-NumPy的使用"><a href="#2-NumPy的使用" class="headerlink" title="2. NumPy的使用"></a>2. NumPy的使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-comment"># 1.创建一个数组</span><br><span class="hljs-comment"># 1.1 创建一个一维数组</span><br>np1 = np.array([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;一维数组：\n<span class="hljs-subst">&#123;np1&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 1.2 创建一个二维数组</span><br>np2 = np.array([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;二维数组：\n<span class="hljs-subst">&#123;np2&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 2.创建全0全1数组</span><br>np3 = np.zeros((<span class="hljs-number">2</span>, <span class="hljs-number">3</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;全0数组：\n<span class="hljs-subst">&#123;np3&#125;</span>&#x27;</span>)<br>np4 = np.ones((<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>))  <span class="hljs-comment"># 有三个数就是三维，2个3*3的矩阵</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;全1数组：\n<span class="hljs-subst">&#123;np4&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 3.范围和等分数组</span><br>np5 = np.arange(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-number">3</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;范围数组：\n<span class="hljs-subst">&#123;np5&#125;</span>&#x27;</span>)<br>np6 = np.linspace(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-number">5</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;等分数组：\n<span class="hljs-subst">&#123;np6&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 4.创建随机数组</span><br>np7 = np.random.rand(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)  <span class="hljs-comment"># 0~1的数值</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;随机数组：\n<span class="hljs-subst">&#123;np7&#125;</span>&#x27;</span>)<br>np8 = np.random.randn(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)  <span class="hljs-comment"># 0~3</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;正态数组：\n<span class="hljs-subst">&#123;np8&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 5.数组的属性</span><br><span class="hljs-comment"># 5.1 数组维度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组维度：<span class="hljs-subst">&#123;np8.ndim&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 5.2 数组形状</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组形状：<span class="hljs-subst">&#123;np8.shape&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 5.3 数组大小</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组大小：<span class="hljs-subst">&#123;np8.size&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 5.4 数组类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组类型：<span class="hljs-subst">&#123;np8.dtype&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 6.数组的形状处理</span><br><span class="hljs-comment"># 6.1 改变数组的形状</span><br>np9 = np.array([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组：\n<span class="hljs-subst">&#123;np9&#125;</span>&#x27;</span>)<br>npr10 = np9.reshape(<span class="hljs-number">3</span>, <span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;改变后的数组：\n<span class="hljs-subst">&#123;npr10&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 6.2 转置</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;转置后的数组：\n<span class="hljs-subst">&#123;npr10.T&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 6.3 展平</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;展平后的数组：\n<span class="hljs-subst">&#123;npr10.flatten()&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 6.4 调整形状和大小（不够就重复）</span><br>npr11=np.array([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>])<br>npr12=np.resize(npr11,(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;调整后的数组：\n<span class="hljs-subst">&#123;npr12&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 7.数组计算</span><br>n1=np.array([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>])<br>n2=np.array([<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>])<br><span class="hljs-comment"># 7.1 加减乘除幂</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;加法运算：<span class="hljs-subst">&#123;n1+n2&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;减法运算：<span class="hljs-subst">&#123;n1-n2&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;乘法运算：<span class="hljs-subst">&#123;n1*n2&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;除法运算：<span class="hljs-subst">&#123;n1/n2&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;幂运算：<span class="hljs-subst">&#123;n1**n2&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 7.2 比较运算</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;等于运算：<span class="hljs-subst">&#123;n1==n2&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;大于运算：<span class="hljs-subst">&#123;n1&gt;n2&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;小于运算：<span class="hljs-subst">&#123;n1&lt;n2&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 7.3 点积运算 .dot</span><br><span class="hljs-built_in">print</span>(np.dot(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)) <span class="hljs-comment"># 标量计算</span><br><span class="hljs-built_in">print</span>(np.dot([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>],[<span class="hljs-number">3</span>,<span class="hljs-number">4</span>])) <span class="hljs-comment"># 向量计算</span><br><span class="hljs-built_in">print</span>(np.dot([[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>],[<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]],[[<span class="hljs-number">5</span>,<span class="hljs-number">6</span>],[<span class="hljs-number">7</span>,<span class="hljs-number">8</span>]])) <span class="hljs-comment"># 矩阵计算</span><br><span class="hljs-comment"># 7.4 矩阵运算</span><br><span class="hljs-comment"># A@B前提：A的列数等于B的行数，A的每一行*B的每一列</span><br>n3=np.array([[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>],[<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],[<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]])<br>n4=np.array([[<span class="hljs-number">5</span>,<span class="hljs-number">6</span>],[<span class="hljs-number">6</span>,<span class="hljs-number">7</span>],[<span class="hljs-number">7</span>,<span class="hljs-number">8</span>]])<br><span class="hljs-built_in">print</span>(n4.T)<br><span class="hljs-built_in">print</span>(n3@n4.T)<br><span class="hljs-comment"># 与@等效</span><br><span class="hljs-built_in">print</span>(np.matmul(n3,n4.T))<br><br><span class="hljs-comment"># 8.数组统计运算</span><br>n5=np.array([[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],[<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>],[<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>]])<br><span class="hljs-comment"># 8.1 数组的和</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组的和为：<span class="hljs-subst">&#123;np.<span class="hljs-built_in">sum</span>(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 8.2 数组的列的和</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组的列的和为：<span class="hljs-subst">&#123;np.<span class="hljs-built_in">sum</span>(n5,axis=<span class="hljs-number">0</span>)&#125;</span>&#x27;</span>) <span class="hljs-comment"># 0表示列</span><br><span class="hljs-comment"># 8.3 数组的行的和</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组的行的和为：<span class="hljs-subst">&#123;np.<span class="hljs-built_in">sum</span>(n5,axis=<span class="hljs-number">1</span>)&#125;</span>&#x27;</span>) <span class="hljs-comment"># 1表示行</span><br><span class="hljs-comment"># 8.4 数组的平均值</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;数组的平均值为：<span class="hljs-subst">&#123;np.mean(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 8.5 方差var</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;方差为：<span class="hljs-subst">&#123;np.var(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 8.6 标准差std</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;标准差为：<span class="hljs-subst">&#123;np.std(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 8.7 最值</span><br><span class="hljs-comment"># 最大值</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;最大值为：<span class="hljs-subst">&#123;np.<span class="hljs-built_in">max</span>(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 最小值</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;最小值为：<span class="hljs-subst">&#123;np.<span class="hljs-built_in">min</span>(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-comment"># 索引</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;索引为：<span class="hljs-subst">&#123;np.argmax(n5)&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;索引为：<span class="hljs-subst">&#123;np.argmin(n5)&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 9.广播机制（由少到多扩散）</span><br><span class="hljs-comment"># 9.1 生维度（少的向多的提升）</span><br><span class="hljs-comment"># 9.2 拉伸（少的向多的拉伸）</span><br>a1=np.array(<br>    [<br>        [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],<br>        [<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>],<br>        [<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>]<br>    ]<br>)<br>a2=np.array([<span class="hljs-number">10</span>,<span class="hljs-number">20</span>,<span class="hljs-number">30</span>])<br><span class="hljs-built_in">print</span>(a1+a2)<br>a3=np.array([[<span class="hljs-number">10</span>],[<span class="hljs-number">20</span>],[<span class="hljs-number">30</span>]])<br><span class="hljs-built_in">print</span>(a1+a3)<br></code></pre></td></tr></table></figure>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2023/07/08/notes-2023-07-08-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-pandas/"><span>Previous</span><strong>python 数据三剑客-Pandas</strong></a>
+    
+    
+      <a href="/posts/2023/06/20/notes-2023-06-20-redis%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/"><span>Next</span><strong>redis基本操作</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/">
+          <small>2026-06-08</small>
+          <strong>Python 学习笔记：从容器语法到能写 LLM 服务</strong>
+        </a>
+      
+        <a href="/posts/2023/07/15/notes-2023-07-15-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-Matplotlib/">
+          <small>2023-07-15</small>
+          <strong>python 数据三剑客-Matplotlib</strong>
+        </a>
+      
+        <a href="/posts/2023/07/08/notes-2023-07-08-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-pandas/">
+          <small>2023-07-08</small>
+          <strong>python 数据三剑客-Pandas</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

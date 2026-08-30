@@ -13,6 +13,9 @@
   <link rel="icon" href="/img/favicon.png">
   <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
   <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
   <script>
     (function () {
       try {
@@ -215,7 +218,7 @@
 <p>分支和循环本身很简单。真正容易写乱的是：在 <code>for</code> 里又改正在遍历的列表，以及把业务判断写成层层 <code>if</code> 而没有提前 <code>return</code>。</p>
 <h2 id="函数：匿名、递归、生成器"><a href="#函数：匿名、递归、生成器" class="headerlink" title="函数：匿名、递归、生成器"></a>函数：匿名、递归、生成器</h2><p>匿名函数适合短排序键，不适合塞进半页 prompt 拼装。递归适合树状文档目录，但知识库切分更常见的是显式栈或队列，避免深度把进程打爆。</p>
 <p>生成器更值得留下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">chunks</span>(<span class="params">items, n</span>):</span><br><span class="line">    batch = []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> items:</span><br><span class="line">        batch.append(x)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(batch) == n:</span><br><span class="line">            <span class="keyword">yield</span> batch</span><br><span class="line">            batch = []</span><br><span class="line">    <span class="keyword">if</span> batch:</span><br><span class="line">        <span class="keyword">yield</span> batch</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">chunks</span>(<span class="hljs-params">items, n</span>):<br>    batch = []<br>    <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> items:<br>        batch.append(x)<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(batch) == n:<br>            <span class="hljs-keyword">yield</span> batch<br>            batch = []<br>    <span class="hljs-keyword">if</span> batch:<br>        <span class="hljs-keyword">yield</span> batch<br></code></pre></td></tr></table></figure>
 
 <p>embedding 和入库都按 batch 走，不要一次性把全部文本装进内存。</p>
 <h2 id="面向对象只保留三件事"><a href="#面向对象只保留三件事" class="headerlink" title="面向对象只保留三件事"></a>面向对象只保留三件事</h2><ol>
@@ -286,19 +289,19 @@
     <h2>Related notes</h2>
     <div class="related-grid">
       
-        <a href="/posts/2023/11/21/notes-2023-11-21-py-pandas-plot/">
-          <small>2023-11-21</small>
-          <strong>用 Pandas 看分布，再用图确认</strong>
+        <a href="/posts/2023/07/15/notes-2023-07-15-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-Matplotlib/">
+          <small>2023-07-15</small>
+          <strong>python 数据三剑客-Matplotlib</strong>
         </a>
       
-        <a href="/posts/2023/11/21/notes-2023-11-21-python-pandas-entry/">
-          <small>2023-11-21</small>
-          <strong>Pandas as the Front Door of Every Dataset</strong>
+        <a href="/posts/2023/07/08/notes-2023-07-08-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-pandas/">
+          <small>2023-07-08</small>
+          <strong>python 数据三剑客-Pandas</strong>
         </a>
       
-        <a href="/posts/2023/10/16/notes-2023-10-16-py-generator-iter/">
-          <small>2023-10-16</small>
-          <strong>迭代器与生成器表达式</strong>
+        <a href="/posts/2023/07/01/notes-2023-07-01-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-numpy/">
+          <small>2023-07-01</small>
+          <strong>python 数据三剑客-numpy</strong>
         </a>
       
     </div>
@@ -306,25 +309,6 @@
 
 
 
-  <section class="comments" id="comments">
-    <h2>Comments</h2>
-    <script src="https://giscus.app/client.js"
-      data-repo="zhanglichen0711/zhanglichen0711.github.io"
-      data-repo-id=""
-      data-category="Announcements"
-      data-category-id=""
-      data-mapping="pathname"
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="bottom"
-      data-theme="light"
-      data-lang="zh-CN"
-      data-loading="lazy"
-      crossorigin="anonymous"
-      async>
-    </script>
-  </section>
 
 
       </main>

@@ -122,4 +122,96 @@
   if (input) {
     input.addEventListener('input', function () { render(input.value); });
   }
+
+  /* ===== TOC 滚动高亮（scroll-spy） ===== */
+  if (tocNav) {
+    const links = Array.prototype.slice.call(tocNav.querySelectorAll('a'));
+    const map = {};
+    links.forEach(function (a) {
+      const id = (a.getAttribute('href') || '').replace('#', '');
+      if (id) map[id] = a;
+    });
+    const heads = Object.keys(map).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (heads.length) {
+      const spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          const a = map[en.target.id];
+          if (a && en.isIntersecting) {
+            links.forEach(function (l) { l.classList.remove('active'); });
+            a.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-90px 0px -72% 0px', threshold: 0 });
+      heads.forEach(function (h) { spy.observe(h); });
+    }
+  }
+
+  /* ===== Mermaid 架构图（将 ```mermaid 代码块渲染成图） ===== */
+  (function () {
+    const mer = document.querySelectorAll('.article-body code.mermaid');
+    if (!mer.length) return;
+    const divs = [];
+    mer.forEach(function (code) {
+      const pre = code.parentElement;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent;
+      pre.parentNode.replaceChild(div, pre);
+      divs.push(div);
+    });
+    function run() {
+      if (!window.mermaid) return;
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+      });
+      window.mermaid.run({ nodes: divs });
+    }
+    if (window.mermaid) return run();
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+    s.onload = run;
+    document.head.appendChild(s);
+  })();
+
+  /* ===== 代码块复制按钮 ===== */
+  document.querySelectorAll('.article-body figure.highlight, .article-body pre').forEach(function (host) {
+    // figure.highlight 内部有两个 <pre>（行号 gutter + 代码本体），跳过它们：
+    // ① gutter 的 <pre> 里没有 <code>，会让外层 figure 提前 return，导致按钮挂不上
+    // ② 不跳过就会挂出重复按钮
+    if (host.tagName === 'PRE' && host.closest('figure.highlight')) return;
+
+    const code = host.querySelector('code');
+    if (!code) return;
+
+    // 包一层 .code-host：figure 自带 overflow:auto，
+    // 按钮若挂在它内部，横向滚动长代码时会跟着滚出视野
+    const wrap = document.createElement('div');
+    wrap.className = 'code-host';
+    host.parentNode.insertBefore(wrap, host);
+    wrap.appendChild(host);
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.type = 'button';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', '复制代码');
+    btn.addEventListener('click', function () {
+      const text = code.textContent;
+      const done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+    wrap.appendChild(btn);
+  });
 })();

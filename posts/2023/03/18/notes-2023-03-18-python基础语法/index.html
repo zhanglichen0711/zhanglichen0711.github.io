@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>python 基础语法 · 小黑程序员</title>
+  <meta name="description" content="基础语法">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="python 基础语法">
+  <meta property="og:description" content="基础语法">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item active" href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item " href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/Python/">Python</a>
+      
+      <time datetime="2023-03-17T16:00:00.000Z">2023-03-18</time>
+    </div>
+    <h1>python 基础语法</h1>
+    <p class="lede">基础语法</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/Python/">#Python</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h1 id="python基础语法"><a href="#python基础语法" class="headerlink" title="python基础语法"></a>python基础语法</h1><h2 id="1-字面量"><a href="#1-字面量" class="headerlink" title="1.字面量"></a>1.字面量</h2><p><strong>概念：</strong>代码中被写下来的固定值</p>
+<p><strong>分类：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 数字</span><br><span class="hljs-built_in">int</span> 整数 <span class="hljs-number">10</span><br><span class="hljs-built_in">float</span> 浮点数 <span class="hljs-number">12.14</span><br><span class="hljs-built_in">complex</span> 复数 <span class="hljs-number">3</span>+<span class="hljs-number">5j</span><br><span class="hljs-built_in">bool</span> 布尔值 <span class="hljs-literal">True</span>=<span class="hljs-number">1</span>  <span class="hljs-literal">False</span>=<span class="hljs-number">0</span><br><span class="hljs-comment"># 字符串</span><br><span class="hljs-built_in">str</span> <span class="hljs-string">&#x27;李正洋&#x27;</span> <span class="hljs-string">&quot;李反洋&quot;</span> <span class="hljs-string">&quot;&quot;&quot;李零洋&quot;&quot;&quot;</span><br><span class="hljs-comment"># 列表</span><br><span class="hljs-built_in">list</span>[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]<br><span class="hljs-comment"># 元组</span><br><span class="hljs-built_in">tuple</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br><span class="hljs-comment"># 集合</span><br><span class="hljs-built_in">set</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;<br><span class="hljs-comment"># 字典</span><br><span class="hljs-built_in">dict</span>&#123;<span class="hljs-string">&#x27;1&#x27;</span>:<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;2&#x27;</span>:<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;3&#x27;</span>:<span class="hljs-number">3</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-注释"><a href="#2-注释" class="headerlink" title="2.注释"></a>2.注释</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 单行注释</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">多行注释</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-comment"># 批量注释快捷键 ctrl+/</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-常用快捷键"><a href="#3-常用快捷键" class="headerlink" title="3.常用快捷键"></a>3.常用快捷键</h2><ul>
+<li>ctrl+&#x2F; 批量注释</li>
+<li>ctrl+c 复制</li>
+<li>ctrl+v 粘贴</li>
+<li>ctrl+x 剪切</li>
+<li>ctrl+z 撤销</li>
+<li>ctrl+y 回滚</li>
+<li>ctrl+d 快速复制粘贴本行</li>
+<li>alt+z 快速换行</li>
+<li>shift+ctrl+上下 移动该行位置</li>
+<li>ctrl+alt+L 快速格式化</li>
+<li>按着alt 选中多行同时编辑</li>
+<li>ctrl+f 查询</li>
+<li>ctrl+r 替换</li>
+</ul>
+<h2 id="4-变量"><a href="#4-变量" class="headerlink" title="4.变量"></a>4.变量</h2><ul>
+<li>能够接收变量值的数据容器</li>
+<li>变量名&#x3D;变量值</li>
+<li>变量本身没有数据类型，但他的值有数据类型</li>
+<li>变量是可以改变的，变量名&#x3D;新变量值</li>
+</ul>
+<h2 id="5-数据类型"><a href="#5-数据类型" class="headerlink" title="5.数据类型"></a>5.数据类型</h2><ul>
+<li><p>字符串 string</p>
+</li>
+<li><p>整数 int</p>
+</li>
+<li><p>浮点数 float</p>
+</li>
+<li><p>查看方式 type( )</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 测试方法</span><br><span class="hljs-comment"># 直接获取</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-number">1</span>))<br><span class="hljs-comment"># 两步获取</span><br>name_type=<span class="hljs-built_in">type</span>(<span class="hljs-string">&#x27;张三&#x27;</span>)<br><span class="hljs-built_in">print</span>(name_type)<br><span class="hljs-comment"># 三部获取</span><br>name=<span class="hljs-string">&#x27;张三&#x27;</span><br>name_type=<span class="hljs-built_in">type</span>(name)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(name_type ))<br><span class="hljs-comment"># 测试结果</span><br><span class="hljs-comment"># 1.整数类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-number">1</span>)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;int&#x27;</span>&gt;<br><span class="hljs-comment"># 2.浮点数类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-number">1.1</span>)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;float&#x27;</span>&gt;<br><span class="hljs-comment"># 3.复数类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-number">1</span>+<span class="hljs-number">2j</span>)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;complex&#x27;</span>&gt;<br><span class="hljs-comment"># 4.布尔值类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-literal">True</span>)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;bool&#x27;</span>&gt;<br><span class="hljs-comment"># 5.字符串类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-string">&#x27;李正洋&#x27;</span>)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;str&#x27;</span>&gt;<br><span class="hljs-comment"># 6.列表类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>([<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>])) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;list&#x27;</span>&gt;<br><span class="hljs-comment"># 7.元组类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>((<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>))) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;tuple&#x27;</span>&gt;<br><span class="hljs-comment"># 8.集合类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(&#123;<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>&#125;)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;set&#x27;</span>&gt;<br><span class="hljs-comment"># 9.字典类型</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(&#123;<span class="hljs-string">&#x27;2&#x27;</span>:<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;5&#x27;</span>:<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;8&#x27;</span>:<span class="hljs-number">8</span>&#125;)) &lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;dict&#x27;</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-数据类型转换"><a href="#6-数据类型转换" class="headerlink" title="6.数据类型转换"></a>6.数据类型转换</h2><ul>
+<li>int(x) 将x转换为整数</li>
+<li>float(x) 将x转换为小数</li>
+<li>str(x) 将x转换为字符串</li>
+<li>bool(x) 将x转换为布尔值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 整数转换</span><br>x=<span class="hljs-number">123</span><br><span class="hljs-comment"># 转字符串</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(x))<br><span class="hljs-comment"># 转浮点数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">float</span>(x))<br><span class="hljs-comment"># 浮点数类型</span><br>x=<span class="hljs-number">123.5</span><br><span class="hljs-comment"># 转整数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">int</span>(x))<br><span class="hljs-comment"># 转字符串</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(x))<br><span class="hljs-comment"># 字符串类型</span><br>x=<span class="hljs-string">&#x27;123&#x27;</span><br><span class="hljs-comment"># 转整数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">int</span>(x))<br><span class="hljs-comment"># 转浮点数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">float</span>(x))<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-标识符"><a href="#7-标识符" class="headerlink" title="7.标识符"></a>7.标识符</h2><ul>
+<li>类型<ul>
+<li>变量（标识符）</li>
+<li>方法名（标识符）</li>
+<li>类名（标识符）</li>
+</ul>
+</li>
+<li>规则<ul>
+<li>内容限定<ul>
+<li>只能包含数字、字母、下划线_、中文（不推荐使用），其中，数字不能作为开头</li>
+</ul>
+</li>
+<li>区分大小写<ul>
+<li>abc和Abc为不同标识符</li>
+</ul>
+</li>
+<li>不能使用关键字<ul>
+<li>不能与python内置关键字重名</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>规范<ul>
+<li>见名知意</li>
+<li>用下划线_拼接</li>
+<li>英文字母全小写</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-运算符"><a href="#8-运算符" class="headerlink" title="8.运算符"></a>8.运算符</h2><ul>
+<li><p>算数运算符</p>
+<p>+ - * &#x2F;  加减乘除</p>
+<p>&#x2F;&#x2F; 取整除</p>
+<p>** 指数运算</p>
+<p>% 取余数</p>
+</li>
+<li><p>赋值运算符</p>
+<p>&#x3D; 将&#x3D;右侧的结果赋值给等式左侧的变量</p>
+<p>复合赋值运算符：将等式左侧的变量与右侧值先进行计算，再赋值给左侧变量</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python">num=<span class="hljs-number">10</span><br>num+=<span class="hljs-number">50</span> <span class="hljs-comment"># num=num+50</span><br><span class="hljs-built_in">print</span>(num)<br><span class="hljs-comment"># -=</span><br>num-=<span class="hljs-number">20</span><br><span class="hljs-built_in">print</span>(num)<br><span class="hljs-comment"># *=</span><br>num*=<span class="hljs-number">5</span><br><span class="hljs-built_in">print</span>(num)<br><span class="hljs-comment"># /=</span><br>num/=<span class="hljs-number">10</span><br><span class="hljs-built_in">print</span>(num)<br><span class="hljs-comment"># //=</span><br>num//=<span class="hljs-number">3</span><br><span class="hljs-built_in">print</span>(num)<br><span class="hljs-comment"># **=</span><br>num**=<span class="hljs-number">3</span><br><span class="hljs-built_in">print</span>(num)<br><span class="hljs-comment"># %=</span><br>num%=<span class="hljs-number">5</span><br><span class="hljs-built_in">print</span>(num)<br></code></pre></td></tr></table></figure>
+
+<h2 id="9-字符串扩展"><a href="#9-字符串扩展" class="headerlink" title="9.字符串扩展"></a>9.字符串扩展</h2><ul>
+<li>字符串拼接<ul>
+<li>print(‘字符串1’, ‘字符串2’)  字符串之间有空格</li>
+<li>print(‘字符串1’+’字符串2’)  字符串之间没有空格，先执行代码运算，再输出计算结果</li>
+</ul>
+</li>
+<li>百分号格式化<ul>
+<li>占位符<ul>
+<li>%d 整数</li>
+<li>%s 字符串</li>
+<li>%f<ul>
+<li>% .2f 保留两位小数</li>
+<li>% 5.2f  宽度保留5位，两位小数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>print(‘字符串%d , %s , %f’ %(变量(int),变量(str),变量(float))</li>
+<li>几个占位符就对应几个变量</li>
+</ul>
+</li>
+<li>format格式化<ul>
+<li>print(‘字符串{},{},{}’.format(变量1,变量2,变量3)）</li>
+</ul>
+</li>
+<li>format简写<ul>
+<li>print(f’字符串{变量1}字符串{变量2}字符串{变量3}’）</li>
+<li>整数转小数  print(f’字符串{<strong>变量(整数): .2f</strong>}’）,保留两位小数</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 字符串拼接</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;模型名称是&quot;</span>, m_name )  <span class="hljs-comment"># 中间有空格</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;模型名称是&#x27;</span>+m_name ) <span class="hljs-comment"># 中间没空格</span><br><span class="hljs-comment"># 字符串格式化</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;模型名称是：%s，厂家是：%s，发布年份是：%d，温度是：%.2f&#x27;</span> %(m_name,m_manu,m_pubilsh ,m_temp))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;模型名称是：%s，厂家是：%s，发布年份是：%d，温度是：%d&#x27;</span> %(m_name,m_manu,m_pubilsh ,m_temp))<br></code></pre></td></tr></table></figure>
+
+<h2 id="10-数据输入"><a href="#10-数据输入" class="headerlink" title="10.数据输入"></a>10.数据输入</h2><ul>
+<li>语法：input([提示的内容])</li>
+<li>输入语句的结果一定是字符串类型，可通过数据类型转换进行转换，int(input(输入内容))</li>
+<li>输入语句如果没有结束，不会执行后边的代码</li>
+<li>输入语句结束后会获取用户输入内容，可用变量进行接收保存，变量&#x3D;input(输入内容)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 输入用户名，级别</span><br>name=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;请输入您的姓名：&quot;</span>)<br>grade=<span class="hljs-built_in">input</span>(<span class="hljs-string">&#x27;请输入您的账户级别：&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;欢迎尊贵的<span class="hljs-subst">&#123;name&#125;</span>，您的账户级别是<span class="hljs-subst">&#123;grade&#125;</span>，感谢您的光临！&#x27;</span>)<br><br><span class="hljs-comment"># ATM取款机</span><br><span class="hljs-comment"># ATM取款机</span><br>num=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;&quot;&quot;                    # 多行输入</span><br><span class="hljs-string">请选择您要办理的业务</span><br><span class="hljs-string">1.查询余额              </span><br><span class="hljs-string">2.存钱</span><br><span class="hljs-string">3.取钱</span><br><span class="hljs-string">4.退出系统</span><br><span class="hljs-string">请输入：</span><br><span class="hljs-string">&quot;&quot;&quot;</span>)<br>money=<span class="hljs-number">9999999</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;当前余额<span class="hljs-subst">&#123;money:<span class="hljs-number">.2</span>f&#125;</span>&#x27;</span>)      <span class="hljs-comment"># format格式化中，整数转小数</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="11-扩展"><a href="#11-扩展" class="headerlink" title="11. 扩展"></a>11. 扩展</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># bool格式转换</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bool</span>(<span class="hljs-number">123</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bool</span>(<span class="hljs-string">&#x27;asd&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bool</span>(<span class="hljs-number">1.2</span>))<br><span class="hljs-comment"># 多数情况结果为True</span><br><span class="hljs-comment"># 少数情况为False</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bool</span>(<span class="hljs-number">0</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bool</span>(<span class="hljs-string">&#x27;&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bool</span>(<span class="hljs-literal">None</span>))<br><br><span class="hljs-comment"># eval 去除内容最外侧引号</span><br>count = <span class="hljs-string">&#x27;1&#x27;</span><br><span class="hljs-comment"># 要使用count变量，但内容为&#x27;count&#x27;</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">eval</span>(<span class="hljs-string">&#x27;count&#x27;</span>))<br><span class="hljs-comment"># 拆解&#x27;count&#x27;最外侧引号后，拿到count变量，输出字符串格式的&#x27;1&#x27;，再拆解变量值&#x27;1&#x27;两侧的引号，得到int类型的1</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">eval</span>(<span class="hljs-built_in">eval</span>(<span class="hljs-string">&#x27;count&#x27;</span>)))<br><span class="hljs-comment"># 如果没有引号，继续使用eval会报错</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="12-布尔值和比较运算符"><a href="#12-布尔值和比较运算符" class="headerlink" title="12.布尔值和比较运算符"></a>12.布尔值和比较运算符</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 布尔值：</span><br>bol1=<span class="hljs-literal">True</span><br>bol2=<span class="hljs-literal">False</span><br><span class="hljs-built_in">print</span>(bol1)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">int</span>(bol1))  -&gt; <span class="hljs-number">1</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">int</span>(bol2))  -&gt; <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2023/03/20/notes-2023-03-20-python%E5%88%A4%E6%96%AD%E3%80%81%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/"><span>Previous</span><strong>python 判断、循环语句</strong></a>
+    
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/">
+          <small>2026-06-08</small>
+          <strong>Python 学习笔记：从容器语法到能写 LLM 服务</strong>
+        </a>
+      
+        <a href="/posts/2023/07/15/notes-2023-07-15-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-Matplotlib/">
+          <small>2023-07-15</small>
+          <strong>python 数据三剑客-Matplotlib</strong>
+        </a>
+      
+        <a href="/posts/2023/07/08/notes-2023-07-08-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-pandas/">
+          <small>2023-07-08</small>
+          <strong>python 数据三剑客-Pandas</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

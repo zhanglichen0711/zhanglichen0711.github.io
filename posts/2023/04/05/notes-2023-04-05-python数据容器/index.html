@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>python 数据容器 · 小黑程序员</title>
+  <meta name="description" content="python 数据容器">
+  <meta name="author" content="Eason">
+  <meta property="og:title" content="python 数据容器">
+  <meta property="og:description" content="python 数据容器">
+  <meta property="og:image" content="/img/cover.jpg">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    <label class="header-search" id="searchOpen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </label>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <nav class="top-tabs">
+    
+      <a href="/categories/Python/">笔记</a>
+    
+      <a href="/categories/Dynamics/">思考</a>
+    
+      <a href="/archives/">归档</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item active" href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item " href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/Python/">Python</a>
+      
+      <time datetime="2023-04-04T16:00:00.000Z">2023-04-05</time>
+    </div>
+    <h1>python 数据容器</h1>
+    <p class="lede">python 数据容器</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/Python/">#Python</a>
+        
+      </div>
+    
+  </header>
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h1 id="数据容器"><a href="#数据容器" class="headerlink" title="数据容器"></a>数据容器</h1><h2 id="1-字符串容器"><a href="#1-字符串容器" class="headerlink" title="1. 字符串容器"></a>1. 字符串容器</h2><ul>
+<li>索引查找<ul>
+<li>str[索引]</li>
+<li>切片  str[start: end: step]<ul>
+<li>包左不包右</li>
+<li>负索引：从右往左计算的索引，起始-1</li>
+<li>负步长：从右往左切</li>
+<li>负向选中负步长切，正向选中正步长切</li>
+<li>起始索引、结束索引，步长都可以省略</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 实例</span><br>str1=<span class="hljs-string">&#x27;0123456789&#x27;</span><br><span class="hljs-comment"># 索引查看</span><br><span class="hljs-built_in">print</span>(str1[<span class="hljs-number">3</span>])<br><span class="hljs-comment"># 取出345</span><br><span class="hljs-built_in">print</span>(str1[<span class="hljs-number">3</span>:<span class="hljs-number">6</span>])<br><span class="hljs-comment"># 取出369</span><br><span class="hljs-built_in">print</span>(str1[<span class="hljs-number">3</span>::<span class="hljs-number">3</span>])<br><span class="hljs-comment"># 从头到尾</span><br><span class="hljs-built_in">print</span>(str1[:])<br><span class="hljs-comment"># 从尾到头</span><br><span class="hljs-built_in">print</span>(str1[::-<span class="hljs-number">1</span>])<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>获取字符串长度<ul>
+<li>len(字符串)</li>
+</ul>
+</li>
+<li>查询字符串中某字符出现次数<ul>
+<li>字符串.count(查找的内容)</li>
+</ul>
+</li>
+<li>字符串的替换<ul>
+<li>字符串.replace(要替换的内容，替换成什么)<ul>
+<li>不会修改原字符串，生成新字符串</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>去除两端空格<ul>
+<li>字符串.strip()<ul>
+<li>不会修改原字符串，生成新字符串</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>字符串的切割<ul>
+<li>字符串.split(用什么切割)</li>
+</ul>
+</li>
+<li>获取字符的索引<ul>
+<li>字符串.index(字符)<ul>
+<li>返回第一个字符的索引</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 获取字符串长度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(str1))<br><span class="hljs-comment"># 统计字符出现次数</span><br><span class="hljs-built_in">print</span>(str1.count(<span class="hljs-string">&#x27;1&#x27;</span>))<br><span class="hljs-comment"># 字符串替换</span><br><span class="hljs-comment"># 不能改变原字符串内容，生成新字符串</span><br>str2=str1.replace(<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>)<br><span class="hljs-built_in">print</span>(str2)<br><span class="hljs-comment"># 去除两端空格</span><br><span class="hljs-comment"># 不能改变原字符串内容，生成新字符串</span><br>str3=<span class="hljs-string">&#x27; itheima &#x27;</span><br><span class="hljs-built_in">print</span>(str3.strip())<br><span class="hljs-comment"># 字符串切分，切完生成列表</span><br>str4=<span class="hljs-string">&#x27;1,2,3,4,5&#x27;</span><br><span class="hljs-built_in">print</span>(str4.split(<span class="hljs-string">&#x27;,&#x27;</span>))<br><span class="hljs-comment"># 获取字符索引</span><br><span class="hljs-built_in">print</span>(str1.index(<span class="hljs-string">&#x27;5&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-列表容器"><a href="#2-列表容器" class="headerlink" title="2. 列表容器"></a>2. 列表容器</h2><ul>
+<li>特点<ul>
+<li>可以修改</li>
+<li>可以存放不同类型的数据</li>
+<li>支持嵌套</li>
+</ul>
+</li>
+<li>定义<ul>
+<li>变量名&#x3D;[内容1,内容2…]</li>
+<li>变量名&#x3D;[]  空列表</li>
+<li>变量名&#x3D;list() 构造列表</li>
+</ul>
+</li>
+<li>常用操作<ul>
+<li>索引查找<ul>
+<li>list[索引]<ul>
+<li>取出的是字符串</li>
+</ul>
+</li>
+<li>切片<ul>
+<li>list[start: end: step]<ul>
+<li>取出的是列表</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 索引查看</span><br><span class="hljs-built_in">print</span>(name_list[<span class="hljs-number">1</span>])  <span class="hljs-comment"># 结果是字符串</span><br><span class="hljs-comment"># 切片</span><br><span class="hljs-built_in">print</span>(name_list[<span class="hljs-number">1</span>:<span class="hljs-number">4</span>]) <span class="hljs-comment"># 结果是列表</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(name_list[<span class="hljs-number">1</span>:<span class="hljs-number">4</span>]))<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>获取列表长度<ul>
+<li>len(列表)</li>
+</ul>
+</li>
+<li>统计某元素出现的次数<ul>
+<li>列表.count(查询的元素)</li>
+</ul>
+</li>
+<li>获取元素的索引<ul>
+<li>字符串.index(元素)  返回元素的索引</li>
+</ul>
+</li>
+<li>修改元素<ul>
+<li>列表[要修改元素的索引]&#x3D;新值</li>
+</ul>
+</li>
+<li>增加元素<ul>
+<li>列表.append(新增元素)  在列表尾部插入</li>
+<li>列表.insert(插入位置的索引,插入元素)  插入指定位置</li>
+</ul>
+</li>
+<li>列表合并<ul>
+<li>列表.extend(新列表)</li>
+</ul>
+</li>
+<li>删除元素<ul>
+<li>列表.remove(要删除的元素)  删除元素有重复的，只能删除第一个</li>
+<li>列表.pop(索引)  通过索引删除元素</li>
+<li>del 列表[索引]</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># - 获取列表长度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(name_list))<br><span class="hljs-comment"># - 统计某元素出现的次数</span><br><span class="hljs-built_in">print</span>(name_list.count(<span class="hljs-string">&#x27;李正洋&#x27;</span>))<br><span class="hljs-comment"># - 获取元素的索引</span><br><span class="hljs-built_in">print</span>(name_list.index(<span class="hljs-string">&#x27;李正洋&#x27;</span>))<br><span class="hljs-comment"># - 修改元素</span><br>name_list[<span class="hljs-number">1</span>]=<span class="hljs-string">&#x27;李反洋&#x27;</span><br><span class="hljs-built_in">print</span>(name_list)<br><span class="hljs-comment"># - 增加元素</span><br><span class="hljs-comment">#   - 列表.append(新增元素)  在列表尾部插入</span><br>name_list.append(<span class="hljs-string">&#x27;成佳乐&#x27;</span>)<br><span class="hljs-built_in">print</span>(name_list)<br><span class="hljs-comment">#   - 列表.insert(插入位置的索引,插入元素)  插入指定位置</span><br>name_list.insert(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;张博洋&#x27;</span>)<br><span class="hljs-built_in">print</span>(name_list)<br><span class="hljs-comment"># - 列表合并</span><br><span class="hljs-comment">#   - 列表.extend(新列表)</span><br>new_list=[<span class="hljs-string">&#x27;宋钰&#x27;</span>,<span class="hljs-string">&#x27;许润涵&#x27;</span>]<br>name_list.extend(new_list)<br><span class="hljs-built_in">print</span>(name_list)<br><span class="hljs-comment"># - 删除元素</span><br><span class="hljs-comment"># remove</span><br>name_list.remove(<span class="hljs-string">&#x27;宋钰&#x27;</span>)<br><span class="hljs-built_in">print</span>(name_list)<br><span class="hljs-comment"># pop</span><br><span class="hljs-built_in">print</span>(name_list.pop(<span class="hljs-number">1</span>))<br><span class="hljs-comment"># del</span><br><span class="hljs-keyword">del</span> name_list[<span class="hljs-number">7</span>]<br><span class="hljs-built_in">print</span>(name_list)<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-元组"><a href="#3-元组" class="headerlink" title="3. 元组"></a>3. 元组</h2><ul>
+<li>特点<ul>
+<li>不能修改，只读列表</li>
+<li>可以存放不同类型的数据</li>
+<li>支持嵌套</li>
+<li>列表和元组可以互相转换</li>
+<li>列表和元组可以拼接</li>
+</ul>
+</li>
+<li>定义<ul>
+<li>元组名&#x3D;（内容1,内容2…）</li>
+<li>元组名&#x3D;(内容,)  单元素</li>
+<li>元组名&#x3D;tuple() 构造元组</li>
+</ul>
+</li>
+<li>常用操作</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义元组</span><br>t1=(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)<br><span class="hljs-comment"># 根据索引查找</span><br><span class="hljs-built_in">print</span>(t1[<span class="hljs-number">0</span>])<br><span class="hljs-comment"># 统计元素数量</span><br><span class="hljs-built_in">print</span>(t1.count(<span class="hljs-number">1</span>))<br><span class="hljs-comment"># 统计元组长度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(t1))<br><span class="hljs-comment"># 获取元素索引</span><br><span class="hljs-built_in">print</span>(t1.index(<span class="hljs-number">3</span>))<br><span class="hljs-comment"># 元组拼接</span><br><span class="hljs-built_in">print</span>(t1+t2)<br><span class="hljs-comment"># 类型转换</span><br><span class="hljs-built_in">list</span>(<span class="hljs-built_in">tuple</span>)<br><span class="hljs-built_in">tuple</span>(<span class="hljs-built_in">list</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-集合"><a href="#4-集合" class="headerlink" title="4. 集合"></a>4. 集合</h2><ul>
+<li>特点<ul>
+<li>可以修改</li>
+<li>可以存放不同类型的数据</li>
+<li>支持嵌套</li>
+<li>无序不重复，不支持索引</li>
+</ul>
+</li>
+<li>定义<ul>
+<li>变量名&#x3D;{内容1,内容2…}</li>
+<li>变量名&#x3D;{}  空集合</li>
+<li>变量名&#x3D;set() 空集合</li>
+</ul>
+</li>
+<li>常用操作</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义</span><br>s1=&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br>s2=&#123;<span class="hljs-number">2</span>,<span class="hljs-number">5</span>&#125;<br><span class="hljs-comment"># 集合长度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(s1))<br><span class="hljs-comment"># 添加元素</span><br>s2.add(<span class="hljs-number">6</span>)<br><span class="hljs-built_in">print</span>(s2)<br><span class="hljs-comment"># 删除元素</span><br>s2.remove(<span class="hljs-number">6</span>)<br><span class="hljs-built_in">print</span>(s2)<br><span class="hljs-comment"># s2.pop()  # 随机删除一个元素</span><br><span class="hljs-comment"># print(s2)</span><br><span class="hljs-comment"># 并集</span><br>s1.update(s2)<br><span class="hljs-built_in">print</span>(s1)<br><span class="hljs-comment"># 差集</span><br>s1.difference_update(s2)  <span class="hljs-comment"># s1.difference(s2)</span><br><span class="hljs-built_in">print</span>(s1)<br><span class="hljs-comment"># 交集</span><br><span class="hljs-built_in">print</span>(s1&amp;s2)<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-字典"><a href="#5-字典" class="headerlink" title="5. 字典"></a>5. 字典</h2><ul>
+<li>特点<ul>
+<li>对数据进行解释时使用的类型</li>
+<li>可以修改</li>
+<li>可以存放不同类型的数据</li>
+<li>支持嵌套</li>
+<li>无序，仅支持通过键查找</li>
+</ul>
+</li>
+<li>定义<ul>
+<li>字典名&#x3D;{‘键’：值,’键’：值…}</li>
+<li>字典名&#x3D;dict{} 构造字典</li>
+</ul>
+</li>
+<li>常用操作</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义字典</span><br>phone_dict=&#123;<span class="hljs-string">&#x27;brand&#x27;</span> : <span class="hljs-string">&#x27;iphone&#x27;</span> , <span class="hljs-string">&#x27;type&#x27;</span> : <span class="hljs-string">&#x27;17 pro max&#x27;</span> , <span class="hljs-string">&#x27;price&#x27;</span> : <span class="hljs-number">8000</span> , <span class="hljs-string">&#x27;publish_year&#x27;</span> : <span class="hljs-number">2026</span>&#125;<br><span class="hljs-built_in">print</span>(phone_dict)<br><span class="hljs-comment"># 获取字典长度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(phone_dict))<br><span class="hljs-comment"># 获取所有键--返回列表</span><br><span class="hljs-built_in">print</span>(phone_dict.keys())<br><span class="hljs-comment"># 获取所有值--返回列表</span><br><span class="hljs-built_in">print</span>(phone_dict.values())<br><span class="hljs-comment"># 增加元素</span><br>phone_dict[<span class="hljs-string">&#x27;month&#x27;</span>]=<span class="hljs-number">6</span><br><span class="hljs-built_in">print</span>(phone_dict)<br><span class="hljs-comment"># 删除元素</span><br>phone_dict.pop(<span class="hljs-string">&#x27;month&#x27;</span>)<br><span class="hljs-built_in">print</span>(phone_dict)<br><span class="hljs-comment"># 修改元素</span><br>phone_dict[<span class="hljs-string">&#x27;publish_year&#x27;</span> ]=<span class="hljs-number">2025</span><br><span class="hljs-built_in">print</span>(phone_dict)<br><br><span class="hljs-comment"># 统计字符串中字符的重复次数</span><br><span class="hljs-built_in">str</span>=<span class="hljs-string">&#x27;aggahwashoidqhepoieqpo564156prqtlzmnvnhalblds74896946314786qfagah&#x27;</span><br><span class="hljs-comment"># 定义一个空字典</span><br>new_dict=&#123;&#125;<br><span class="hljs-comment"># 遍历字符串</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">str</span>:<br>    <span class="hljs-keyword">if</span> i <span class="hljs-keyword">in</span> new_dict:  <span class="hljs-comment"># 字符在字典中</span><br>        new_dict[i]+=<span class="hljs-number">1</span> <span class="hljs-comment"># 该字符的值增加1</span><br>    <span class="hljs-keyword">else</span>:<br>        new_dict[i]=<span class="hljs-number">1</span> <span class="hljs-comment"># 字符不在字典中，键=该字符，值=1</span><br><span class="hljs-built_in">print</span>(new_dict)<br></code></pre></td></tr></table></figure>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2023/04/10/notes-2023-04-10-%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6/"><span>Previous</span><strong>python 函数进阶</strong></a>
+    
+    
+      <a href="/posts/2023/04/02/notes-2023-04-02-python%E5%87%BD%E6%95%B0/"><span>Next</span><strong>python 函数</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2026/06/08/notes-2026-06-08-python-from-syntax-to-engineering/">
+          <small>2026-06-08</small>
+          <strong>Python 学习笔记：从容器语法到能写 LLM 服务</strong>
+        </a>
+      
+        <a href="/posts/2023/07/15/notes-2023-07-15-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-Matplotlib/">
+          <small>2023-07-15</small>
+          <strong>python 数据三剑客-Matplotlib</strong>
+        </a>
+      
+        <a href="/posts/2023/07/08/notes-2023-07-08-%E6%95%B0%E6%8D%AE%E4%B8%89%E5%89%91%E5%AE%A2-pandas/">
+          <small>2023-07-08</small>
+          <strong>python 数据三剑客-Pandas</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…" autocomplete="off">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
