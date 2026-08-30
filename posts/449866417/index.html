@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>数据库基础知识 · 小黑程序员</title>
+  <meta name="description" content="Mysql数据库基础知识">
+  <meta name="author" content="Eason">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/449866417/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="数据库基础知识">
+  <meta property="og:description" content="Mysql数据库基础知识">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/449866417/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2023-09-27T16:00:00.000Z">
+  <meta property="article:modified_time" content="2026-08-30T02:30:53.628Z">
+  
+  <meta property="article:tag" content="MySQL">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="数据库基础知识">
+  <meta name="twitter:description" content="Mysql数据库基础知识">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"数据库基础知识","description":"Mysql数据库基础知识","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/449866417/","datePublished":"2023-09-27T16:00:00.000Z","dateModified":"2026-08-30T02:30:53.628Z","author":{"@type":"Person","name":"Eason"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/449866417/"},"keywords":"MySQL"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  
+  <nav class="top-tabs">
+    
+      <a class="" href="/notes/">学习笔记</a>
+    
+      <a class="" href="/thoughts/">行业思考</a>
+    
+      <a class="" href="/archives/">归档</a>
+    
+      <a class="" href="/about/">关于</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item " href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item active" href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/MySQL/">MySQL</a>
+      
+      <time datetime="2023-09-27T16:00:00.000Z">2023-09-28</time>
+      <span>11053 字 · 约 28 分钟</span>
+      
+        <span>更新于 2026-08-30</span>
+      
+    </div>
+    <h1>数据库基础知识</h1>
+    <p class="lede">Mysql数据库基础知识</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/MySQL/">#MySQL</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h2 id="SQL约束"><a href="#SQL约束" class="headerlink" title="SQL约束"></a>SQL约束</h2><p>​		数据类型本身就是一种约束，SQL约束是指在数据类型限定的基础上额外增加的要求。</p>
+<p>​		常见的约束：</p>
+<p>​		主键约束(PRIMARY KEY)</p>
+<p>​		其他约束：非空约束(NOT NULL)、唯一约束(UNIQUE)、默认值(DEFAULT)、外键约束(Foreign Key)</p>
+<h3 id="1-主键约束"><a href="#1-主键约束" class="headerlink" title="1. 主键约束"></a>1. 主键约束</h3><p>​		PRIMARY KEY 约束唯一标识数据库表中的每条记录</p>
+<p>​		<strong>主键必须包含唯一的值</strong></p>
+<p>​		<strong>主键列不能包含 NULL 值</strong></p>
+<p>​		每个表都应该有一个主键，并且每个表<strong>只能有一个主键</strong></p>
+<p>​		主要作用:  在后续数据查询中, 根据主键查询效率最高（底层 有索引）</p>
+<p>​		唯一标识数据库表中的每条记录、加快数据的查找速度</p>
+<p>​		如何创建主键约束?</p>
+<ul>
+<li>方式一:  创建表时，在字段描述处，声明指定字段为主键</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 创建用于演示约束的数据库<br><span class="hljs-keyword">drop</span> database if <span class="hljs-keyword">exists</span> day03_constraint;<br><span class="hljs-keyword">create</span> database day03_constraint;<br>use day03_constraint;<br><span class="hljs-comment">-- 方式一: 在创建表的时候, 直接在对应的字段后面的约束位置添加主键约束</span><br><span class="hljs-comment">-- 需求1: 构建persons表, 表中有 id last_name first_name address city字段,  需要为id设置主键</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons1;<br><span class="hljs-keyword">create table</span> day03_constraint.persons1(<br>  id <span class="hljs-type">int</span> <span class="hljs-keyword">primary key</span>,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>)<br>);<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>方式二:  创建表时，在constraint约束区域，声明指定字段为主键<ul>
+<li>格式: primary key (字段列表)</li>
+<li>字段列表需要使用小括号括住，如果有多字段需要使用逗号分隔。声明两个以上字段为主键，我们称为联合主键。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 方式二: 在创建表的时候, 在表的 constraint 约束位置, 添加主键约束</span><br><span class="hljs-comment">-- 需求2: 构建persons表, 表中有 last_name first_name address city字段, 需要为last_name first_name 共同设置主键</span><br><span class="hljs-comment">-- 联合主键: 指的将表中多个字段合并在一起构建一个主键约束, 通过多个字段来唯一的确定表中某一条数据</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons2;<br><span class="hljs-keyword">create table</span> day03_constraint.persons2(<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) ,<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  <span class="hljs-keyword">primary key</span> (last_name,first_name) <br>); <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>方式三:   创建表后设置主键<ul>
+<li>语法: alter table 表名 add primary key(主键字段列表…)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 方式三: 创建表后, 添加主键</span><br><span class="hljs-comment">-- 语法: alter table 表名 add primary key(字段列表);8</span><br><span class="hljs-comment">-- 需求3: 构建persons表, 表中有 last_name first_name address city字段, 构建后, 手动为last_name first_name 共同设置主键</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons3;<br><span class="hljs-keyword">create table</span> day03_constraint.persons3(<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) ,<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>)<br>);<br><br><span class="hljs-comment">-- 添加主键:</span><br><span class="hljs-keyword">alter table</span> day03_constraint.persons3 <span class="hljs-keyword">add</span> <span class="hljs-keyword">primary key</span>(last_name,first_name);<br><br></code></pre></td></tr></table></figure>
+
+<p>如何删除主键约束:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> Persons <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">PRIMARY KEY</span>;<br></code></pre></td></tr></table></figure>
+
+<p>验证主键约束:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 主键约束的相关演示:</span><br><span class="hljs-comment">-- 演示 向单一主键表数据处理</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons1 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>); # 初次插入 可以正常插入成功<br><br># 再次插入 直接报错 (主键冲突) Duplicate entry <span class="hljs-string">&#x27;1&#x27;</span> <span class="hljs-keyword">for</span> key <span class="hljs-string">&#x27;persons1.PRIMARY&#x27;</span><br># 错误原因: 在表中 已经有了一条主键为<span class="hljs-number">1</span>的数据, 再次插入主键为<span class="hljs-number">1</span>的数据, 就会报错<br><span class="hljs-keyword">insert into</span> day03_constraint.persons1 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-comment">-- 思考: 如果将ID更改为2 是否可以插入呢? 可以的, 只要主键不冲突, 也没有其他约束 就可以正常插入</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons1 <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-keyword">insert into</span> day03_constraint.persons1 <span class="hljs-keyword">values</span> (<span class="hljs-number">3</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br># 尝试 给主键设置为<span class="hljs-keyword">NULL</span>  直接报错(不能为<span class="hljs-keyword">NULL</span>)  <span class="hljs-keyword">Column</span> <span class="hljs-string">&#x27;id&#x27;</span> cannot be <span class="hljs-keyword">null</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons1 <span class="hljs-keyword">values</span> (<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 演示: 联合主键</span><br><span class="hljs-comment">-- 初次插入: 可以正常插入</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons2 <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;四&#x27;</span>,<span class="hljs-string">&#x27;李&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-comment">-- 再次插入:  报错   主键冲突  Duplicate entry &#x27;四-李&#x27; for key &#x27;persons2.PRIMARY&#x27;</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons2 <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;四&#x27;</span>,<span class="hljs-string">&#x27;李&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 思考 以下SQL 是否可以插入成功 :  可以成功的, 两个字段联合在一起 能够唯一的指定一条数据就可以</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons2 <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;五&#x27;</span>,<span class="hljs-string">&#x27;李&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-keyword">insert into</span> day03_constraint.persons2 <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;五&#x27;</span>,<span class="hljs-string">&#x27;王&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 思考 以下SQL 是否可以插入成功 : 非空性 是要求联合主键中的每个字段都要保证非空性</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons2 <span class="hljs-keyword">values</span> (<span class="hljs-keyword">NULL</span> ,<span class="hljs-string">&#x27;赵&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>); #  <span class="hljs-keyword">Column</span> <span class="hljs-string">&#x27;last_name&#x27;</span> cannot be <span class="hljs-keyword">null</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons2 <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;七&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>); # <span class="hljs-keyword">Column</span> <span class="hljs-string">&#x27;first_name&#x27;</span> cannot be <span class="hljs-keyword">null</span><br><br><span class="hljs-comment">-- 如何删除唯一约束呢?</span><br><span class="hljs-keyword">alter table</span>  day03_constraint.persons2 <span class="hljs-keyword">drop</span> <span class="hljs-keyword">primary key</span> ;<br><span class="hljs-comment">-- 如何去掉非空呢? 一会讲</span><br></code></pre></td></tr></table></figure>
+
+<p>自动增长列:</p>
+<ul>
+<li><p>我们通常希望在每次插入新记录时，数据库自动生成字段的值。</p>
+</li>
+<li><p>我们可以在表中使用 auto_increment（自动增长列）关键字，自动增长列类型必须是整形，自动增长列必须为键(一般是主键)。</p>
+</li>
+</ul>
+<p>演示:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 自动增长列: auto_increment</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    作用: 一旦给某个字段添加了此关键词,该列的值就会自动的增长, 每一次插入数据, 如果不给这一列赋值 即会自动增长</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">    使用要求:</span><br><span class="hljs-comment">        1- 列的数据类型必须为整数</span><br><span class="hljs-comment">        2- 列必须是一个键(一般就是主键)</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">-- 需求:  构建persons表, 表中有 id last_name first_name address city字段, 需要为id设置主键  同时要求ID是自动增长列</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons4;<br><span class="hljs-keyword">create table</span> day03_constraint.persons4(<br>  id <span class="hljs-type">int</span> <span class="hljs-keyword">primary key</span> auto_increment,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>)<br>);<br><br><span class="hljs-comment">-- 尝试插入数据:</span><br><span class="hljs-comment">-- 在插入数据的时候, 不给主键赋值, 此时就会基于自动增长方案执行, 默认从 1开始 每次增加 1</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons4 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-keyword">insert into</span> day03_constraint.persons4 (last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-comment">-- 如果给ID直接赋值会有什么效果呢?</span><br><span class="hljs-comment">-- 如果你自己赋值了, 按照你赋值的来, 前提要保证主键的唯一性</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons4 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-number">100</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 如果在重新添加数据呢. 不给主键赋值 会有效果呢?</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons4 (last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><br><span class="hljs-comment">-- 也可以设置自动增长列起始默认值:</span><br><span class="hljs-keyword">alter table</span> day03_constraint.persons4 AUTO_INCREMENT<span class="hljs-operator">=</span><span class="hljs-number">10000</span>;<br><span class="hljs-comment">-- ID就是从10000开始</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons4 (last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>扩展说明:  默认AUTO_INCREMENT 的开始值是 1，如果希望修改起始值，请使用下列 SQL</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter table</span> persons AUTO_INCREMENT<span class="hljs-operator">=</span><span class="hljs-number">100</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-非空约束"><a href="#2-非空约束" class="headerlink" title="2. 非空约束"></a>2. 非空约束</h3><p>NOT NULL 约束强制列不接受 NULL 值。 </p>
+<p>NOT NULL 约束强制字段始终包含值。这意味着，如果不向字段添加值，就无法插入新记录或者更新记录。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 非空约束: not null</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    特点:</span><br><span class="hljs-comment">      非空性  被标记列,该列的值必须保证不能为空</span><br><span class="hljs-comment">      非空约束可以在一个表中设置多个</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">-- 需求: 构建person表, 有 id、last_name、first_name、address、city 字段， 要求 id、last_name 不接受null值, 并验证测试</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons5;<br><span class="hljs-keyword">create table</span> day03_constraint.persons5(<br>  id <span class="hljs-type">int</span> <span class="hljs-keyword">not null</span> ,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">not null</span>,<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>)<br>);<br><br># 尝试添加数据<br># 添加正常的数据<br><span class="hljs-keyword">insert into</span> day03_constraint.persons5 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-comment">-- 尝试给ID 赋值为NULL ID有非空约束, 直接报错  Column &#x27;id&#x27; cannot be null</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons5 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><span class="hljs-comment">-- 尝试给last_name 赋值为NULL last_name有非空约束, Column &#x27;last_name&#x27; cannot be null</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons5 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 尝试给first_name赋值为NULL  first_name没有非空约束  可以插入</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons5 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;四&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 尝试给last_name 赋值为&#x27;&#x27;, 请问是否可以插入呢? 可以插入, 所以说 &#x27;&#x27; 和 NULL 是不一样的 认为 &#x27;&#x27;有值的, 只不过是一个空字符串而已</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons5 (id, last_name, first_name, address, city) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>);<br><br><span class="hljs-comment">-- 如何删除非空约束呢?</span><br><span class="hljs-comment">-- alter table day03_constraint.persons5 change id id int not null;  不写not null 就是删除约束 写了 就是增加该约束</span><br><span class="hljs-comment">-- modify 不能修改列名, 只能修改列的属性</span><br><span class="hljs-comment">-- alter table day03_constraint.persons5 modify id int;  不写not null 就是删除约束 写了 就是增加该约束</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-唯一约束"><a href="#3-唯一约束" class="headerlink" title="3. 唯一约束"></a>3. 唯一约束</h3><ul>
+<li><p>UNIQUE 约束唯一标识数据库表中的每条记录。</p>
+</li>
+<li><p>UNIQUE 和 PRIMARY KEY 约束均为列或列集合提供了唯一性的保证。</p>
+</li>
+<li><p>PRIMARY KEY 拥有自动定义的 UNIQUE 约束。</p>
+</li>
+<li><p>请注意，每个表可以有多个 UNIQUE 约束，但是每个表只能有一个 PRIMARY KEY 约束。</p>
+</li>
+<li><p>添加唯一约束:</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 唯一约束: UNIQUE</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">  特点:</span><br><span class="hljs-comment">    被标记的列, 必须保证唯一性, 不能有重复值 但是可以为NULL</span><br><span class="hljs-comment">    一个表中可以有多个唯一约束</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">-- 需求1: 构建person表, 有 id、last_name、first_name、address、city、phone 字段， 要求phone字段必须唯一, 并验证测试</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons6;<br><span class="hljs-keyword">create table</span> day03_constraint.persons6(<br>  id <span class="hljs-type">int</span>,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  phone <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">unique</span><br>);<br><br><span class="hljs-comment">-- 测试:</span><br><span class="hljs-comment">-- 正常添加:</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons6 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-string">&#x27;13814253621&#x27;</span>);<br><br><span class="hljs-comment">-- 尝试再次执行 : 触发了唯一键冲突(有重复值) 直接报错 Duplicate entry &#x27;13814253621&#x27; for key &#x27;persons6.phone&#x27;</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons6 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-string">&#x27;13814253621&#x27;</span>);<br><br><span class="hljs-comment">-- 尝试添加Null值: 可以接收NULL, 也可以接受多个NULL</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons6 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><br><br><span class="hljs-comment">-- 需求2: 构建person表, 有id、 last_name、first_name、address、city、phone 字段， 要求ID为主键， 同时姓名必须唯一 ,</span><br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons7;<br><span class="hljs-keyword">create table</span> day03_constraint.persons7(<br>  id <span class="hljs-type">int</span> <span class="hljs-keyword">primary key</span> ,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">unique</span> ,<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">unique</span>,<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  phone <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>)<br>);<br><br><span class="hljs-comment">-- 测试下</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons7 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><br><span class="hljs-comment">-- 再次执行: Duplicate entry &#x27;1&#x27; for key &#x27;persons7.PRIMARY&#x27;  会报错主键冲突错误</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons7 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><span class="hljs-comment">-- 修改主键  此时报错 Duplicate entry &#x27;三&#x27; for key &#x27;persons7.last_name&#x27; last_name唯一冲突</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons7 <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><span class="hljs-comment">-- 修改 last_name 内容, 此时报错 Duplicate entry &#x27;张&#x27; for key &#x27;persons7.first_name&#x27;  first_name唯一冲突</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons7 <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;四&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><span class="hljs-comment">-- 修改 first_name 内容, 正常插入</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons7 <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;四&#x27;</span>,<span class="hljs-string">&#x27;李&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><br><span class="hljs-comment">-- 想要插入 李五: 无法插入, 因为 李是重复  是不符合题意 现在的效果是 名和姓分别都不能重复</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons7 <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;五&#x27;</span>,<span class="hljs-string">&#x27;李&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><br><span class="hljs-comment">-- 如何解决呢? 联合唯一键方案  类似于 联合主键</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons8;<br><span class="hljs-keyword">create table</span> day03_constraint.persons8(<br>  id <span class="hljs-type">int</span> <span class="hljs-keyword">primary key</span> ,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) ,<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  phone <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  <span class="hljs-comment">-- [constraint 键名字] unique(字段列表)   键名字 默认和字段名字一致, 如果是联合唯一键,默认为第一个字段的名字,建议联合唯一手动设置唯一键名字</span><br>  <span class="hljs-keyword">constraint</span> last_first_unique  <span class="hljs-keyword">unique</span> (last_name,first_name)  # 联合唯一<br>);<br><br><span class="hljs-comment">-- 验证:</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons8 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><br><span class="hljs-comment">-- 修改主键和 其中一个名 或者 姓 观察是否可以成功</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons8 <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;四&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-keyword">NULL</span>);<br><br><span class="hljs-comment">-- 删除唯一约束</span><br><span class="hljs-comment">-- 格式: alter table 表名 drop key 键的名字;</span><br><span class="hljs-comment">-- 注意: 只有是键, 就必须使用 drop key 删除 不能使用change 或者 modify方案</span><br><span class="hljs-keyword">alter table</span> day03_constraint.persons8 <span class="hljs-keyword">drop</span> key last_first_unique;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-默认值"><a href="#4-默认值" class="headerlink" title="4. 默认值"></a>4. 默认值</h3><p>DEFAULT，默认值，插入数据时当不填写字段对应的值会使用默认值，如果填写时以填写为准。</p>
+<p>格式:  default 默认值</p>
+<p>默认值:  如果值是非数值类型的 或者 关键词,  必须使用 引号引起来</p>
+<p>放置位置: 字段的约束位置,如果有其他约束, 要求放置到其他约束的后面</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 默认值: default</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    DEFAULT，默认值，插入数据时当不填写字段对应的值会使用默认值，如果填写时以填写为准。</span><br><span class="hljs-comment">    格式:  default 默认值</span><br><span class="hljs-comment">    默认值:  如果值是非数值类型的 或者 关键词,  必须使用 引号引起来</span><br><span class="hljs-comment">    放置位置: 字段的约束位置,如果有其他约束, 要求放置到其他约束的后面</span><br><span class="hljs-comment">*/</span><br><span class="hljs-comment">-- 需求: 构建person表, 有 id、last_name、first_name、address、city、phone 字段, 要求city字段默认值为北京，设置后验证测试</span><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> day03_constraint.persons9;<br><span class="hljs-keyword">create table</span> day03_constraint.persons9(<br>  id <span class="hljs-type">int</span> <span class="hljs-keyword">primary key</span> ,<br>  last_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) ,<br>  first_name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  address <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>  city <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">default</span> <span class="hljs-string">&#x27;北京&#x27;</span>,<br>  phone <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>)<br>);<br><span class="hljs-comment">-- 测试</span><br><span class="hljs-comment">-- 完整数据插入:  你给定的数据是什么 就会插入什么 不会涉及到默认值</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons9 <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;南京市&#x27;</span>,<span class="hljs-string">&#x27;13812543625&#x27;</span>);<br><span class="hljs-comment">-- 对 city 不设置值 : 必须是不赋任何值, 哪怕NULL也不行</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons9(id, last_name, first_name, address, phone) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-string">&#x27;1381243625&#x27;</span>);<br><span class="hljs-comment">-- 如果这样写, 结果是什么呢?  NULL  因为 这是我们手动赋值的内容</span><br><span class="hljs-keyword">insert into</span> day03_constraint.persons9(id, last_name, first_name, address,city, phone) <span class="hljs-keyword">values</span> (<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;三&#x27;</span>,<span class="hljs-string">&#x27;张&#x27;</span>,<span class="hljs-string">&#x27;南京市雨花台区&#x27;</span>,<span class="hljs-keyword">NULL</span> ,<span class="hljs-string">&#x27;1381243625&#x27;</span>);<br><span class="hljs-comment">-- 删除默认值 与 删除not null方案是一致的</span><br></code></pre></td></tr></table></figure>
+
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/815538007/"><span>Previous</span><strong>Mysql DQL</strong></a>
+    
+    
+      <a href="/posts/2975889368/"><span>Next</span><strong>Mysql DML案例</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/3390242430/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/1672220019/">
+          <small>2023-10-25</small>
+          <strong>MySQL 函数分析</strong>
+        </a>
+      
+        <a href="/posts/1026605783/">
+          <small>2023-10-20</small>
+          <strong>MySQL 连接查询</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

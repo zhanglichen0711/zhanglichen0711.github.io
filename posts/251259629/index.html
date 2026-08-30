@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>MySQL DDL · 小黑程序员</title>
+  <meta name="description" content="MySQL DDL操作">
+  <meta name="author" content="Eason">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/251259629/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="MySQL DDL">
+  <meta property="og:description" content="MySQL DDL操作">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/251259629/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2023-08-24T16:00:00.000Z">
+  <meta property="article:modified_time" content="2026-08-30T02:30:53.596Z">
+  
+  <meta property="article:tag" content="MySQL">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MySQL DDL">
+  <meta name="twitter:description" content="MySQL DDL操作">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"MySQL DDL","description":"MySQL DDL操作","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/251259629/","datePublished":"2023-08-24T16:00:00.000Z","dateModified":"2026-08-30T02:30:53.596Z","author":{"@type":"Person","name":"Eason"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/251259629/"},"keywords":"MySQL"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="Eason">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">Eason</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">Search notes, models, methods...</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="WeChat" title="WeChat">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  
+  <nav class="top-tabs">
+    
+      <a class="" href="/notes/">学习笔记</a>
+    
+      <a class="" href="/thoughts/">行业思考</a>
+    
+      <a class="" href="/archives/">归档</a>
+    
+      <a class="" href="/about/">关于</a>
+    
+  </nav>
+  
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    
+    <button class="side-group" type="button" data-group="notes" aria-expanded="true">
+      <span class="side-group-name">学习笔记</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children open">
+      
+        <a class="side-item " href="/categories/Python/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+          <span>Python</span>
+        </a>
+      
+        <a class="side-item active" href="/categories/MySQL/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+          <span>MySQL</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Redis/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span>
+          <span>Redis</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Machine-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3-5 3 3 5-8"/></svg></span>
+          <span>Machine Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Deep-Learning/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+          <span>Deep Learning</span>
+        </a>
+      
+        <a class="side-item " href="/categories/NLP/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h12"/></svg></span>
+          <span>NLP</span>
+        </a>
+      
+        <a class="side-item " href="/categories/RAG/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.2-3.2"/><path d="M8 11h6"/></svg></span>
+          <span>RAG</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Milvus/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+          <span>Milvus</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Agent/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+          <span>Agent</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="thoughts" aria-expanded="false">
+      <span class="side-group-name">行业思考</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/categories/Dynamics/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+          <span>Dynamics</span>
+        </a>
+      
+        <a class="side-item " href="/categories/Job-Trends/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span>Job Trends</span>
+        </a>
+      
+        <a class="side-item " href="/categories/How-to-Learn/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+          <span>How to Learn</span>
+        </a>
+      
+    </div>
+  
+    
+    <button class="side-group" type="button" data-group="library" aria-expanded="false">
+      <span class="side-group-name">站点</span>
+      <svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="side-children ">
+      
+        <a class="side-item " href="/archives/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+          <span>Archives</span>
+        </a>
+      
+        <a class="side-item " href="/about/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+          <span>About</span>
+        </a>
+      
+        <a class="side-item " href="/links/">
+          <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+          <span>Friends</span>
+        </a>
+      
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/MySQL/">MySQL</a>
+      
+      <time datetime="2023-08-24T16:00:00.000Z">2023-08-25</time>
+      <span>4191 字 · 约 10 分钟</span>
+      
+        <span>更新于 2026-08-30</span>
+      
+    </div>
+    <h1>MySQL DDL</h1>
+    <p class="lede">MySQL DDL操作</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/MySQL/">#MySQL</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h2 id="一、DDL之数据库操作-database"><a href="#一、DDL之数据库操作-database" class="headerlink" title="一、DDL之数据库操作(database)"></a>一、DDL之数据库操作(database)</h2><h3 id="1-创建数据库"><a href="#1-创建数据库" class="headerlink" title="1. 创建数据库"></a>1. 创建数据库</h3><p>格式:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> database 数据库名;    #直接创建数据库，如果存在则报错<br><span class="hljs-keyword">create</span> database if <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span> 数据库名;  #如果数据库不存在则创建<br><span class="hljs-keyword">create</span> database 数据库名 <span class="hljs-keyword">character set</span> 字符集; #创建数据库时设置字符集（utf8  gbk 拉丁字符）<br></code></pre></td></tr></table></figure>
+
+<p>实例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- DDL语句:  数据库定义操作</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    建库操作:</span><br><span class="hljs-comment">        语法:</span><br><span class="hljs-comment">            create database [if not exists]  数据库名称 [character set 字符集编码];</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">        说明:</span><br><span class="hljs-comment">          [] : 表示内部的语法是可选的</span><br><span class="hljs-comment">          if not exists :  判断是否不存在</span><br><span class="hljs-comment">          character set 字符集编码 : 设置 库的字符集编码 默认为UTF8  一般为UTF8,  可选 GBK ......</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-comment">-- 需求1:  请创建一个 day01_db  数据库</span><br><span class="hljs-keyword">create</span> database day01_db; # 仅能执行一次, 如果库存在, 直接报错 Can<span class="hljs-string">&#x27;t create database &#x27;</span>day01_db<span class="hljs-string">&#x27;; database exists</span><br><span class="hljs-string"></span><br><span class="hljs-string">-- 需求2:  请创建一个 day01_db_test1  数据库 要求该数据库不存在的时候创建它</span><br><span class="hljs-string">create database if not exists day01_db_test1; # 如果库存在, 不执行 , 如果不存在 才会创建这个数据库  不会报错</span><br><span class="hljs-string">-- 需求3:  请创建一个 day01_db_test2  数据库 要求该数据库采用GBK编码格式</span><br><span class="hljs-string">create database if not exists day01_db_test2 character set gbk;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-查看所有数据库"><a href="#2-查看所有数据库" class="headerlink" title="2. 查看所有数据库"></a>2. 查看所有数据库</h3><p>格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> databases;<br></code></pre></td></tr></table></figure>
+
+<p>示例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 2- 查看所有的数据库</span><br><span class="hljs-keyword">show</span> databases;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-删除数据库"><a href="#3-删除数据库" class="headerlink" title="3. 删除数据库"></a>3. 删除数据库</h3><p>格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">drop</span> database [if <span class="hljs-keyword">exists</span>]  数据库名称<br></code></pre></td></tr></table></figure>
+
+<p>示例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 删除数据库:</span><br><span class="hljs-comment">-- 语法:  drop database [if exists] 库名称;</span><br><span class="hljs-comment">-- if exists 是否存在</span><br><span class="hljs-comment">-- 需求: 请删除 day01_db_test1库</span><br><span class="hljs-keyword">drop</span> database day01_db_test1;<br><br><span class="hljs-comment">-- 需求: 如果 day01_db_test2库 存在, 请将其删除, 删除后, 请重新创建改库, 并且将编码设置为UTF8</span><br><span class="hljs-keyword">drop</span> database if <span class="hljs-keyword">exists</span> day01_db_test2;<br><span class="hljs-keyword">create</span> database day01_db_test2 <span class="hljs-keyword">character set</span> utf8;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-使用数据库"><a href="#4-使用数据库" class="headerlink" title="4. 使用数据库"></a>4. 使用数据库</h3><p>格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">use 数据库名字;<br></code></pre></td></tr></table></figure>
+
+<p>示例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 使用数据库:</span><br><span class="hljs-comment">-- 语法:  use  库名;</span><br><span class="hljs-comment">-- 需求: 使用 day01_db</span><br>use day01_db;<br></code></pre></td></tr></table></figure>
+
+<h2 id="二、DDL之表操作-table"><a href="#二、DDL之表操作-table" class="headerlink" title="二、DDL之表操作(table)"></a>二、DDL之表操作(table)</h2><h3 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h3><p>数据类型是用于约束每一列应该存储什么类型的数据</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>类型名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>整数类型</strong></td>
+<td>tinyInt</td>
+<td>很小的整数</td>
+</tr>
+<tr>
+<td></td>
+<td>smallint</td>
+<td>小的整数</td>
+</tr>
+<tr>
+<td></td>
+<td>mediumint</td>
+<td>中等大小的整数</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>int</strong></td>
+<td>普通大小的整数</td>
+</tr>
+<tr>
+<td><strong>小数类型</strong></td>
+<td>float</td>
+<td>单精度浮点数</td>
+</tr>
+<tr>
+<td></td>
+<td>double</td>
+<td>双精度浮点数</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>decimal（m,d）</strong></td>
+<td>压缩严格的定点数  decimal(10,2)  m: 小数位+整数位最多可以有多少位  d: 必须保留多少位小数</td>
+</tr>
+<tr>
+<td><strong>日期类型</strong></td>
+<td>year</td>
+<td>YYYY  1901~2155</td>
+</tr>
+<tr>
+<td></td>
+<td>time</td>
+<td>HH:MM:SS  -838:59:59~838:59:59</td>
+</tr>
+<tr>
+<td></td>
+<td>date</td>
+<td>YYYY-MM-DD 1000-01-01~9999-12-3</td>
+</tr>
+<tr>
+<td></td>
+<td>datetime</td>
+<td>YYYY-MM-DD HH:MM:SS 1000-01-01 00:00:00~ 9999-12-31 23:59:59</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>timestamp</strong></td>
+<td>YYYY-MM-DD HH:MM:SS  1970<del>01</del>01 00:00:01 UTC~2038-01-19 03:14:07UTC  秒单位 时间戳</td>
+</tr>
+<tr>
+<td><strong>文本(字符串)、二进制类型</strong></td>
+<td>char(m)</td>
+<td>m为0~255之间的整数定长 char(10) tom</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>varchar(m)</strong></td>
+<td>m为0~65535之间的整数变长 varchar(10) tom</td>
+</tr>
+<tr>
+<td></td>
+<td>tinyblob</td>
+<td>允许长度0~255字节</td>
+</tr>
+<tr>
+<td></td>
+<td>blob</td>
+<td>允许长度0~65535字节</td>
+</tr>
+<tr>
+<td></td>
+<td>mediumblob</td>
+<td>允许长度0~167772150字节</td>
+</tr>
+<tr>
+<td></td>
+<td>longblob</td>
+<td>允许长度0~4294967295字节</td>
+</tr>
+<tr>
+<td></td>
+<td>tinytext</td>
+<td>允许长度0~255字节</td>
+</tr>
+<tr>
+<td></td>
+<td>text</td>
+<td>允许长度0~65535字节</td>
+</tr>
+<tr>
+<td></td>
+<td>mediumtext</td>
+<td>允许长度0~167772150字节</td>
+</tr>
+<tr>
+<td></td>
+<td>longtext</td>
+<td>允许长度0~4294967295字节</td>
+</tr>
+<tr>
+<td></td>
+<td>varbinary(m)</td>
+<td>允许长度0~M个字节的变长字节字符串</td>
+</tr>
+<tr>
+<td></td>
+<td>binary(m)</td>
+<td>允许长度0~m个字节的定长字节字符串</td>
+</tr>
+</tbody></table></div>
+<p>常见的数据类型:</p>
+<ul>
+<li>整数类型:  int</li>
+<li>小数类型: decimal(M,D) M：总共几位  D：小数有几位</li>
+<li>日期类型: datetime 和 timestamp</li>
+<li>文本类型:  varchar(长度)</li>
+</ul>
+<h3 id="2-创建数据表"><a href="#2-创建数据表" class="headerlink" title="2. 创建数据表"></a>2. 创建数据表</h3><p>基本语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create table</span> [if <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span>] 表名 (<br>    字段名<span class="hljs-number">1</span>  数据类型 [约束],<br>    字段名<span class="hljs-number">2</span>  数据类型 [约束]<br>    ...<br>) [<span class="hljs-keyword">character set</span> 字符集];<br><br><span class="hljs-comment">-- 类型：</span><br>      <span class="hljs-type">varchar</span>(n)字符串<span class="hljs-operator">/</span>文本<br>      <span class="hljs-type">int</span>   整形<br>      <span class="hljs-type">decimal</span>（m,d） 浮点<span class="hljs-operator">/</span>小数<br>      <span class="hljs-type">date</span>   时间<br>      <span class="hljs-type">timestamp</span>时间戳<br><span class="hljs-comment">-- 约束：</span><br>	  <span class="hljs-keyword">primary key</span>  主键，被主键修饰字段中的数据，不能重复、不能为<span class="hljs-keyword">null</span>。<br>	  一个表中应该有一个主键约束, 一个表有且只能有一个主键约束<br></code></pre></td></tr></table></figure>
+
+<p>需求1：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">--</span> <span class="hljs-string">创建表</span><br><span class="hljs-attr">/*</span><br>    <span class="hljs-attr">语法</span>:<span class="hljs-string"></span><br>    <span class="hljs-attr">create</span> <span class="hljs-string">table [if not exists]  表名(</span><br>        <span class="hljs-attr">字段名称1</span> <span class="hljs-string">数据类型 [约束],</span><br>        <span class="hljs-attr">字段名称2</span> <span class="hljs-string">数据类型 [约束]</span><br>        <span class="hljs-attr">.....</span><br><br>    <span class="hljs-attr">)</span> <span class="hljs-string">[character set 字符集编码];</span><br><br>    <span class="hljs-attr">常见的数据类型</span>:<span class="hljs-string"></span><br>        <span class="hljs-attr">整数</span>:  <span class="hljs-string">int</span><br>        <span class="hljs-attr">小数</span>: <span class="hljs-string">decimal(M,D)</span><br>        <span class="hljs-attr">日期</span>:  <span class="hljs-string">datetime  和 timestamp</span><br>        <span class="hljs-attr">字符串(文本)</span>:  <span class="hljs-string">varchar(长度)</span><br><br>    <span class="hljs-attr">约束</span>:<span class="hljs-string"></span><br>        <span class="hljs-attr">primary</span> <span class="hljs-string">key:  主键约束</span><br>            <span class="hljs-attr">被该关键词标注的列,</span> <span class="hljs-string">该列必须保证 非空 和 唯一</span><br>            <span class="hljs-attr">注意</span>: <span class="hljs-string">一个表应该有一个主键约束, 一个表有且只能有一个主键约束</span><br> <span class="hljs-attr">*/</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># 在day02_db的库中创建分类表 category</span><br><span class="hljs-comment"># 字段说明： 分类 id  分类名称 cname</span><br><span class="hljs-comment"># 数据案例： c01   Phone</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># 第一步 创建 day02_db库</span><br><span class="hljs-attr">drop</span> <span class="hljs-string">database if exists day02_db;</span><br><span class="hljs-attr">create</span>  <span class="hljs-string">database day02_db;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># 第二步: 使用库</span><br><span class="hljs-attr">use</span> <span class="hljs-string">day02_db;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># 第三步: 创建表</span><br><span class="hljs-attr">create</span> <span class="hljs-string">table if not exists category(</span><br>  <span class="hljs-attr">id</span> <span class="hljs-string">varchar(10) primary key ,</span><br>  <span class="hljs-attr">cname</span> <span class="hljs-string">varchar(20)</span><br><span class="hljs-attr">)</span> <span class="hljs-string">;</span><br></code></pre></td></tr></table></figure>
+
+<p>需求2：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"># 在day02_db的库中创建商品表 product</span><br><span class="hljs-comment"># 字段说明： 编号: pid 商品名称: pname 商品价格: price 商品分类: category_id</span><br><span class="hljs-comment"># 数据案例：1 苹果手机 3999.9 c01</span><br><br><span class="hljs-attr">create</span> <span class="hljs-string">table if not exists day02_db.product(</span><br>  <span class="hljs-attr">pid</span> <span class="hljs-string">int primary key ,</span><br>  <span class="hljs-attr">pname</span> <span class="hljs-string">varchar(50),</span><br>  <span class="hljs-attr">price</span> <span class="hljs-string">decimal(10,1),</span><br>  <span class="hljs-attr">category_id</span> <span class="hljs-string">varchar(10)</span><br><span class="hljs-attr">);</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-查看表"><a href="#3-查看表" class="headerlink" title="3. 查看表"></a>3. 查看表</h3><ul>
+<li>1- 查看数据库中的所有表：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">格式:  <span class="hljs-keyword">show</span> tables   <br>注意:  要先选择(使用)对应的库<br><span class="hljs-comment">-- 需求： 查看所有的表 (看当前使用的库下面的所有表, 如果要查看其他库, 请先使用use切换)</span><br><span class="hljs-keyword">show</span> tables ;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>2- 查看表结构：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 查看某个表的结构:</span><br><span class="hljs-comment">-- 格式: desc 表名;</span><br><br><span class="hljs-comment">-- 需求: 查看 分类表</span><br><span class="hljs-keyword">desc</span> day02_db.category;<br><br><span class="hljs-comment">-- 需求: 查看 商品表</span><br><span class="hljs-keyword">desc</span> day02_db.product;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-删除表"><a href="#4-删除表" class="headerlink" title="4. 删除表"></a>4. 删除表</h3><p>格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> [if <span class="hljs-keyword">exists</span>] 表名;<br></code></pre></td></tr></table></figure>
+
+<p>需求：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">--</span> <span class="hljs-string">删除表操作:</span><br><span class="hljs-attr">--</span> <span class="hljs-string">语法:  drop table [if exists] 表名;</span><br><br><span class="hljs-attr">--</span> <span class="hljs-string">删除 category, 如果表存在的情况下:</span><br><span class="hljs-attr">drop</span> <span class="hljs-string">table if exists day02_db.category;</span><br><br><span class="hljs-attr">--</span> <span class="hljs-string">删除 product, 并且重新创建该表</span><br><span class="hljs-attr">drop</span> <span class="hljs-string">table  if exists day02_db.product;</span><br><span class="hljs-attr">create</span> <span class="hljs-string">table day02_db.product(</span><br>  <span class="hljs-attr">pid</span> <span class="hljs-string">int primary key ,</span><br>  <span class="hljs-attr">pname</span> <span class="hljs-string">varchar(50),</span><br>  <span class="hljs-attr">price</span> <span class="hljs-string">decimal(10,1),</span><br>  <span class="hljs-attr">category_id</span> <span class="hljs-string">varchar(10)</span><br><span class="hljs-attr">);</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-修改表结构格式"><a href="#5-修改表结构格式" class="headerlink" title="5. 修改表结构格式"></a>5. 修改表结构格式</h3><ul>
+<li>1- 修改表: 添加列</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sql">格式：<br>	<span class="hljs-keyword">alter table</span> 表名 <span class="hljs-keyword">add</span> 新列名 类型(长度) [约束];	<br>	<br>	<br><span class="hljs-comment">-- 需求：为分类表添加一个新的字段为分类描述 describe varchar(20)</span><br><span class="hljs-comment">-- 字段\表名\库名 这些在定义的时候, 不能和SQL语句中关键词, 例如: create  table  database ....</span><br><span class="hljs-comment">-- 如果想要使用某个关键词作为普通名称, 可以在SQL中强制使用: 在该关键词的两端使用飘号标记即可</span><br><span class="hljs-comment">-- 符号: `    esc下面的这个键 1旁边这边键  在英文的格式下 按下即可打出来该符号</span><br><span class="hljs-keyword">alter table</span> day02_db.category <span class="hljs-keyword">add</span> `<span class="hljs-keyword">describe</span>` <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>);<br><br><span class="hljs-comment">-- 查看是否添加成功?</span><br><span class="hljs-keyword">desc</span> day02_db.category;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>2- 修改表: 修改列</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql">格式：<br>	<span class="hljs-keyword">alter table</span> 表名 change 旧列名 新列名 类型(长度) [约束];<br>	<br><br><span class="hljs-comment">-- 需求：为分类表的分类描述字段更换为  description  varchar(30)</span><br><span class="hljs-keyword">alter table</span>  day02_db.category change `<span class="hljs-keyword">describe</span>` description <span class="hljs-type">varchar</span>(<span class="hljs-number">30</span>);<br><br><span class="hljs-keyword">desc</span> day02_db.category;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>3- 修改表 删除列</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">格式:<br>	<span class="hljs-keyword">alter table</span> 表名 <span class="hljs-keyword">drop</span> 列名;	<br><span class="hljs-comment">-- 需求：删除分类表中description这列</span><br><span class="hljs-keyword">alter table</span> day02_db.category <span class="hljs-keyword">drop</span> description; <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>4- 修改表名</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql">格式：<br>	rename <span class="hljs-keyword">table</span> 旧表名 <span class="hljs-keyword">to</span> 新表名;<br><span class="hljs-comment">-- 需求：为分类表category改名成 category_test</span><br>rename <span class="hljs-keyword">table</span> day02_db.category <span class="hljs-keyword">to</span> day02_db.category_test;<br><br></code></pre></td></tr></table></figure>
+
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">On this page</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2214359849/"><span>Previous</span><strong>MySQL DDL案例</strong></a>
+    
+    
+      <a href="/posts/1055776341/"><span>Next</span><strong>MySQL：基本介绍</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>Related notes</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/3390242430/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/1672220019/">
+          <small>2023-10-25</small>
+          <strong>MySQL 函数分析</strong>
+        </a>
+      
+        <a href="/posts/1026605783/">
+          <small>2023-10-20</small>
+          <strong>MySQL 连接查询</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 Eason · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">About</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
