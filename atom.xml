@@ -186,11 +186,11 @@
     <category term="NLP" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/"/>
     
     
-    <category term="Transformer" scheme="https://zhanglichen0711.github.io/tags/Transformer/"/>
-    
     <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
     
     <category term="BERT" scheme="https://zhanglichen0711.github.io/tags/BERT/"/>
+    
+    <category term="Transformer" scheme="https://zhanglichen0711.github.io/tags/Transformer/"/>
     
   </entry>
   
