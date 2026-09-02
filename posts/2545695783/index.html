@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <title>决策树与随机森林当基线 · 小黑程序员</title>
-  <meta name="description" content="表格数据和要解释的任务，树模型仍有位置。">
+  <title>KNN算法与决策树 · 小黑程序员</title>
+  <meta name="description" content="KNN算法、决策树">
   <meta name="author" content="zhanglichen">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
@@ -13,20 +13,20 @@
 
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="小黑程序员">
-  <meta property="og:title" content="决策树与随机森林当基线">
-  <meta property="og:description" content="表格数据和要解释的任务，树模型仍有位置。">
+  <meta property="og:title" content="KNN算法与决策树">
+  <meta property="og:description" content="KNN算法、决策树">
   <meta property="og:url" content="https://zhanglichen0711.github.io/posts/2545695783/">
   <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
   <meta property="og:locale" content="zh_CN">
   
-  <meta property="article:published_time" content="2024-09-02T16:00:00.000Z">
+  <meta property="article:published_time" content="2023-09-02T16:00:00.000Z">
   
   <meta property="article:tag" content="机器学习">
   
   
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="决策树与随机森林当基线">
-  <meta name="twitter:description" content="表格数据和要解释的任务，树模型仍有位置。">
+  <meta name="twitter:title" content="KNN算法与决策树">
+  <meta name="twitter:description" content="KNN算法、决策树">
   <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
 
   <link rel="icon" href="/img/favicon.png">
@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="/css/style.css">
   
   
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"决策树与随机森林当基线","description":"表格数据和要解释的任务，树模型仍有位置。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/2545695783/","datePublished":"2024-09-02T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/2545695783/"},"keywords":"机器学习"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"KNN算法与决策树","description":"KNN算法、决策树","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/2545695783/","datePublished":"2023-09-02T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/2545695783/"},"keywords":"机器学习"}</script>
   <script>
     (function () {
       try {
@@ -501,11 +501,11 @@
       
         <a class="chip" href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">Machine Learning</a>
       
-      <time datetime="2024-09-02T16:00:00.000Z">2024-09-03</time>
-      <span>162 字 · 约 1 分钟</span>
+      <time datetime="2023-09-02T16:00:00.000Z">2023-09-03</time>
+      <span>4022 字 · 约 10 分钟</span>
     </div>
-    <h1>决策树与随机森林当基线</h1>
-    <p class="lede">表格数据和要解释的任务，树模型仍有位置。</p>
+    <h1>KNN算法与决策树</h1>
+    <p class="lede">KNN算法、决策树</p>
     
       <div class="tag-row">
         
@@ -525,9 +525,138 @@
 
   <div class="article-layout">
     <div class="article-body" id="articleBody">
-      <p>树模型把特征切成可讲的规则。随机森林降低单棵树的过拟合。线性回归给出「损失可导就能迭代」，KNN 提醒你距离和标准化不是细节。</p>
-<p>文本层级分类可以先跑随机森林和 FastText，再决定上 BERT。基线不是过时作业，它让后面的提升有参照。</p>
-<p>评估分类用混淆矩阵、精确率、召回率、F1，不要只报准确率。回归看误差分布，不要只看一个平均数。</p>
+      <h2 id="一、KNN算法"><a href="#一、KNN算法" class="headerlink" title="一、KNN算法"></a>一、KNN算法</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h3><ul>
+<li>K-近邻算法<ul>
+<li>寻找与最近邻的K个样本，对未知样本进行预测</li>
+<li>样本的距离通过欧氏距离来度量</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-分类"><a href="#2-分类" class="headerlink" title="2. 分类"></a>2. 分类</h3><ul>
+<li>基于选出的样本标签进行投票，出现次数最多的类别<ul>
+<li>sklearn.neighbors.KNeighborsClassifier</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-回归"><a href="#3-回归" class="headerlink" title="3. 回归"></a>3. 回归</h3><ul>
+<li>基于选出的样本标签，求其平均值<ul>
+<li>sklearn.neighbors.KNeighborsRegressor</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-API的使用"><a href="#4-API的使用" class="headerlink" title="4. API的使用"></a>4. API的使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 模型训练</span><br>model = KNeighborsClassifier() <span class="hljs-comment"># 默认值是5</span><br>model.fit(x,y)<br><span class="hljs-comment"># K值过小--过拟合</span><br><span class="hljs-comment"># K值过大--欠拟合</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-特征预处理"><a href="#5-特征预处理" class="headerlink" title="5. 特征预处理"></a>5. 特征预处理</h3><ul>
+<li><p>归一化</p>
+<ul>
+<li><p>sklearn.preprocessing.MinMaxScaler </p>
+</li>
+<li><p>异常点对结果的影响较大</p>
+</li>
+<li><p><img src="/%5Cimg%5Cimage-20260716182830384.png" alt="image-20260716182830384" loading="lazy" decoding="async"></p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># API调用</span><br>scaler = MinMaxScaler()<br>new_data = scaler.fit_transform(data)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>数据标准化<ul>
+<li>sklearn.preprocessing.StandardScaler</li>
+<li>少量的异常点对于平均值的影响并不大</li>
+<li><img src="/%5Cimg%5Cimage-20260716182852720.png" alt="image-20260716182852720" loading="lazy" decoding="async"></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># API调用</span><br>scaler1 = StandardScaler()  <span class="hljs-comment"># 一维转换</span><br>scaler2 = StandardScaler()  <span class="hljs-comment"># 多维转换</span><br><span class="hljs-comment"># 标准化</span><br>new_data1 = scaler1.fit_transform(np.array(l1).reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>))<br>new_data2 = scaler2.fit_transform(l2)<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-超参数选择"><a href="#6-超参数选择" class="headerlink" title="6. 超参数选择"></a>6. 超参数选择</h3><ul>
+<li>交叉验证<ul>
+<li>数据集的划分：将训练集划分为 n 份，一份做验证集，其他做训练集</li>
+</ul>
+</li>
+<li>网格搜索<ul>
+<li>获取最优的超参数<ul>
+<li>best_params_：最优超参</li>
+<li>best_score_：最好结果</li>
+<li>best_estimator_：最佳模型</li>
+<li>cv_results_：每次交叉验证后的验证集和训练集的准确率结果</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 导包</span><br><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_iris <span class="hljs-comment"># 鸢尾花案例</span><br><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score <span class="hljs-comment"># 结果准确率</span><br><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> train_test_split, GridSearchCV <span class="hljs-comment"># 交叉验证及网络搜索</span><br><span class="hljs-keyword">from</span> sklearn.neighbors <span class="hljs-keyword">import</span> KNeighborsClassifier <span class="hljs-comment"># KNN分类</span><br><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> StandardScaler <span class="hljs-comment"># 标准化</span><br><br>datasets = load_iris()<br><span class="hljs-comment"># 数据集划分</span><br>x_train, x_test, y_train, y_test = train_test_split(datasets.data, datasets.target, test_size=<span class="hljs-number">0.2</span>)<br><span class="hljs-comment"># 标准化</span><br>scaler = StandardScaler()<br><span class="hljs-comment"># 第一步需要fit_transform标准化，后续基于此标准转化</span><br>x_train = scaler.fit_transform(x_train)<br>x_test = scaler.transform(x_test)<br><span class="hljs-comment"># 模型实例化</span><br>model = KNeighborsClassifier(n_neighbors=<span class="hljs-number">5</span>)<br><span class="hljs-comment"># 交叉验证和网格搜索（算法思想）</span><br>new_model = GridSearchCV(estimator=model, param_grid=&#123;<span class="hljs-string">&#x27;n_neighbors&#x27;</span>: [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">10</span>)]&#125;, cv=<span class="hljs-number">4</span>)<br><span class="hljs-comment"># 模型训练</span><br>new_model.fit(x_train, y_train)<br><span class="hljs-comment"># 模型测试</span><br>y_pre = new_model.predict(x_test)<br><span class="hljs-built_in">print</span>(accuracy_score(y_test, y_pre))<br><span class="hljs-comment"># 最优超参</span><br><span class="hljs-built_in">print</span>(new_model.best_params_)<br><span class="hljs-comment"># 最高分</span><br><span class="hljs-built_in">print</span>(new_model.best_score_)<br><span class="hljs-comment"># 最佳模型</span><br><span class="hljs-built_in">print</span>(new_model.best_estimator_)<br><span class="hljs-comment"># cv结果</span><br><span class="hljs-built_in">print</span>(new_model.cv_results_)<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-分类问题评估"><a href="#7-分类问题评估" class="headerlink" title="7. 分类问题评估"></a>7. 分类问题评估</h3><ul>
+<li><strong>混淆矩阵</strong><ul>
+<li>TP：真实值是正例 ，预测值为正例（正确）</li>
+<li>FN：真实值是正例，预测值为反例（错误）</li>
+<li>FP：真实值是反例，预测值为正例（错误）</li>
+<li>TN：真实值是反例，预测值为反例（正确）</li>
+</ul>
+</li>
+</ul>
+<p><img src="/%5Cimg%5Cimage-20260718143752574.png" alt="image-20260718143752574" loading="lazy" decoding="async"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#混淆矩阵</span><br><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> confusion_matrix<br>y_true=[<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>]<br>y_pre1=[<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>]<br>y_pre2=[<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;恶&#x27;</span>,<span class="hljs-string">&#x27;良&#x27;</span>]<br><span class="hljs-built_in">print</span>(confusion_matrix(y_true, y_pre1, labels=[<span class="hljs-string">&#x27;恶&#x27;</span>, <span class="hljs-string">&#x27;良&#x27;</span>]))<br>[[<span class="hljs-number">3</span> <span class="hljs-number">3</span>]<br> [<span class="hljs-number">0</span> <span class="hljs-number">4</span>]]<br><span class="hljs-built_in">print</span>(confusion_matrix(y_true, y_pre2, labels=[<span class="hljs-string">&#x27;恶&#x27;</span>, <span class="hljs-string">&#x27;良&#x27;</span>]))<br>[[<span class="hljs-number">6</span> <span class="hljs-number">0</span>]<br> [<span class="hljs-number">3</span> <span class="hljs-number">1</span>]]<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>精确率𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛</strong><ul>
+<li>查准</li>
+<li>P &#x3D; TP &#x2F; ( TP + FP )：猜对的正样本 &#x2F; 预测的正样本数量</li>
+</ul>
+</li>
+<li><strong>召回率𝑅𝑒𝑐𝑎𝑙𝑙</strong><ul>
+<li>查全</li>
+<li>P &#x3D; TP &#x2F; ( TP + FN )：猜对的正样本 &#x2F; 真实的正样本数量</li>
+</ul>
+</li>
+<li><strong>F1-score</strong><ul>
+<li>2 * 精确率 * 召回率 &#x2F; (精确率+召回率)</li>
+<li>综合能力、综合稳定性指标</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># API</span><br><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score,precision_score,recall_score,f1_score<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;准确率:&#x27;</span>,accuracy_score(y_true, y_pre1))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;精确率:&#x27;</span>,precision_score(y_true, y_pre1, pos_label=<span class="hljs-string">&#x27;恶&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;召回率:&#x27;</span>,recall_score(y_true, y_pre1, pos_label=<span class="hljs-string">&#x27;恶&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;F1:&#x27;</span>,f1_score(y_true, y_pre1, pos_label=<span class="hljs-string">&#x27;恶&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<h2 id="二、决策树"><a href="#二、决策树" class="headerlink" title="二、决策树"></a>二、决策树</h2><h3 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理"></a>1.原理</h3><ul>
+<li>强制二分</li>
+<li>通过基尼值选择最优的划分节点<ul>
+<li>gini值&#x3D;2(p正)(1-p正)</li>
+<li>基尼值越小划分质量越高</li>
+</ul>
+</li>
+<li>重复逐层划分</li>
+<li>剪枝，防止过拟合</li>
+</ul>
+<h3 id="2-API"><a href="#2-API" class="headerlink" title="2.API"></a>2.API</h3><ul>
+<li>Criterion:特征选择标准</li>
+<li>min_samples_split:内部节点再划分所需最小样本数</li>
+<li>min_samples_leaf:叶子节点最少样本数</li>
+<li>max_depth:决策树最大深度</li>
+<li>model &#x3D; DecisionTreeClassifier()</li>
+<li>独热编码<ul>
+<li>one-hot</li>
+<li>new_x &#x3D; pd.get_dummise(x)  把字符串改成布尔值</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-波士顿房价预测"><a href="#3-波士顿房价预测" class="headerlink" title="3. 波士顿房价预测"></a>3. 波士顿房价预测</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeRegressor<br><span class="hljs-comment"># 1.数据获取</span><br>raw_df = pd.read_csv(<span class="hljs-string">&#x27;Boston.txt&#x27;</span>, sep=<span class="hljs-string">r&quot;\s+&quot;</span>, skiprows=<span class="hljs-number">22</span>, header=<span class="hljs-literal">None</span>)<br><span class="hljs-comment"># 2.数据预处理(划分训练集和测试集)</span><br>x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=<span class="hljs-number">0.2</span>)<br><span class="hljs-comment"># 3.特征工程(标准化)</span><br>transfer = StandardScaler()<br>x_train = transfer.fit_transform(x_train)<br>x_test = transfer.transform(x_test)<br><span class="hljs-comment"># 4.模型训练</span><br>model = DecisionTreeRegressor()<br>model.fit(x_train, y_train)<br><span class="hljs-comment"># 5.模型预测</span><br>y_pre = model.predict(x_test)<br><span class="hljs-comment"># 6.模型评估</span><br><span class="hljs-comment"># 分类：混淆矩阵、准确率、精确率、召回率、F1值</span><br><span class="hljs-comment"># 回归：MAE、MSE、RMSE、R2</span><br><span class="hljs-comment"># MAE</span><br><span class="hljs-built_in">print</span>(mean_absolute_error(y_test, y_pre))<br><span class="hljs-comment"># MSE</span><br><span class="hljs-built_in">print</span>(mean_squared_error(y_test, y_pre))<br><span class="hljs-comment"># RMSE</span><br><span class="hljs-built_in">print</span>(root_mean_squared_error(y_test, y_pre))<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-剪枝"><a href="#4-剪枝" class="headerlink" title="4. 剪枝"></a>4. 剪枝</h3><ul>
+<li>预剪枝<ul>
+<li>决策树生成过程中，每个节点划分前进行</li>
+<li>训练测试时间少，有欠拟合风险</li>
+<li>兜底</li>
+</ul>
+</li>
+<li>后剪枝<ul>
+<li>先生成完整决策树，自底向上地对非叶节点进行考察</li>
+<li>训练测试时间多，泛化能力强</li>
+<li>优化</li>
+</ul>
+</li>
+</ul>
 
     </div>
     
@@ -540,10 +669,10 @@
 
   <nav class="post-nav">
     
-      <a href="/posts/722644444/"><span>上一篇</span><strong>一套能复用的建模流程</strong></a>
+      <a href="/posts/3605742090/"><span>上一篇</span><strong>Mysql DML</strong></a>
     
     
-      <a href="/posts/3384363459/"><span>下一篇</span><strong>vLLM：连续批处理让推理更快</strong></a>
+      <a href="/posts/2214359849/"><span>下一篇</span><strong>MySQL DDL案例</strong></a>
     
   </nav>
 </article>
@@ -554,18 +683,18 @@
     <div class="related-grid">
       
         <a href="/posts/722644444/">
-          <small>2024-09-25</small>
-          <strong>一套能复用的建模流程</strong>
+          <small>2023-09-25</small>
+          <strong>集成学习与聚类算法</strong>
         </a>
       
         <a href="/posts/1579001655/">
-          <small>2024-08-08</small>
-          <strong>线性回归与 KNN：两条入门路线</strong>
+          <small>2023-08-08</small>
+          <strong>线性回归问题</strong>
         </a>
       
         <a href="/posts/920923342/">
-          <small>2024-07-12</small>
-          <strong>人工智能、机器学习和深度学习</strong>
+          <small>2023-07-12</small>
+          <strong>机器学习基本概念</strong>
         </a>
       
     </div>

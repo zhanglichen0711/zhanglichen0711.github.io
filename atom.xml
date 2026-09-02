@@ -6,7 +6,7 @@
   <link href="https://zhanglichen0711.github.io/atom.xml" rel="self"/>
   
   <link href="https://zhanglichen0711.github.io/"/>
-  <updated>2026-08-30T14:09:33.246Z</updated>
+  <updated>2026-09-01T03:20:36.372Z</updated>
   <id>https://zhanglichen0711.github.io/</id>
   
   <author>
@@ -17,79 +17,439 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>应用开发岗位在增加什么、减少什么</title>
-    <link href="https://zhanglichen0711.github.io/posts/668636511/"/>
-    <id>https://zhanglichen0711.github.io/posts/668636511/</id>
-    <published>2026-08-25T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.246Z</updated>
+    <title>资源与工具推荐</title>
+    <link href="https://zhanglichen0711.github.io/posts/1914493002/"/>
+    <id>https://zhanglichen0711.github.io/posts/1914493002/</id>
+    <published>2026-12-23T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.372Z</updated>
     
     
-    <summary type="html">纯页面封装和只会调聊天 API 都在被压价。中间态是系统集成、评测和数据闭环。</summary>
+    <summary type="html">资料与工具的清单。</summary>
+    
+    
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="学习" scheme="https://zhanglichen0711.github.io/tags/%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="资源" scheme="https://zhanglichen0711.github.io/tags/%E8%B5%84%E6%BA%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>学习路线图整理</title>
+    <link href="https://zhanglichen0711.github.io/posts/1079459422/"/>
+    <id>https://zhanglichen0711.github.io/posts/1079459422/</id>
+    <published>2026-12-21T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.370Z</updated>
+    
+    
+    <summary type="html">一套可执行的学习路径。</summary>
+    
+    
+    
+    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="学习" scheme="https://zhanglichen0711.github.io/tags/%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="路线" scheme="https://zhanglichen0711.github.io/tags/%E8%B7%AF%E7%BA%BF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>薪资与城市分布</title>
+    <link href="https://zhanglichen0711.github.io/posts/585194866/"/>
+    <id>https://zhanglichen0711.github.io/posts/585194866/</id>
+    <published>2026-12-19T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.369Z</updated>
+    
+    
+    <summary type="html">不同城市的岗位差异。</summary>
     
     
     
     <category term="就业趋势" scheme="https://zhanglichen0711.github.io/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/"/>
     
     
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
+    <category term="就业" scheme="https://zhanglichen0711.github.io/tags/%E5%B0%B1%E4%B8%9A/"/>
     
-    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/tags/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
+    <category term="薪资" scheme="https://zhanglichen0711.github.io/tags/%E8%96%AA%E8%B5%84/"/>
     
   </entry>
   
   <entry>
-    <title>新模型发布时，我只看这五个问题</title>
-    <link href="https://zhanglichen0711.github.io/posts/4046898793/"/>
-    <id>https://zhanglichen0711.github.io/posts/4046898793/</id>
-    <published>2026-08-22T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.232Z</updated>
+    <title>岗位技能要求变化</title>
+    <link href="https://zhanglichen0711.github.io/posts/1673785459/"/>
+    <id>https://zhanglichen0711.github.io/posts/1673785459/</id>
+    <published>2026-12-17T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.368Z</updated>
     
     
-    <summary type="html">发布会默认会赢自己的榜。应用开发者要看上下文、工具调用、价格、开放程度，以及自己那 30 道题。</summary>
+    <summary type="html">招聘要求透露的信号。</summary>
+    
+    
+    
+    <category term="就业趋势" scheme="https://zhanglichen0711.github.io/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/"/>
+    
+    
+    <category term="就业" scheme="https://zhanglichen0711.github.io/tags/%E5%B0%B1%E4%B8%9A/"/>
+    
+    <category term="技能" scheme="https://zhanglichen0711.github.io/tags/%E6%8A%80%E8%83%BD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>行业格局与竞争</title>
+    <link href="https://zhanglichen0711.github.io/posts/2052480022/"/>
+    <id>https://zhanglichen0711.github.io/posts/2052480022/</id>
+    <published>2026-12-15T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.366Z</updated>
+    
+    
+    <summary type="html">各家厂商的路线与竞争。</summary>
     
     
     
     <category term="行业发展" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/"/>
     
     
-    <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
+    <category term="行业" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A/"/>
+    
+    <category term="格局" scheme="https://zhanglichen0711.github.io/tags/%E6%A0%BC%E5%B1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>大模型开源生态观察</title>
+    <link href="https://zhanglichen0711.github.io/posts/3299246377/"/>
+    <id>https://zhanglichen0711.github.io/posts/3299246377/</id>
+    <published>2026-12-13T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.365Z</updated>
+    
+    
+    <summary type="html">开源模型的格局与趋势。</summary>
+    
+    
+    
+    <category term="行业发展" scheme="https://zhanglichen0711.github.io/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/"/>
+    
+    
+    <category term="行业" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A/"/>
+    
+    <category term="开源" scheme="https://zhanglichen0711.github.io/tags/%E5%BC%80%E6%BA%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Prompt 注入防护</title>
+    <link href="https://zhanglichen0711.github.io/posts/3916158976/"/>
+    <id>https://zhanglichen0711.github.io/posts/3916158976/</id>
+    <published>2026-12-11T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.362Z</updated>
+    
+    
+    <summary type="html">把用户输入当不可信数据。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Safety" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/"/>
+    
+    
+    <category term="安全" scheme="https://zhanglichen0711.github.io/tags/%E5%AE%89%E5%85%A8/"/>
+    
+    <category term="注入" scheme="https://zhanglichen0711.github.io/tags/%E6%B3%A8%E5%85%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LLM 成本监控</title>
+    <link href="https://zhanglichen0711.github.io/posts/4249218952/"/>
+    <id>https://zhanglichen0711.github.io/posts/4249218952/</id>
+    <published>2026-12-09T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.361Z</updated>
+    
+    
+    <summary type="html">token 成本可视化。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Observability" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/"/>
+    
+    
+    <category term="可观测" scheme="https://zhanglichen0711.github.io/tags/%E5%8F%AF%E8%A7%82%E6%B5%8B/"/>
+    
+    <category term="成本" scheme="https://zhanglichen0711.github.io/tags/%E6%88%90%E6%9C%AC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Langfuse 追踪</title>
+    <link href="https://zhanglichen0711.github.io/posts/2176830420/"/>
+    <id>https://zhanglichen0711.github.io/posts/2176830420/</id>
+    <published>2026-12-07T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.359Z</updated>
+    
+    
+    <summary type="html">记录每次 LLM 调用。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Observability" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/"/>
+    
+    
+    <category term="可观测" scheme="https://zhanglichen0711.github.io/tags/%E5%8F%AF%E8%A7%82%E6%B5%8B/"/>
+    
+    <category term="Langfuse" scheme="https://zhanglichen0711.github.io/tags/Langfuse/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kubernetes 滚动更新</title>
+    <link href="https://zhanglichen0711.github.io/posts/566751290/"/>
+    <id>https://zhanglichen0711.github.io/posts/566751290/</id>
+    <published>2026-12-05T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.358Z</updated>
+    
+    
+    <summary type="html">零停机发布。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Kubernetes" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/"/>
+    
+    
+    <category term="Kubernetes" scheme="https://zhanglichen0711.github.io/tags/Kubernetes/"/>
+    
+    <category term="滚动更新" scheme="https://zhanglichen0711.github.io/tags/%E6%BB%9A%E5%8A%A8%E6%9B%B4%E6%96%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kubernetes Service 与 Ingress</title>
+    <link href="https://zhanglichen0711.github.io/posts/3036327783/"/>
+    <id>https://zhanglichen0711.github.io/posts/3036327783/</id>
+    <published>2026-12-03T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.357Z</updated>
+    
+    
+    <summary type="html">稳定的访问入口。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Kubernetes" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/"/>
+    
+    
+    <category term="Kubernetes" scheme="https://zhanglichen0711.github.io/tags/Kubernetes/"/>
+    
+    <category term="Service" scheme="https://zhanglichen0711.github.io/tags/Service/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>容器化 LLM 服务</title>
+    <link href="https://zhanglichen0711.github.io/posts/1568435425/"/>
+    <id>https://zhanglichen0711.github.io/posts/1568435425/</id>
+    <published>2026-12-01T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.356Z</updated>
+    
+    
+    <summary type="html">把模型服务装进容器。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Docker" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/"/>
+    
+    
+    <category term="Docker" scheme="https://zhanglichen0711.github.io/tags/Docker/"/>
+    
+    <category term="LLM" scheme="https://zhanglichen0711.github.io/tags/LLM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker Compose 多服务编排</title>
+    <link href="https://zhanglichen0711.github.io/posts/4189602194/"/>
+    <id>https://zhanglichen0711.github.io/posts/4189602194/</id>
+    <published>2026-11-29T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.354Z</updated>
+    
+    
+    <summary type="html">一次启动多个容器。</summary>
+    
+    
+    
+    <category term="工程化与运维" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="Docker" scheme="https://zhanglichen0711.github.io/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/"/>
+    
+    
+    <category term="Docker" scheme="https://zhanglichen0711.github.io/tags/Docker/"/>
+    
+    <category term="Compose" scheme="https://zhanglichen0711.github.io/tags/Compose/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>视觉语言模型 VLM</title>
+    <link href="https://zhanglichen0711.github.io/posts/3205351054/"/>
+    <id>https://zhanglichen0711.github.io/posts/3205351054/</id>
+    <published>2026-11-27T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.352Z</updated>
+    
+    
+    <summary type="html">图文理解与问答。</summary>
+    
+    
+    
+    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
+    
+    <category term="Multimodal" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/"/>
+    
+    
+    <category term="多模态" scheme="https://zhanglichen0711.github.io/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/"/>
+    
+    <category term="VLM" scheme="https://zhanglichen0711.github.io/tags/VLM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LLM-as-judge 评测</title>
+    <link href="https://zhanglichen0711.github.io/posts/1799469384/"/>
+    <id>https://zhanglichen0711.github.io/posts/1799469384/</id>
+    <published>2026-11-25T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.348Z</updated>
+    
+    
+    <summary type="html">用模型给模型打分。</summary>
+    
+    
+    
+    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
+    
+    <category term="Evaluation" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/"/>
+    
     
     <category term="评测" scheme="https://zhanglichen0711.github.io/tags/%E8%AF%84%E6%B5%8B/"/>
     
-  </entry>
-  
-  <entry>
-    <title>先用平台验证，再把链路拿回自己手里</title>
-    <link href="https://zhanglichen0711.github.io/posts/1713945516/"/>
-    <id>https://zhanglichen0711.github.io/posts/1713945516/</id>
-    <published>2026-08-21T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.219Z</updated>
-    
-    
-    <summary type="html">低代码适合证明有人真的会用。自研适合证明你能改切分、加评测、做隔离。两者是阶段，不是站队。</summary>
-    
-    
-    
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
-    
-    <category term="行业动态" scheme="https://zhanglichen0711.github.io/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/"/>
+    <category term="Evaluation" scheme="https://zhanglichen0711.github.io/tags/Evaluation/"/>
     
   </entry>
   
   <entry>
-    <title>RAG 工程闭环：从切分、混合检索到评测和隔离</title>
-    <link href="https://zhanglichen0711.github.io/posts/1988079953/"/>
-    <id>https://zhanglichen0711.github.io/posts/1988079953/</id>
-    <published>2026-08-20T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.120Z</updated>
+    <title>思维链 CoT</title>
+    <link href="https://zhanglichen0711.github.io/posts/2189955734/"/>
+    <id>https://zhanglichen0711.github.io/posts/2189955734/</id>
+    <published>2026-11-23T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.346Z</updated>
     
     
-    <summary type="html">最小闭环是「切得可引用、找得回来、必须带出处」。可上线的闭环还要加上意图、版本、隔离、评测和观测。</summary>
+    <summary type="html">让模型分步推理。</summary>
+    
+    
+    
+    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
+    
+    <category term="Prompt Engineering" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/"/>
+    
+    
+    <category term="Prompt" scheme="https://zhanglichen0711.github.io/tags/Prompt/"/>
+    
+    <category term="CoT" scheme="https://zhanglichen0711.github.io/tags/CoT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LangGraph 复杂状态图</title>
+    <link href="https://zhanglichen0711.github.io/posts/1674850611/"/>
+    <id>https://zhanglichen0711.github.io/posts/1674850611/</id>
+    <published>2026-11-21T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.345Z</updated>
+    
+    
+    <summary type="html">分支、循环与回退。</summary>
+    
+    
+    
+    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
+    
+    <category term="LangGraph" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/"/>
+    
+    
+    <category term="LangGraph" scheme="https://zhanglichen0711.github.io/tags/LangGraph/"/>
+    
+    <category term="状态机" scheme="https://zhanglichen0711.github.io/tags/%E7%8A%B6%E6%80%81%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Agent 记忆管理</title>
+    <link href="https://zhanglichen0711.github.io/posts/3481117201/"/>
+    <id>https://zhanglichen0711.github.io/posts/3481117201/</id>
+    <published>2026-11-19T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.344Z</updated>
+    
+    
+    <summary type="html">短期与长期记忆设计。</summary>
+    
+    
+    
+    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+    <category term="记忆" scheme="https://zhanglichen0711.github.io/tags/%E8%AE%B0%E5%BF%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>多 Agent 协作</title>
+    <link href="https://zhanglichen0711.github.io/posts/3134572471/"/>
+    <id>https://zhanglichen0711.github.io/posts/3134572471/</id>
+    <published>2026-11-17T16:00:00.000Z</published>
+    <updated>2026-09-01T03:20:36.342Z</updated>
+    
+    
+    <summary type="html">多个 Agent 分工协作。</summary>
+    
+    
+    
+    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
+    
+    
+    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
+    
+    <category term="多智能体" scheme="https://zhanglichen0711.github.io/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RAG 混合检索与 rerank</title>
+    <link href="https://zhanglichen0711.github.io/posts/112566362/"/>
+    <id>https://zhanglichen0711.github.io/posts/112566362/</id>
+    <published>2026-11-15T16:00:00.000Z</published>
+    <updated>2026-09-01T06:35:48.861Z</updated>
+    
+    
+    <summary type="html">关键词 + 向量双路召回，再用重排模型精挑，别只调 embedding。</summary>
     
     
     
@@ -100,361 +460,9 @@
     
     <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
     
-    <category term="FastAPI" scheme="https://zhanglichen0711.github.io/tags/FastAPI/"/>
+    <category term="混合检索" scheme="https://zhanglichen0711.github.io/tags/%E6%B7%B7%E5%90%88%E6%A3%80%E7%B4%A2/"/>
     
-    <category term="Milvus" scheme="https://zhanglichen0711.github.io/tags/Milvus/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>从哪里开始学 AI 应用开发</title>
-    <link href="https://zhanglichen0711.github.io/posts/2182010915/"/>
-    <id>https://zhanglichen0711.github.io/posts/2182010915/</id>
-    <published>2026-08-17T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.208Z</updated>
-    
-    
-    <summary type="html">不要从论文目录学起。先选一条能上线的链路：数据、检索、调用、评测。低代码可以验证价值，但不能代替对链路的理解。</summary>
-    
-    
-    
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/tags/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>文本层级分类，以及和检测结果怎么融合</title>
-    <link href="https://zhanglichen0711.github.io/posts/2613703373/"/>
-    <id>https://zhanglichen0711.github.io/posts/2613703373/</id>
-    <published>2026-08-15T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.102Z</updated>
-    
-    
-    <summary type="html">先用 FastText / 随机森林打基线，再用 BERT 做层级分类；和视觉结果冲突时，用置信度决策，而不是让生成模型仲裁一切。</summary>
-    
-    
-    
-    <category term="模型训练与微调" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/"/>
-    
-    <category term="NLP" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/"/>
-    
-    
-    <category term="深度学习" scheme="https://zhanglichen0711.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>哪些岗位在增加，哪些在变便宜</title>
-    <link href="https://zhanglichen0711.github.io/posts/1812080006/"/>
-    <id>https://zhanglichen0711.github.io/posts/1812080006/</id>
-    <published>2026-08-11T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.202Z</updated>
-    
-    
-    <summary type="html">中间态是集成、评测和成本控制。</summary>
-    
-    
-    
-    <category term="就业趋势" scheme="https://zhanglichen0711.github.io/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/"/>
-    
-    
-    <category term="岗位趋势" scheme="https://zhanglichen0711.github.io/tags/%E5%B2%97%E4%BD%8D%E8%B6%8B%E5%8A%BF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>NLP 笔记：从分词、词向量到 Transformer</title>
-    <link href="https://zhanglichen0711.github.io/posts/55663161/"/>
-    <id>https://zhanglichen0711.github.io/posts/55663161/</id>
-    <published>2026-08-09T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.084Z</updated>
-    
-    
-    <summary type="html">预处理决定模型吃进什么；RNN 解决序列；Attention 和 Transformer 解决长距离依赖。BERT 和 GPT 是同一骨架的两种用法。</summary>
-    
-    
-    
-    <category term="模型训练与微调" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/"/>
-    
-    <category term="NLP" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/"/>
-    
-    
-    <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
-    
-    <category term="BERT" scheme="https://zhanglichen0711.github.io/tags/BERT/"/>
-    
-    <category term="Transformer" scheme="https://zhanglichen0711.github.io/tags/Transformer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>先看调用轨迹，再调 Prompt</title>
-    <link href="https://zhanglichen0711.github.io/posts/4201707697/"/>
-    <id>https://zhanglichen0711.github.io/posts/4201707697/</id>
-    <published>2026-08-05T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.068Z</updated>
-    
-    
-    <summary type="html">落盘 thought、tool、observation，问题会从「模型不行」变成可修的步骤。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Agent 的五种模式，以及何时不要用</title>
-    <link href="https://zhanglichen0711.github.io/posts/263983963/"/>
-    <id>https://zhanglichen0711.github.io/posts/263983963/</id>
-    <published>2026-07-15T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.062Z</updated>
-    
-    
-    <summary type="html">自主程度不是职称。能写死的顺序就不要自由规划。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>从机器学习术语到反向传播：深度学习笔记</title>
-    <link href="https://zhanglichen0711.github.io/posts/2959966780/"/>
-    <id>https://zhanglichen0711.github.io/posts/2959966780/</id>
-    <published>2026-07-11T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.040Z</updated>
-    
-    
-    <summary type="html">线性回归、树模型和 KNN 解决的是「怎么学」；张量、反向传播和优化器解决的是「深层网络怎么更新」。</summary>
-    
-    
-    
-    <category term="模型训练与微调" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/"/>
-    
-    <category term="Deep Learning" scheme="https://zhanglichen0711.github.io/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/"/>
-    
-    
-    <category term="深度学习" scheme="https://zhanglichen0711.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="NLP" scheme="https://zhanglichen0711.github.io/tags/NLP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Agent 笔记：Function Call、MCP 和五种模式</title>
-    <link href="https://zhanglichen0711.github.io/posts/3379738813/"/>
-    <id>https://zhanglichen0711.github.io/posts/3379738813/</id>
-    <published>2026-07-05T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.030Z</updated>
-    
-    
-    <summary type="html">Function Call 解决「模型如何提出一次调用」；MCP 解决「工具如何描述自己」；Agent 模式决定要不要规划、反思和协作。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-    <category term="MCP" scheme="https://zhanglichen0711.github.io/tags/MCP/"/>
-    
-    <category term="工具调用" scheme="https://zhanglichen0711.github.io/tags/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MCP：让工具自己描述自己</title>
-    <link href="https://zhanglichen0711.github.io/posts/3291806266/"/>
-    <id>https://zhanglichen0711.github.io/posts/3291806266/</id>
-    <published>2026-06-21T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.007Z</updated>
-    
-    
-    <summary type="html">工具作者最清楚输入输出，不应由每个调用方重写卡片。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-    <category term="MCP" scheme="https://zhanglichen0711.github.io/tags/MCP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>工具描述质量决定调用稳定性</title>
-    <link href="https://zhanglichen0711.github.io/posts/3852160933/"/>
-    <id>https://zhanglichen0711.github.io/posts/3852160933/</id>
-    <published>2026-06-07T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:32.982Z</updated>
-    
-    
-    <summary type="html">每个应用自己写一遍说明书，质量一定漂。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python 学习笔记：从容器语法到能写 LLM 服务</title>
-    <link href="https://zhanglichen0711.github.io/posts/3833552795/"/>
-    <id>https://zhanglichen0711.github.io/posts/3833552795/</id>
-    <published>2026-06-07T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.000Z</updated>
-    
-    
-    <summary type="html">把基础语法课里真正会反复用到的部分抽出来：容器、函数、面向对象、并发和数据分析三件套。</summary>
-    
-    
-    
-    <category term="编程基础" scheme="https://zhanglichen0711.github.io/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/"/>
-    
-    <category term="Python" scheme="https://zhanglichen0711.github.io/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/"/>
-    
-    
-    <category term="Python" scheme="https://zhanglichen0711.github.io/tags/Python/"/>
-    
-    <category term="Pandas" scheme="https://zhanglichen0711.github.io/tags/Pandas/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL 笔记：约束、联表和分析函数怎么接到知识库</title>
-    <link href="https://zhanglichen0711.github.io/posts/3390242430/"/>
-    <id>https://zhanglichen0711.github.io/posts/3390242430/</id>
-    <published>2026-05-25T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:32.973Z</updated>
-    
-    
-    <summary type="html">DDL / DML / DQL 背再多也不如先想清楚：文档、切片、权限和引用主键分别放哪。</summary>
-    
-    
-    
-    <category term="数据与存储" scheme="https://zhanglichen0711.github.io/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/"/>
-    
-    <category term="MySQL" scheme="https://zhanglichen0711.github.io/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/"/>
-    
-    
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
-    
-    <category term="MySQL" scheme="https://zhanglichen0711.github.io/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Function Call：模型输出参数不是散文</title>
-    <link href="https://zhanglichen0711.github.io/posts/1183765348/"/>
-    <id>https://zhanglichen0711.github.io/posts/1183765348/</id>
-    <published>2026-05-19T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:32.953Z</updated>
-    
-    
-    <summary type="html">由程序执行副作用，由模型决定调不调、调哪个。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/"/>
-    
-    
-    <category term="Agent" scheme="https://zhanglichen0711.github.io/tags/Agent/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2026 年还该把时间花在哪</title>
-    <link href="https://zhanglichen0711.github.io/posts/684353403/"/>
-    <id>https://zhanglichen0711.github.io/posts/684353403/</id>
-    <published>2026-05-05T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:33.186Z</updated>
-    
-    
-    <summary type="html">框架清单会过期。评测和数据闭环不会。</summary>
-    
-    
-    
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="如何学习" scheme="https://zhanglichen0711.github.io/tags/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>评测集、测试和 Trace</title>
-    <link href="https://zhanglichen0711.github.io/posts/877053790/"/>
-    <id>https://zhanglichen0711.github.io/posts/877053790/</id>
-    <published>2026-04-26T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:32.944Z</updated>
-    
-    
-    <summary type="html">RAG 不能只用 assertEqual。至少准备 30 道业务题。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/"/>
-    
-    
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
-    
-    <category term="评测" scheme="https://zhanglichen0711.github.io/tags/%E8%AF%84%E6%B5%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>知识库版本与数据隔离</title>
-    <link href="https://zhanglichen0711.github.io/posts/3647790954/"/>
-    <id>https://zhanglichen0711.github.io/posts/3647790954/</id>
-    <published>2026-04-08T16:00:00.000Z</published>
-    <updated>2026-08-30T14:09:32.926Z</updated>
-    
-    
-    <summary type="html">看到不该看的资料，是过滤没做，不是模型不听话。</summary>
-    
-    
-    
-    <category term="大模型应用" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/"/>
-    
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/"/>
-    
-    
-    <category term="RAG" scheme="https://zhanglichen0711.github.io/tags/RAG/"/>
+    <category term="rerank" scheme="https://zhanglichen0711.github.io/tags/rerank/"/>
     
   </entry>
   

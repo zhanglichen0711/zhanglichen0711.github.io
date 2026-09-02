@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <title>一套能复用的建模流程 · 小黑程序员</title>
-  <meta name="description" content="取数、划分、特征、训练、评估，写成固定顺序。">
+  <title>集成学习与聚类算法 · 小黑程序员</title>
+  <meta name="description" content="集成学习与聚类算法">
   <meta name="author" content="zhanglichen">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
@@ -13,20 +13,20 @@
 
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="小黑程序员">
-  <meta property="og:title" content="一套能复用的建模流程">
-  <meta property="og:description" content="取数、划分、特征、训练、评估，写成固定顺序。">
+  <meta property="og:title" content="集成学习与聚类算法">
+  <meta property="og:description" content="集成学习与聚类算法">
   <meta property="og:url" content="https://zhanglichen0711.github.io/posts/722644444/">
   <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
   <meta property="og:locale" content="zh_CN">
   
-  <meta property="article:published_time" content="2024-09-24T16:00:00.000Z">
+  <meta property="article:published_time" content="2023-09-24T16:00:00.000Z">
   
   <meta property="article:tag" content="机器学习">
   
   
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="一套能复用的建模流程">
-  <meta name="twitter:description" content="取数、划分、特征、训练、评估，写成固定顺序。">
+  <meta name="twitter:title" content="集成学习与聚类算法">
+  <meta name="twitter:description" content="集成学习与聚类算法">
   <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
 
   <link rel="icon" href="/img/favicon.png">
@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="/css/style.css">
   
   
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"一套能复用的建模流程","description":"取数、划分、特征、训练、评估，写成固定顺序。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/722644444/","datePublished":"2024-09-24T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/722644444/"},"keywords":"机器学习"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"集成学习与聚类算法","description":"集成学习与聚类算法","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/722644444/","datePublished":"2023-09-24T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/722644444/"},"keywords":"机器学习"}</script>
   <script>
     (function () {
       try {
@@ -501,11 +501,11 @@
       
         <a class="chip" href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">Machine Learning</a>
       
-      <time datetime="2024-09-24T16:00:00.000Z">2024-09-25</time>
-      <span>94 字 · 约 1 分钟</span>
+      <time datetime="2023-09-24T16:00:00.000Z">2023-09-25</time>
+      <span>917 字 · 约 2 分钟</span>
     </div>
-    <h1>一套能复用的建模流程</h1>
-    <p class="lede">取数、划分、特征、训练、评估，写成固定顺序。</p>
+    <h1>集成学习与聚类算法</h1>
+    <p class="lede">集成学习与聚类算法</p>
     
       <div class="tag-row">
         
@@ -525,8 +525,91 @@
 
   <div class="article-layout">
     <div class="article-body" id="articleBody">
-      <p>课堂案例把波士顿房价或分类数据走一遍，是为了记住顺序，不是为了记住这个数据集。</p>
-<p>同一套流程可以套到缺陷文本分类：先固定划分随机种子，再比三个模型。没有固定流程，线上一次「感觉更好」无法复现。</p>
+      <h2 id="一、集成学习"><a href="#一、集成学习" class="headerlink" title="一、集成学习"></a>一、集成学习</h2><h3 id="1-思想"><a href="#1-思想" class="headerlink" title="1. 思想"></a>1. 思想</h3><ul>
+<li>多个弱学习器组合成一个更强大的学习器，得到更好性能</li>
+</ul>
+<h3 id="2-分类"><a href="#2-分类" class="headerlink" title="2. 分类"></a>2. 分类</h3><ul>
+<li>Bagging<ul>
+<li>有放回的抽样</li>
+<li>平权投票决定预测结果</li>
+<li>并行训练</li>
+</ul>
+</li>
+</ul>
+<p><img src="/%5Cimg%5Cimage-20260901214913937.png" alt="image-20260901214913937" loading="lazy" decoding="async"></p>
+<ul>
+<li>Boosting<ul>
+<li>重点关注前一个训练器不足的地方进行训练</li>
+<li>加权投票决定预测结果</li>
+<li>串行的训练</li>
+</ul>
+</li>
+</ul>
+<p><img src="/%5Cimg%5Cimage-20260901214943994.png" alt="image-20260901214943994" loading="lazy" decoding="async"></p>
+<h3 id="3-随机森林"><a href="#3-随机森林" class="headerlink" title="3. 随机森林"></a>3. 随机森林</h3><ul>
+<li>RandomForestClassifier</li>
+<li>n_estimators<ul>
+<li>决策树数量</li>
+</ul>
+</li>
+<li>max_depth<ul>
+<li>最大深度</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 4.模型训练</span><br><span class="hljs-comment"># 4.1 决策树</span><br>model1 = DecisionTreeClassifier()<br>model1.fit(x_train, y_train)<br>y_pre1 = model1.predict(x_test)<br><span class="hljs-comment"># 4.2 随机森林</span><br>model2 = RandomForestClassifier()<br>model2.fit(x_train, y_train)<br>y_pre2 = model2.predict(x_test)<br><span class="hljs-comment"># 4.3 随机森林 - 超参优化</span><br>model3 = RandomForestClassifier()<br>model3 = GridSearchCV(model3, param_grid=&#123;<span class="hljs-string">&#x27;n_estimators&#x27;</span>: [<span class="hljs-number">10</span>,<span class="hljs-number">30</span>,<span class="hljs-number">50</span>], <span class="hljs-string">&#x27;max_depth&#x27;</span>: [<span class="hljs-number">6</span>,<span class="hljs-number">8</span>,<span class="hljs-number">10</span>,<span class="hljs-literal">None</span>]&#125;, cv=<span class="hljs-number">4</span>)<br>model3.fit(x_train, y_train)<br>y_pre3 = model3.predict(x_test)<br></code></pre></td></tr></table></figure>
+
+<h2 id="二、聚类算法"><a href="#二、聚类算法" class="headerlink" title="二、聚类算法"></a>二、聚类算法</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h3><ul>
+<li>根据样本相似性分类<ul>
+<li>欧氏距离</li>
+</ul>
+</li>
+<li>自动发现数据集中的内在结构和模式</li>
+<li>无监督学习算法</li>
+</ul>
+<h3 id="2-分类方法"><a href="#2-分类方法" class="headerlink" title="2. 分类方法"></a>2. 分类方法</h3><ul>
+<li>颗粒度分类：细聚类、粗聚类</li>
+<li>实现方法分类：KMeans</li>
+</ul>
+<h3 id="3-KMeans"><a href="#3-KMeans" class="headerlink" title="3. KMeans"></a>3. KMeans</h3><ul>
+<li>n_clusters：聚类中心数量</li>
+<li>实现步骤<ul>
+<li>确定聚类类别数量K</li>
+<li>随机选择K个样本点作为簇心</li>
+<li>计算每个样本点距离簇心的距离，判断赝本属于哪个簇</li>
+<li>重新计算簇心</li>
+<li>重复以上两个步骤</li>
+<li>直到新簇心与旧簇心一致结束</li>
+</ul>
+</li>
+</ul>
+<p><img src="/%5Cimg%5Cimage-20260901215120290.png" alt="image-20260901215120290" loading="lazy" decoding="async"></p>
+<ul>
+<li><p>模型评估方法</p>
+<ul>
+<li>误差平方和SSE<ul>
+<li>肘方法：确定 n_clusters 的值</li>
+<li>SSE 越小，表示数据点越接近它们的中心，聚类效果越好</li>
+</ul>
+</li>
+</ul>
+<p><img src="/%5Cimg%5Cimage-20260901215156996.png" alt="image-20260901215156996" loading="lazy" decoding="async"></p>
+<ul>
+<li>CH轮廓系数<ul>
+<li>calinski_harabasz_score</li>
+<li>簇间分散度 &#x2F; 簇内聚合度<ul>
+<li>越大越好</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SC轮廓系数<ul>
+<li>silhouette_score</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
     </div>
     
@@ -539,10 +622,10 @@
 
   <nav class="post-nav">
     
-      <a href="/posts/1823148091/"><span>上一篇</span><strong>LangChain：编排 LLM 的积木箱</strong></a>
+      <a href="/posts/449866417/"><span>上一篇</span><strong>数据库基础知识</strong></a>
     
     
-      <a href="/posts/2545695783/"><span>下一篇</span><strong>决策树与随机森林当基线</strong></a>
+      <a href="/posts/2975889368/"><span>下一篇</span><strong>Mysql DML案例</strong></a>
     
   </nav>
 </article>
@@ -553,18 +636,18 @@
     <div class="related-grid">
       
         <a href="/posts/2545695783/">
-          <small>2024-09-03</small>
-          <strong>决策树与随机森林当基线</strong>
+          <small>2023-09-03</small>
+          <strong>KNN算法与决策树</strong>
         </a>
       
         <a href="/posts/1579001655/">
-          <small>2024-08-08</small>
-          <strong>线性回归与 KNN：两条入门路线</strong>
+          <small>2023-08-08</small>
+          <strong>线性回归问题</strong>
         </a>
       
         <a href="/posts/920923342/">
-          <small>2024-07-12</small>
-          <strong>人工智能、机器学习和深度学习</strong>
+          <small>2023-07-12</small>
+          <strong>机器学习基本概念</strong>
         </a>
       
     </div>
