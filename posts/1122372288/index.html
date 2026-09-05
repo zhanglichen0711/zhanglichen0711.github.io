@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Matplotlib 柱形图 · 小黑程序员</title>
+  <meta name="description" content="Matplotlib 柱形图">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/1122372288/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="Matplotlib 柱形图">
+  <meta property="og:description" content="Matplotlib 柱形图">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/1122372288/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2024-01-10T16:00:00.000Z">
+  
+  <meta property="article:tag" content="Python, Matplotlib">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Matplotlib 柱形图">
+  <meta name="twitter:description" content="Matplotlib 柱形图">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Matplotlib 柱形图","description":"Matplotlib 柱形图","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/1122372288/","datePublished":"2024-01-10T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/1122372288/"},"keywords":"Python, Matplotlib"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Spring-Boot/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Spring Boot</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Elasticsearch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Elasticsearch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Vector-Search/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vector Search</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/TensorRT/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TensorRT</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangChain/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangChain</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Context-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Context Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">编程基础</a>
+      
+        <a class="chip" href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">Data Science</a>
+      
+      <time datetime="2024-01-10T16:00:00.000Z">2024-01-11</time>
+      <span>5417 字 · 约 14 分钟</span>
+    </div>
+    <h1>Matplotlib 柱形图</h1>
+    <p class="lede">Matplotlib 柱形图</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/Python/">#Python</a>
+        
+          <a href="/tags/Matplotlib/">#Matplotlib</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <h1 id="Matplotlib-柱形图"><a href="#Matplotlib-柱形图" class="headerlink" title="Matplotlib 柱形图"></a>Matplotlib 柱形图</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>柱形图是”比大小”的王者。它用柱子的高度编码数值，把抽象的数字差变成肉眼可辨的高度差——“A 是 B 的两倍”这句话，在柱形图里就是一根柱子比另一根高一倍，不需要任何心算。</p>
+<p>柱形图家族有三个主力成员：<strong>柱形图</strong>（<code>bar</code>，竖向，适合类别名较短）、<strong>横向条形图</strong>（<code>barh</code>，横向，适合类别名长或类别多的排行榜）、<strong>堆叠柱形图</strong>（<code>bottom</code> 参数，展示构成关系）。分组对比则靠”同一类别摆两根柱子”的位移技巧实现。</p>
+<p>柱形图有一个铁律必须先记住：<strong>y 轴必须从 0 开始</strong>。柱子靠高度编码数值，如果纵轴被截断，高度比例就失真了——这是数据可视化里最经典（也最容易被媒体滥用）的误导手法。</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p><code>plt.bar(x, height)</code> 中 x 是类别（字符串会自动按位置摆放），height 是数值。加上数值标注和”最高项高亮”，就是一个合格的业务柱形图。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> matplotlib<br>matplotlib.use(<span class="hljs-string">&#x27;Agg&#x27;</span>)  <span class="hljs-comment"># 保存图片用 Agg 后端（无显示器环境）</span><br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br>plt.rcParams[<span class="hljs-string">&#x27;font.sans-serif&#x27;</span>] = [<span class="hljs-string">&#x27;SimHei&#x27;</span>, <span class="hljs-string">&#x27;Microsoft YaHei&#x27;</span>]<br>plt.rcParams[<span class="hljs-string">&#x27;axes.unicode_minus&#x27;</span>] = <span class="hljs-literal">False</span><br><br>products = [<span class="hljs-string">&#x27;笔记本电脑&#x27;</span>, <span class="hljs-string">&#x27;智能手机&#x27;</span>, <span class="hljs-string">&#x27;平板&#x27;</span>, <span class="hljs-string">&#x27;智能手表&#x27;</span>, <span class="hljs-string">&#x27;无线耳机&#x27;</span>]<br>sales = [<span class="hljs-number">458</span>, <span class="hljs-number">892</span>, <span class="hljs-number">326</span>, <span class="hljs-number">512</span>, <span class="hljs-number">735</span>]<br><br>plt.figure(figsize=(<span class="hljs-number">10</span>, <span class="hljs-number">5.5</span>))<br>bars = plt.bar(products, sales, color=<span class="hljs-string">&#x27;tab:blue&#x27;</span>, width=<span class="hljs-number">0.55</span>)<br>bars[sales.index(<span class="hljs-built_in">max</span>(sales))].set_color(<span class="hljs-string">&#x27;tab:red&#x27;</span>)  <span class="hljs-comment"># 高亮冠军</span><br><span class="hljs-keyword">for</span> b <span class="hljs-keyword">in</span> bars:                                       <span class="hljs-comment"># 柱顶标数值</span><br>    plt.text(b.get_x() + b.get_width() / <span class="hljs-number">2</span>, b.get_height() + <span class="hljs-number">12</span>,<br>             <span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;b.get_height():<span class="hljs-number">.0</span>f&#125;</span>&#x27;</span>, ha=<span class="hljs-string">&#x27;center&#x27;</span>, fontsize=<span class="hljs-number">10</span>)<br>plt.title(<span class="hljs-string">&#x27;2023 年双 11 各品类销售额（万元）&#x27;</span>)<br>plt.ylabel(<span class="hljs-string">&#x27;销售额 (万元)&#x27;</span>)<br>plt.ylim(<span class="hljs-number">0</span>, <span class="hljs-number">1000</span>)<br>plt.grid(axis=<span class="hljs-string">&#x27;y&#x27;</span>, alpha=<span class="hljs-number">0.3</span>)<br>plt.gca().set_axisbelow(<span class="hljs-literal">True</span>)  <span class="hljs-comment"># 网格垫底</span><br>plt.savefig(<span class="hljs-string">&#x27;bar_basic.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/image-20260904211440004.png" alt="各品类销售额柱形图" loading="lazy" decoding="async"></p>
+<p>两个值得注意的细节：<code>bar()</code> 返回柱子对象列表（BarContainer），可以直接改某一根的颜色做高亮；<code>plt.text</code> 配合 <code>b.get_x() + b.get_width()/2</code> 把数值标在每根柱子正上方——读者就不必来回对网格读数了。</p>
+<h2 id="常用-API-详解"><a href="#常用-API-详解" class="headerlink" title="常用 API 详解"></a>常用 API 详解</h2><h3 id="width-——-柱宽与间距"><a href="#width-——-柱宽与间距" class="headerlink" title="width —— 柱宽与间距"></a>width —— 柱宽与间距</h3><p><code>width</code> 默认 0.8，取值是”类别间距的比例”。柱子太细显得稀疏、太粗挤在一起，0.5~0.7 之间比较舒服。类别多时记得同步缩小 width。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">plt.bar([<span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;D&#x27;</span>], [<span class="hljs-number">23</span>, <span class="hljs-number">41</span>, <span class="hljs-number">35</span>, <span class="hljs-number">52</span>], width=<span class="hljs-number">0.6</span>)<br>plt.savefig(<span class="hljs-string">&#x27;bar_width.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="color-edgecolor-——-配色"><a href="#color-edgecolor-——-配色" class="headerlink" title="color &#x2F; edgecolor —— 配色"></a>color &#x2F; edgecolor —— 配色</h3><p><code>color</code> 支持统一色、颜色列表（逐柱设色）两种写法；<code>edgecolor</code> 给柱子描边，数据少时描边更显精致，但大数据量会增加视觉噪音。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">colors = [<span class="hljs-string">&#x27;tab:red&#x27;</span> <span class="hljs-keyword">if</span> v &gt; <span class="hljs-number">40</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;tab:blue&#x27;</span> <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> [<span class="hljs-number">23</span>, <span class="hljs-number">41</span>, <span class="hljs-number">35</span>, <span class="hljs-number">52</span>]]<br>plt.bar([<span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;D&#x27;</span>], [<span class="hljs-number">23</span>, <span class="hljs-number">41</span>, <span class="hljs-number">35</span>, <span class="hljs-number">52</span>], color=colors,<br>        edgecolor=<span class="hljs-string">&#x27;white&#x27;</span>)<br>plt.savefig(<span class="hljs-string">&#x27;bar_color.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="分组柱形图-——-位移叠加"><a href="#分组柱形图-——-位移叠加" class="headerlink" title="分组柱形图 —— 位移叠加"></a>分组柱形图 —— 位移叠加</h3><p>没有现成的”分组柱形图”函数，靠手动位移实现：把 x 换成数值位置 <code>np.arange(n)</code>，两个系列分别画在 <code>x - w/2</code> 和 <code>x + w/2</code>，宽度各取 <code>w</code>。这是面试和实战都高频的写法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python">x = np.arange(<span class="hljs-number">4</span>)<br>w = <span class="hljs-number">0.36</span><br>quarters = [<span class="hljs-string">&#x27;一季度&#x27;</span>, <span class="hljs-string">&#x27;二季度&#x27;</span>, <span class="hljs-string">&#x27;三季度&#x27;</span>, <span class="hljs-string">&#x27;四季度&#x27;</span>]<br>online = [<span class="hljs-number">286</span>, <span class="hljs-number">312</span>, <span class="hljs-number">358</span>, <span class="hljs-number">421</span>]<br>offline = [<span class="hljs-number">342</span>, <span class="hljs-number">308</span>, <span class="hljs-number">295</span>, <span class="hljs-number">331</span>]<br><br>plt.bar(x - w / <span class="hljs-number">2</span>, online, w, label=<span class="hljs-string">&#x27;线上&#x27;</span>)<br>plt.bar(x + w / <span class="hljs-number">2</span>, offline, w, label=<span class="hljs-string">&#x27;线下&#x27;</span>)<br>plt.xticks(x, quarters)   <span class="hljs-comment"># 把刻度位置换回季度名</span><br>plt.legend()<br>plt.savefig(<span class="hljs-string">&#x27;bar_grouped.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="bottom-——-堆叠柱形图"><a href="#bottom-——-堆叠柱形图" class="headerlink" title="bottom —— 堆叠柱形图"></a>bottom —— 堆叠柱形图</h3><p>第二组数据传 <code>bottom=第一组数据</code>，柱子就会”叠”在第一组上面。三组以上逐层传递 <code>bottom=组1+组2</code>（用 <code>np.add</code> 或直接相加）。堆叠图适合看<strong>总量 + 构成</strong>，但不适合精确比较中间层的大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">plt.bar(quarters, online, label=<span class="hljs-string">&#x27;线上&#x27;</span>)<br>plt.bar(quarters, offline, bottom=online, label=<span class="hljs-string">&#x27;线下&#x27;</span>)<br><span class="hljs-keyword">for</span> i, total <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(np.array(online) + np.array(offline)):<br>    plt.text(i, total + <span class="hljs-number">10</span>, <span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;total&#125;</span>&#x27;</span>, ha=<span class="hljs-string">&#x27;center&#x27;</span>)  <span class="hljs-comment"># 顶部标总量</span><br>plt.legend()<br>plt.savefig(<span class="hljs-string">&#x27;bar_stacked.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/image-20260904211440449.png" alt="分组与堆叠柱形图对比" loading="lazy" decoding="async"></p>
+<p>同一份数据的两种呈现：分组图便于<strong>比较各组内部</strong>线上线下谁高，堆叠图便于<strong>比较总量</strong>（Q4 总额 752 万领先一眼可见）。选哪种取决于你想让读者先看到什么。</p>
+<h3 id="plt-barh-——-横向条形图"><a href="#plt-barh-——-横向条形图" class="headerlink" title="plt.barh() —— 横向条形图"></a>plt.barh() —— 横向条形图</h3><p>把坐标轴转 90 度：x 变数值、y 变类别。类别名是中文长词（城市、产品全名）时横排远比竖排易读，排行榜类图表几乎都用它。注意横条的”高度从 0 开始”铁律变成了”x 轴从 0 开始”。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">plt.barh([<span class="hljs-string">&#x27;上海&#x27;</span>, <span class="hljs-string">&#x27;北京&#x27;</span>, <span class="hljs-string">&#x27;深圳&#x27;</span>], [<span class="hljs-number">19137</span>, <span class="hljs-number">18654</span>, <span class="hljs-number">17821</span>])<br>plt.xlabel(<span class="hljs-string">&#x27;平均月薪 (元)&#x27;</span>)<br>plt.savefig(<span class="hljs-string">&#x27;barh.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="plt-axvline-plt-axhline-——-参考线"><a href="#plt-axvline-plt-axhline-——-参考线" class="headerlink" title="plt.axvline() &#x2F; plt.axhline() —— 参考线"></a>plt.axvline() &#x2F; plt.axhline() —— 参考线</h3><p>在柱形图上加一条平均线、目标线，能让”谁在平均线之上”立刻可见。<code>linestyle=&#39;--&#39;</code> 加 <code>label</code> 进图例，是性价比最高的增值元素。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">plt.bar([<span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;D&#x27;</span>], [<span class="hljs-number">23</span>, <span class="hljs-number">41</span>, <span class="hljs-number">35</span>, <span class="hljs-number">52</span>])<br>plt.axhline(y=np.mean([<span class="hljs-number">23</span>, <span class="hljs-number">41</span>, <span class="hljs-number">35</span>, <span class="hljs-number">52</span>]), color=<span class="hljs-string">&#x27;red&#x27;</span>,<br>            linestyle=<span class="hljs-string">&#x27;--&#x27;</span>, label=<span class="hljs-string">&#x27;平均&#x27;</span>)<br>plt.legend()<br>plt.savefig(<span class="hljs-string">&#x27;bar_refline.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="综合示例"><a href="#综合示例" class="headerlink" title="综合示例"></a>综合示例</h2><p>综合运用横排、排序、条件配色和参考线，做一个”城市月薪排行榜”：条形按数值降序排列（barh 需先升序排序数据）、过线城市蓝色&#x2F;未过线灰色、红色虚线标出八城平均。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> matplotlib<br>matplotlib.use(<span class="hljs-string">&#x27;Agg&#x27;</span>)<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br>plt.rcParams[<span class="hljs-string">&#x27;font.sans-serif&#x27;</span>] = [<span class="hljs-string">&#x27;SimHei&#x27;</span>, <span class="hljs-string">&#x27;Microsoft YaHei&#x27;</span>]<br>plt.rcParams[<span class="hljs-string">&#x27;axes.unicode_minus&#x27;</span>] = <span class="hljs-literal">False</span><br><br>cities = [<span class="hljs-string">&#x27;上海&#x27;</span>, <span class="hljs-string">&#x27;北京&#x27;</span>, <span class="hljs-string">&#x27;深圳&#x27;</span>, <span class="hljs-string">&#x27;广州&#x27;</span>, <span class="hljs-string">&#x27;杭州&#x27;</span>, <span class="hljs-string">&#x27;成都&#x27;</span>, <span class="hljs-string">&#x27;南京&#x27;</span>, <span class="hljs-string">&#x27;武汉&#x27;</span>]<br>salary = [<span class="hljs-number">19137</span>, <span class="hljs-number">18654</span>, <span class="hljs-number">17821</span>, <span class="hljs-number">13928</span>, <span class="hljs-number">16213</span>, <span class="hljs-number">11437</span>, <span class="hljs-number">12811</span>, <span class="hljs-number">11908</span>]<br><br>order = np.argsort(salary)                    <span class="hljs-comment"># 升序 → barh 从下往上画</span><br>cities_s = [cities[i] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> order]<br>salary_s = [salary[i] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> order]<br><br>fig, ax = plt.subplots(figsize=(<span class="hljs-number">10</span>, <span class="hljs-number">5.8</span>))<br>colors = [<span class="hljs-string">&#x27;tab:gray&#x27;</span> <span class="hljs-keyword">if</span> s &lt; <span class="hljs-number">15000</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;tab:blue&#x27;</span> <span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> salary_s]<br>bars = ax.barh(cities_s, salary_s, color=colors, height=<span class="hljs-number">0.6</span>)<br><span class="hljs-keyword">for</span> b <span class="hljs-keyword">in</span> bars:                                <span class="hljs-comment"># 条尾标数值</span><br>    ax.text(b.get_width() + <span class="hljs-number">180</span>, b.get_y() + b.get_height() / <span class="hljs-number">2</span>,<br>            <span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;b.get_width():,<span class="hljs-number">.0</span>f&#125;</span>&#x27;</span>, va=<span class="hljs-string">&#x27;center&#x27;</span>, fontsize=<span class="hljs-number">10</span>)<br>ax.axvline(x=np.mean(salary), color=<span class="hljs-string">&#x27;tab:red&#x27;</span>, linestyle=<span class="hljs-string">&#x27;--&#x27;</span>,<br>           linewidth=<span class="hljs-number">1.4</span>, label=<span class="hljs-string">f&#x27;八城平均 <span class="hljs-subst">&#123;np.mean(salary):,<span class="hljs-number">.0</span>f&#125;</span> 元&#x27;</span>)<br>ax.set_title(<span class="hljs-string">&#x27;2023 年主要城市平均月薪排行（元/月）&#x27;</span>, fontsize=<span class="hljs-number">13</span>, loc=<span class="hljs-string">&#x27;left&#x27;</span>)<br>ax.set_xlabel(<span class="hljs-string">&#x27;平均月薪 (元)&#x27;</span>)<br>ax.set_xlim(<span class="hljs-number">0</span>, <span class="hljs-number">22500</span>)<br>ax.legend(loc=<span class="hljs-string">&#x27;lower right&#x27;</span>)<br>ax.grid(axis=<span class="hljs-string">&#x27;x&#x27;</span>, alpha=<span class="hljs-number">0.3</span>)<br>ax.set_axisbelow(<span class="hljs-literal">True</span>)<br>plt.tight_layout()<br>plt.savefig(<span class="hljs-string">&#x27;salary_rank.png&#x27;</span>, dpi=<span class="hljs-number">120</span>, bbox_inches=<span class="hljs-string">&#x27;tight&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/image-20260904211441174.png" alt="城市月薪排行榜横向条形图" loading="lazy" decoding="async"></p>
+<p>这张图的配方可以复用到任何排行榜：<code>np.argsort</code> 排序 → 条件配色强调目标子集 → 条尾标数值 → 参考线给”整体水位”。注意 barh 是从 y 轴底部往上画的，所以要降序显示就得先升序排数据——这是 barh 最反直觉的一处。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>柱形图简单，但好柱形图有讲究。三条铁律：</p>
+<ul>
+<li><strong>y 轴（或 barh 的 x 轴）永远从 0 开始</strong>，截断坐标轴的柱形图 &#x3D; 视觉造假；</li>
+<li><strong>类别多就横排</strong>：barh 让中文长标签和数值都平铺可读，配合排序更有说服力；</li>
+<li><strong>分组靠位移（x±w&#x2F;2），堆叠靠 bottom</strong>：两个”手工技巧”记熟，柱形图家族就全通关了。</li>
+</ul>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/1122372289/"><span>上一篇</span><strong>Matplotlib 饼图</strong></a>
+    
+    
+      <a href="/posts/1122372287/"><span>下一篇</span><strong>Matplotlib 散点图</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/1122372289/">
+          <small>2024-01-16</small>
+          <strong>Matplotlib 饼图</strong>
+        </a>
+      
+        <a href="/posts/1122372287/">
+          <small>2024-01-06</small>
+          <strong>Matplotlib 散点图</strong>
+        </a>
+      
+        <a href="/posts/1122372286/">
+          <small>2024-01-01</small>
+          <strong>Matplotlib 绘制多图</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

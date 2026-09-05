@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>React 简介 · 小黑程序员</title>
+  <meta name="description" content="React 是由 Facebook（现 Meta）开发并于 2013 年开源的 JavaScript 库">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/3435504910/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="React 简介">
+  <meta property="og:description" content="React 是由 Facebook（现 Meta）开发并于 2013 年开源的 JavaScript 库">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/3435504910/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-01-29T16:00:00.000Z">
+  
+  <meta property="article:tag" content="React, 简介">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="React 简介">
+  <meta name="twitter:description" content="React 是由 Facebook（现 Meta）开发并于 2013 年开源的 JavaScript 库">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"React 简介","description":"React 是由 Facebook（现 Meta）开发并于 2013 年开源的 JavaScript 库","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/3435504910/","datePublished":"2025-01-29T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/3435504910/"},"keywords":"React, 简介"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Spring-Boot/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Spring Boot</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Elasticsearch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Elasticsearch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Vector-Search/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vector Search</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/TensorRT/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TensorRT</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangChain/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangChain</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Context-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Context Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/">前端交互</a>
+      
+        <a class="chip" href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">React</a>
+      
+      <time datetime="2025-01-29T16:00:00.000Z">2025-01-30</time>
+      <span>3629 字 · 约 9 分钟</span>
+    </div>
+    <h1>React 简介</h1>
+    <p class="lede">React 是由 Facebook（现 Meta）开发并于 2013 年开源的 JavaScript 库</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/React/">#React</a>
+        
+          <a href="/tags/%E7%AE%80%E4%BB%8B/">#简介</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>React 是由 Facebook（现 Meta）开发并于 2013 年开源的 JavaScript 库，专门用于构建用户界面，特别是单页应用程序（SPA）。</p>
+<p>React 允许开发者使用声明式的方式来构建可复用的 UI 组件。</p>
+<h3 id="React-的定位"><a href="#React-的定位" class="headerlink" title="React 的定位"></a>React 的定位</h3><ul>
+<li><strong>不是框架，而是库</strong>：React 专注于视图层（MVC 中的 V），不像 Angular 那样提供完整的框架解决方案</li>
+<li><strong>组件化思想</strong>：将 UI 拆分成独立、可复用的组件</li>
+<li><strong>JavaScript 为中心</strong>：一切皆 JavaScript，包括结构、样式和逻辑</li>
+</ul>
+<hr>
+<h2 id="React-的核心特点"><a href="#React-的核心特点" class="headerlink" title="React 的核心特点"></a>React 的核心特点</h2><h3 id="1-声明式编程（Declarative）"><a href="#1-声明式编程（Declarative）" class="headerlink" title="1. 声明式编程（Declarative）"></a>1. 声明式编程（Declarative）</h3><p><strong>传统命令式编程</strong>：告诉计算机怎么做</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-comment">// 原生 JavaScript（命令式）</span><br><span class="hljs-keyword">const</span> button = <span class="hljs-built_in">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;myButton&#x27;</span>);<br>button.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-title function_">function</span>() &#123;<br>  <span class="hljs-keyword">const</span> counter = <span class="hljs-built_in">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;counter&#x27;</span>);<br>  <span class="hljs-keyword">const</span> currentValue = <span class="hljs-title function_">parseInt</span>(counter.textContent);<br>  counter.textContent = currentValue + <span class="hljs-number">1</span>;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p><strong>React 声明式编程</strong>：告诉计算机要什么结果</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dns">// React（声明式）<br>function Counter<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>  const [count, setCount] = useState<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>  return &lt;button onClick=&#123;<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> =&gt; setCount<span class="hljs-punctuation">(</span>count + <span class="hljs-number">1</span><span class="hljs-punctuation">)</span>&#125;&gt;&#123;count&#125;&lt;/button&gt;<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>优势</strong>：</p>
+<ul>
+<li>代码更简洁直观</li>
+<li>更容易理解和维护</li>
+<li>减少手动操作 DOM 的错误</li>
+<li>状态和 UI 保持同步</li>
+</ul>
+<h3 id="2-组件化（Component-Based）"><a href="#2-组件化（Component-Based）" class="headerlink" title="2. 组件化（Component-Based）"></a>2. 组件化（Component-Based）</h3><p>React 的核心是组件化思维，把 UI 拆成独立、可复用、可组合的组件，就像搭积木一样，每个组件只关心自己的状态（state）和属性（props），逻辑清晰、易于维护。</p>
+<p>React 应用由一个个独立的组件构成，每个组件：</p>
+<ul>
+<li>封装了自己的结构、样式和逻辑</li>
+<li>可以接收输入（props）</li>
+<li>可以维护内部状态（state）</li>
+<li>可以被复用和组合</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">// 一个简单的组件<br>function Welcome(&#123; name &#125;) &#123;<br>  <span class="hljs-keyword">return</span> &lt;h1&gt;Hello, &#123;name&#125;!&lt;/h1&gt;;<br>&#125;<br><br>// 组件的复用和组合<br>function App() &#123;<br>  <span class="hljs-keyword">return</span> (<br>    &lt;div&gt;<br>      &lt;Welcome name=<span class="hljs-string">&quot;Alice&quot;</span> /&gt;<br>      &lt;Welcome name=<span class="hljs-string">&quot;Bob&quot;</span> /&gt;<br>      &lt;Welcome name=<span class="hljs-string">&quot;Charlie&quot;</span> /&gt;<br>    &lt;/div&gt;<br>  );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>组件化的优势</strong>：</p>
+<ul>
+<li><strong>复用性</strong>：同一组件可在多处使用</li>
+<li><strong>可维护性</strong>：修改组件不影响其他部分</li>
+<li><strong>可测试性</strong>：独立组件易于单元测试</li>
+<li><strong>协作性</strong>：团队成员可并行开发不同组件</li>
+</ul>
+<h3 id="3-虚拟-DOM（Virtual-DOM）"><a href="#3-虚拟-DOM（Virtual-DOM）" class="headerlink" title="3. 虚拟 DOM（Virtual DOM）"></a>3. 虚拟 DOM（Virtual DOM）</h3><h4 id="什么是虚拟-DOM？"><a href="#什么是虚拟-DOM？" class="headerlink" title="什么是虚拟 DOM？"></a>什么是虚拟 DOM？</h4><p>虚拟 DOM 是真实 DOM 的 JavaScript 对象表示，是一个轻量级的内存中的数据结构。</p>
+<h4 id="工作原理："><a href="#工作原理：" class="headerlink" title="工作原理："></a>工作原理：</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 状态改变<br>   ↓<br><span class="hljs-bullet">2.</span> 生成新的虚拟 DOM 树<br>   ↓<br><span class="hljs-bullet">3.</span> 与旧虚拟 DOM 树进行对比（Diffing）<br>   ↓<br><span class="hljs-bullet">4.</span> 计算出最小差异（Reconciliation）<br>   ↓<br><span class="hljs-bullet">5.</span> 只更新真实 DOM 中变化的部分<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Virtual DOM 是浏览器 DOM 的一个轻量级 JavaScript 对象表示。</li>
+<li>当状态发生变化时，框架（如 React）会先在 Virtual DOM 中进行计算和比较（diff 算法）。</li>
+<li>然后通过 patch 过程，只将最小必要的更新应用到 Real DOM 上。</li>
+</ul>
+<h4 id="为什么需要虚拟-DOM？"><a href="#为什么需要虚拟-DOM？" class="headerlink" title="为什么需要虚拟 DOM？"></a>为什么需要虚拟 DOM？</h4><p>真实 DOM 操作的问题：</p>
+<ul>
+<li>DOM 操作非常慢（相比 JavaScript 运算）</li>
+<li>频繁的 DOM 操作会导致页面重排和重绘</li>
+<li>直接操作 DOM 容易出错</li>
+</ul>
+<p>虚拟 DOM 的优势：</p>
+<ul>
+<li><strong>性能优化</strong>：批量更新，减少真实 DOM 操作次数</li>
+<li><strong>跨平台</strong>：虚拟 DOM 可以渲染到不同平台（Web、移动端、桌面）</li>
+<li><strong>声明式</strong>：开发者只需关心状态，不用手动操作 DOM</li>
+</ul>
+<h4 id="示例对比："><a href="#示例对比：" class="headerlink" title="示例对比："></a>示例对比：</h4><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs dns">// 假设要更新 <span class="hljs-number">1000</span> 个列表项<br>const items = Array<span class="hljs-punctuation">(</span><span class="hljs-number">1000</span><span class="hljs-punctuation">)</span>.fill<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span>.map<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span>_, i<span class="hljs-punctuation">)</span> =&gt; i<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br><br>// 传统方式：每次都操作真实 DOM（慢）<br>items.forEach<span class="hljs-punctuation">(</span>item =&gt; &#123;<br>  const li = document.createElement<span class="hljs-punctuation">(</span>&#x27;li&#x27;<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>  li.textContent = item<span class="hljs-comment">;</span><br>  ul.appendChild<span class="hljs-punctuation">(</span>li<span class="hljs-punctuation">)</span><span class="hljs-comment">; // 1000 次 DOM 操作</span><br>&#125;<span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br><br>// React 方式：通过虚拟 DOM 批量更新<br>function ItemList<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> &#123;<br>  return <span class="hljs-punctuation">(</span><br>    &lt;ul&gt;<br>      &#123;items.map<span class="hljs-punctuation">(</span>item =&gt; &lt;li <span class="hljs-keyword">key</span>=&#123;item&#125;&gt;&#123;item&#125;&lt;/li&gt;<span class="hljs-punctuation">)</span>&#125;<br>    &lt;/ul&gt;<br>  <span class="hljs-punctuation">)</span><span class="hljs-comment">;</span><br>&#125;<br>// React 会智能地批量更新 DOM<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-单向数据流（Unidirectional-Data-Flow）"><a href="#4-单向数据流（Unidirectional-Data-Flow）" class="headerlink" title="4. 单向数据流（Unidirectional Data Flow）"></a>4. 单向数据流（Unidirectional Data Flow）</h3><p>React 的数据是单向向下流的，Parent (父) → Child (子)，Child 不能反向到 Parent：</p>
+<p>React 采用自顶向下的数据流动方式：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dns">父组件<br>  ↓ <span class="hljs-punctuation">(</span>props<span class="hljs-punctuation">)</span><br>子组件<br>  ↓ <span class="hljs-punctuation">(</span>props<span class="hljs-punctuation">)</span><br>孙组件<br></code></pre></td></tr></table></figure>
+
+<p><strong>特点</strong>：</p>
+<ul>
+<li>数据从父组件流向子组件</li>
+<li>子组件通过回调函数向父组件通信</li>
+<li>数据流向清晰，便于追踪和调试</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python">function Parent() &#123;<br>  const [message, setMessage] = useState(<span class="hljs-string">&#x27;Hello&#x27;</span>);<br>  <br>  <span class="hljs-keyword">return</span> (<br>    &lt;Child <br>      message=&#123;message&#125;  // 数据向下传递<br>      onUpdate=&#123;setMessage&#125;  // 通过回调向上通信<br>    /&gt;<br>  );<br>&#125;<br><br>function Child(&#123; message, onUpdate &#125;) &#123;<br>  <span class="hljs-keyword">return</span> (<br>    &lt;div&gt;<br>      &lt;p&gt;&#123;message&#125;&lt;/p&gt;<br>      &lt;button onClick=&#123;() =&gt; onUpdate(<span class="hljs-string">&#x27;Updated!&#x27;</span>)&#125;&gt;<br>        Update<br>      &lt;/button&gt;<br>    &lt;/div&gt;<br>  );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="React-的主要优势"><a href="#React-的主要优势" class="headerlink" title="React 的主要优势"></a>React 的主要优势</h2><h3 id="1-学习曲线相对平缓"><a href="#1-学习曲线相对平缓" class="headerlink" title="1. 学习曲线相对平缓"></a>1. 学习曲线相对平缓</h3><ul>
+<li>核心 API 较少</li>
+<li>主要使用 JavaScript 知识</li>
+<li>概念清晰，文档完善</li>
+</ul>
+<h3 id="2-强大的生态系统"><a href="#2-强大的生态系统" class="headerlink" title="2. 强大的生态系统"></a>2. 强大的生态系统</h3><ul>
+<li><strong>路由</strong>：React Router</li>
+<li><strong>状态管理</strong>：Redux, Zustand, Jotai</li>
+<li><strong>UI 库</strong>：Material-UI, Ant Design, Chakra UI</li>
+<li><strong>工具链</strong>：Create React App, Vite, Next.js</li>
+</ul>
+<h3 id="3-广泛的社区支持"><a href="#3-广泛的社区支持" class="headerlink" title="3. 广泛的社区支持"></a>3. 广泛的社区支持</h3><ul>
+<li>GitHub 上最受欢迎的前端库之一</li>
+<li>大量的第三方组件和工具</li>
+<li>活跃的社区和丰富的学习资源</li>
+</ul>
+<h3 id="4-性能优异"><a href="#4-性能优异" class="headerlink" title="4. 性能优异"></a>4. 性能优异</h3><ul>
+<li>虚拟 DOM 优化</li>
+<li>按需渲染</li>
+<li>代码分割和懒加载支持</li>
+</ul>
+<h3 id="5-跨平台能力"><a href="#5-跨平台能力" class="headerlink" title="5. 跨平台能力"></a>5. 跨平台能力</h3><ul>
+<li><strong>React Native</strong>：开发移动应用</li>
+<li><strong>React Native for Windows</strong>：桌面应用</li>
+<li><strong>React 360</strong>：VR 应用</li>
+</ul>
+<h3 id="6-企业级应用支持"><a href="#6-企业级应用支持" class="headerlink" title="6. 企业级应用支持"></a>6. 企业级应用支持</h3><p>被众多知名公司使用：</p>
+<ul>
+<li>Facebook&#x2F;Meta</li>
+<li>Instagram</li>
+<li>Netflix</li>
+<li>Airbnb</li>
+<li>Uber</li>
+<li>腾讯、阿里巴巴等</li>
+</ul>
+<hr>
+<h2 id="React-的适用场景"><a href="#React-的适用场景" class="headerlink" title="React 的适用场景"></a>React 的适用场景</h2><h3 id="适合使用-React-的场景："><a href="#适合使用-React-的场景：" class="headerlink" title="适合使用 React 的场景："></a>适合使用 React 的场景：</h3><ul>
+<li>单页应用（SPA）</li>
+<li>需要频繁更新的动态界面</li>
+<li>复杂的交互式 UI</li>
+<li>需要组件复用的大型项目</li>
+<li>需要跨平台开发的应用</li>
+</ul>
+<h3 id="不太适合的场景："><a href="#不太适合的场景：" class="headerlink" title="不太适合的场景："></a>不太适合的场景：</h3><ul>
+<li>简单的静态网站（可能过度设计）</li>
+<li>SEO 要求极高的网站（需配合 Next.js 等 SSR 方案）</li>
+<li>团队对 JavaScript 不熟悉</li>
+</ul>
+<hr>
+<h2 id="React-与其他框架的对比"><a href="#React-与其他框架的对比" class="headerlink" title="React 与其他框架的对比"></a>React 与其他框架的对比</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">React</th>
+<th align="left">Vue</th>
+<th align="left">Angular</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">类型</td>
+<td align="left">库</td>
+<td align="left">渐进式框架</td>
+<td align="left">完整框架</td>
+</tr>
+<tr>
+<td align="left">学习曲线</td>
+<td align="left">中等</td>
+<td align="left">较平缓</td>
+<td align="left">较陡峭</td>
+</tr>
+<tr>
+<td align="left">灵活性</td>
+<td align="left">高</td>
+<td align="left">中</td>
+<td align="left">低（约定多）</td>
+</tr>
+<tr>
+<td align="left">生态系统</td>
+<td align="left">非常丰富</td>
+<td align="left">丰富</td>
+<td align="left">完整集成</td>
+</tr>
+<tr>
+<td align="left">企业支持</td>
+<td align="left">Meta</td>
+<td align="left">独立</td>
+<td align="left">Google</td>
+</tr>
+<tr>
+<td align="left">TypeScript</td>
+<td align="left">支持良好</td>
+<td align="left">支持良好</td>
+<td align="left">原生支持</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="React-的发展历程"><a href="#React-的发展历程" class="headerlink" title="React 的发展历程"></a>React 的发展历程</h2><ul>
+<li><strong>2013</strong>：React 开源</li>
+<li><strong>2015</strong>：React Native 发布</li>
+<li><strong>2016</strong>：React 16（Fiber 架构）</li>
+<li><strong>2019</strong>：React Hooks 正式发布</li>
+<li><strong>2020</strong>：并发模式实验版</li>
+<li><strong>2022</strong>：React 18（并发渲染）</li>
+<li><strong>2024-2025</strong>：React Compiler、Server Components 等新特性</li>
+</ul>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/1992739907/"><span>上一篇</span><strong>React 创建第一个项目</strong></a>
+    
+    
+      <a href="/posts/974642383/"><span>下一篇</span><strong>文本预处理：分词、NER 和 DataLoader</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/1139111529/">
+          <small>2025-02-19</small>
+          <strong>React 博客项目</strong>
+        </a>
+      
+        <a href="/posts/683979779/">
+          <small>2025-02-12</small>
+          <strong>React 参考手册</strong>
+        </a>
+      
+        <a href="/posts/1992739907/">
+          <small>2025-02-06</small>
+          <strong>React 创建第一个项目</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

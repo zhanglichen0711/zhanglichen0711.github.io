@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Vue3 简介 · 小黑程序员</title>
+  <meta name="description" content="Vue3 是一个用于构建用户界面的渐进式框架。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/3277367535/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="Vue3 简介">
+  <meta property="og:description" content="Vue3 是一个用于构建用户界面的渐进式框架。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/3277367535/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2024-10-24T16:00:00.000Z">
+  
+  <meta property="article:tag" content="简介, Vue3">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vue3 简介">
+  <meta name="twitter:description" content="Vue3 是一个用于构建用户界面的渐进式框架。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Vue3 简介","description":"Vue3 是一个用于构建用户界面的渐进式框架。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/3277367535/","datePublished":"2024-10-24T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/3277367535/"},"keywords":"简介, Vue3"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Spring-Boot/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Spring Boot</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Elasticsearch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Elasticsearch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Vector-Search/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vector Search</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/TensorRT/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TensorRT</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangChain/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangChain</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Context-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Context Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/">前端交互</a>
+      
+        <a class="chip" href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">Vue3</a>
+      
+      <time datetime="2024-10-24T16:00:00.000Z">2024-10-25</time>
+      <span>8078 字 · 约 20 分钟</span>
+    </div>
+    <h1>Vue3 简介</h1>
+    <p class="lede">Vue3 是一个用于构建用户界面的渐进式框架。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/%E7%AE%80%E4%BB%8B/">#简介</a>
+        
+          <a href="/tags/Vue3/">#Vue3</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>Vue3 是一个用于构建用户界面的渐进式框架。</p>
+<p><strong>渐进式</strong>意味着你可以根据项目需要，只引入 Vue 的一部分能力：从一个简单的页面交互增强，到构建完整的单页应用（SPA），乃至服务端渲染（SSR）应用，Vue3 都能胜任。</p>
+<p>Vue3 是由尤雨溪（Evan You）主导开发的渐进式 JavaScript 前端框架，于 2020 年 9 月 18 日正式发布，代号 <strong>One Piece（海贼王）</strong>。</p>
+<p>相比 Vue2，Vue3 对核心架构进行了全面重写：响应式系统从 <code>Object.defineProperty</code> 升级为 <code>Proxy</code>，引入组合式 API（Composition API），并在性能、TypeScript 支持、包体积等方面全面提升。</p>
+<h3 id="Vue3-与-Vue2-的本质区别"><a href="#Vue3-与-Vue2-的本质区别" class="headerlink" title="Vue3 与 Vue2 的本质区别"></a>Vue3 与 Vue2 的本质区别</h3><p>Vue3 不是 Vue2 的修补升级，而是一次彻底的重写。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">对比项</th>
+<th align="left">Vue2</th>
+<th align="left">Vue3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">响应式原理</td>
+<td align="left"><code>Object.defineProperty</code>，无法监听新增属性和数组索引变化</td>
+<td align="left"><code>Proxy</code>，完整代理对象所有操作，无上述限制</td>
+</tr>
+<tr>
+<td align="left">代码组织方式</td>
+<td align="left">选项式 API（Options API）：data、methods、computed 分离</td>
+<td align="left">组合式 API（Composition API）：按逻辑关注点聚合代码</td>
+</tr>
+<tr>
+<td align="left">TypeScript 支持</td>
+<td align="left">后期适配，类型推断有限</td>
+<td align="left">核心代码用 TypeScript 重写，TS 是一等公民</td>
+</tr>
+<tr>
+<td align="left">包体积</td>
+<td align="left">运行时约 20KB（gzip）</td>
+<td align="left">支持 Tree-shaking，按需打包，最小仅 13.5KB</td>
+</tr>
+<tr>
+<td align="left">性能</td>
+<td align="left">基准线</td>
+<td align="left">初次渲染快约 55%，更新渲染快约 133%，内存占用减少约 54%</td>
+</tr>
+<tr>
+<td align="left">组件模板根节点</td>
+<td align="left">必须有且只有一个根元素</td>
+<td align="left">支持多根节点（Fragment）</td>
+</tr>
+<tr>
+<td align="left">全局 API</td>
+<td align="left">挂载在 Vue 构造函数上，多实例共享状态</td>
+<td align="left">通过 <code>createApp</code> 创建独立实例，隔离更彻底</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="核心特性"><a href="#核心特性" class="headerlink" title="核心特性"></a>核心特性</h2><p>Vue3 的改进涵盖响应式系统、API 设计、编译器和新内置组件四个维度。</p>
+<h3 id="组合式-API（Composition-API）"><a href="#组合式-API（Composition-API）" class="headerlink" title="组合式 API（Composition API）"></a>组合式 API（Composition API）</h3><p>组合式 API 是 Vue3 最重要的设计变化，它解决了 Vue2 中 Options API 的根本痛点：<strong>相关逻辑分散在不同选项中，复用困难</strong>。</p>
+<p>在 Options API 中，一个”用户搜索”功能的数据可能散落在 <code>data</code>、<code>methods</code>、<code>computed</code>、<code>watch</code> 四个选项里；而 Composition API 允许你把同一功能的所有逻辑写在一起，然后提取为可复用的函数（Composable）。</p>
+<h3 id="响应式系统：Proxy-替代-defineProperty"><a href="#响应式系统：Proxy-替代-defineProperty" class="headerlink" title="响应式系统：Proxy 替代 defineProperty"></a>响应式系统：Proxy 替代 defineProperty</h3><p>Vue2 的响应式基于 <code>Object.defineProperty</code>，这个方案有两个无法根治的问题：无法监听对象新增属性、无法监听数组通过索引直接赋值。Vue3 用 <code>Proxy</code> 从根本上解决了这两个问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;script setup&gt;<br>import &#123; useCounter &#125; from &#x27;./composables/useCounter&#x27;<br><br>// 直接解构使用，响应式仍然保持<br>const &#123; count, doubled, increment, decrement, reset &#125; = useCounter(10)<br>&lt;/script&gt;<br><br>&lt;template&gt;<br>  &lt;p&gt;当前值：&#123;&#123; count &#125;&#125;，两倍：&#123;&#123; doubled &#125;&#125;&lt;/p&gt;<br>  &lt;button @click=&quot;increment&quot;&gt;+1&lt;/button&gt;<br>  &lt;button @click=&quot;decrement&quot;&gt;-1&lt;/button&gt;<br>  &lt;button @click=&quot;reset&quot;&gt;重置&lt;/button&gt;<br>&lt;/template&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="新内置组件"><a href="#新内置组件" class="headerlink" title="新内置组件"></a>新内置组件</h3><p>Vue3 新增了三个内置组件，解决了前端开发中三类高频场景。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">组件</th>
+<th align="left">解决的问题</th>
+<th align="left">典型使用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Fragment</td>
+<td align="left">Vue2 要求组件模板必须有单一根节点，Fragment 允许多个根节点并存（无需额外包裹 div）</td>
+<td align="left">列表项组件、减少不必要的 DOM 层级</td>
+</tr>
+<tr>
+<td align="left">Teleport</td>
+<td align="left">将组件的 HTML 渲染到 DOM 中任意指定位置，突破父组件的 CSS 层叠上下文限制</td>
+<td align="left">全局 Modal 弹窗、Toast 通知、悬浮工具栏</td>
+</tr>
+<tr>
+<td align="left">Suspense</td>
+<td align="left">在异步组件加载完成之前，优雅地展示 fallback 内容，统一处理异步等待状态</td>
+<td align="left">懒加载组件的骨架屏、路由切换时的 Loading</td>
+</tr>
+</tbody></table></div>
+<h2 id="实例：Teleport-实现全局弹窗"><a href="#实例：Teleport-实现全局弹窗" class="headerlink" title="实例：Teleport 实现全局弹窗"></a>实例：Teleport 实现全局弹窗</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;script setup&gt;<br>import &#123; ref &#125; from &#x27;vue&#x27;<br><br>const showModal = ref(false)<br>&lt;/script&gt;<br><br>&lt;template&gt;<br>  &lt;button @click=&quot;showModal = true&quot;&gt;打开弹窗&lt;/button&gt;<br><br>  &lt;!--<br>    Teleport 将弹窗内容挂载到 body 下，<br>    而不是当前组件的父元素内，避免 z-index 和 overflow 问题<br>  --&gt;<br>  &lt;Teleport to=&quot;body&quot;&gt;<br>    &lt;div v-if=&quot;showModal&quot; class=&quot;modal-mask&quot;&gt;<br>      &lt;div class=&quot;modal-box&quot;&gt;<br>        &lt;p&gt;这是一个全局弹窗&lt;/p&gt;<br>        &lt;button @click=&quot;showModal = false&quot;&gt;关闭&lt;/button&gt;<br>      &lt;/div&gt;<br>    &lt;/div&gt;<br>  &lt;/Teleport&gt;<br>&lt;/template&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="实例：Suspense-处理异步组件加载"><a href="#实例：Suspense-处理异步组件加载" class="headerlink" title="实例：Suspense 处理异步组件加载"></a>实例：Suspense 处理异步组件加载</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;!-- 父组件 App.vue --&gt;<br>&lt;template&gt;<br>  &lt;Suspense&gt;<br>    &lt;!-- 默认插槽：异步内容 --&gt;<br>    &lt;template #default&gt;<br>      &lt;AsyncUserProfile /&gt; &lt;!-- 内部使用 await 的异步组件 --&gt;<br>    &lt;/template&gt;<br><br>    &lt;!-- fallback 插槽：加载中显示的内容 --&gt;<br>    &lt;template #fallback&gt;<br>      &lt;div class=&quot;loading&quot;&gt;加载中...&lt;/div&gt;<br>    &lt;/template&gt;<br>  &lt;/Suspense&gt;<br>&lt;/template&gt;<br></code></pre></td></tr></table></figure>
+</template>
+
+<h3 id="Tree-shaking-支持"><a href="#Tree-shaking-支持" class="headerlink" title="Tree-shaking 支持"></a>Tree-shaking 支持</h3><p>Vue3 将所有全局 API 改为具名导出（Named Export），配合 Vite &#x2F; webpack 等打包工具的 Tree-shaking 能力，未使用的 API 不会被打包进最终产物。</p>
+<h2 id="实例：按需导入-API"><a href="#实例：按需导入-API" class="headerlink" title="实例：按需导入 API"></a>实例：按需导入 API</h2><p><em>&#x2F;&#x2F; Vue2：所有 API 通过全局对象 Vue 访问，无法 tree-shake</em><br><em>&#x2F;&#x2F; Vue.nextTick(…)</em><br><em>&#x2F;&#x2F; Vue.set(obj, ‘key’, value)</em></p>
+<p><em>&#x2F;&#x2F; Vue3：按需导入，打包时只包含实际用到的函数</em><br>import { ref, computed, watch, nextTick, onMounted } from ‘vue’</p>
+<p><em>&#x2F;&#x2F; 只导入了这些 API，其余未使用的（如 watchEffect、provide 等）不会进入产物</em></p>
+<h3 id="生命周期钩子"><a href="#生命周期钩子" class="headerlink" title="生命周期钩子"></a>生命周期钩子</h3><p>Vue3 的组合式 API 对应的生命周期钩子全部以 <code>on</code> 开头，并在 <code>setup</code> 中调用。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">Vue2 选项式</th>
+<th align="left">Vue3 组合式</th>
+<th align="left">触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>beforeCreate</code></td>
+<td align="left">— （setup 本身即替代）</td>
+<td align="left">实例初始化前</td>
+</tr>
+<tr>
+<td align="left"><code>created</code></td>
+<td align="left">— （setup 本身即替代）</td>
+<td align="left">实例创建完成</td>
+</tr>
+<tr>
+<td align="left"><code>beforeMount</code></td>
+<td align="left"><code>onBeforeMount</code></td>
+<td align="left">挂载前</td>
+</tr>
+<tr>
+<td align="left"><code>mounted</code></td>
+<td align="left"><code>onMounted</code></td>
+<td align="left">挂载完成，可访问 DOM</td>
+</tr>
+<tr>
+<td align="left"><code>beforeUpdate</code></td>
+<td align="left"><code>onBeforeUpdate</code></td>
+<td align="left">数据更新、DOM 重渲染前</td>
+</tr>
+<tr>
+<td align="left"><code>updated</code></td>
+<td align="left"><code>onUpdated</code></td>
+<td align="left">DOM 重渲染完成后</td>
+</tr>
+<tr>
+<td align="left"><code>beforeDestroy</code></td>
+<td align="left"><code>onBeforeUnmount</code></td>
+<td align="left">组件销毁前（名称已改）</td>
+</tr>
+<tr>
+<td align="left"><code>destroyed</code></td>
+<td align="left"><code>onUnmounted</code></td>
+<td align="left">组件销毁完成（名称已改）</td>
+</tr>
+</tbody></table></div>
+<h2 id="实例：生命周期钩子使用"><a href="#实例：生命周期钩子使用" class="headerlink" title="实例：生命周期钩子使用"></a>实例：生命周期钩子使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;script setup&gt;<br>import &#123; ref, onMounted, onUnmounted &#125; from &#x27;vue&#x27;<br><br>const timer = ref(null)<br>const count = ref(0)<br><br>// 组件挂载完成后执行（可安全操作 DOM）<br>onMounted(() =&gt; &#123;<br>  console.log(&#x27;组件已挂载&#x27;)<br>  // 启动定时器，每秒计数加一<br>  timer.value = setInterval(() =&gt; &#123;<br>    count.value++<br>  &#125;, 1000)<br>&#125;)<br><br>// 组件卸载时执行（清理副作用，避免内存泄漏）<br>onUnmounted(() =&gt; &#123;<br>  clearInterval(timer.value)<br>  console.log(&#x27;计时器已清除&#x27;)<br>&#125;)<br>&lt;/script&gt;<br><br>&lt;template&gt;<br>  &lt;p&gt;已运行：&#123;&#123; count &#125;&#125; 秒&lt;/p&gt;<br>&lt;/template&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="完整的-TypeScript-支持"><a href="#完整的-TypeScript-支持" class="headerlink" title="完整的 TypeScript 支持"></a>完整的 TypeScript 支持</h3><p>Vue3 的核心库完全用 TypeScript 重写，提供精准的类型推断。配合 <code>&lt;script setup lang=&quot;ts&quot;&gt;</code>，可以直接在单文件组件中使用 TypeScript，无需额外配置。</p>
+<h2 id="实例：script-setup-中使用-TypeScript"><a href="#实例：script-setup-中使用-TypeScript" class="headerlink" title="实例：script setup 中使用 TypeScript"></a>实例：script setup 中使用 TypeScript</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;script setup lang=&quot;ts&quot;&gt;<br>import &#123; ref, computed &#125; from &#x27;vue&#x27;<br><br>// 接口定义组件内数据结构<br>interface User &#123;<br>  id: number<br>  name: string<br>  email?: string<br>&#125;<br><br>// ref 会根据初始值自动推断类型，也可显式指定<br>const user = ref&lt;User&gt;(&#123;<br>  id: 1,<br>  name: &#x27;RUNOOB&#x27;,<br>&#125;)<br><br>// defineProps：声明并推断 props 类型<br>const props = defineProps&lt;&#123;<br>  title: string       // 必填<br>  count?: number      // 可选<br>&#125;&gt;()<br><br>// defineEmits：声明并类型检查自定义事件<br>const emit = defineEmits&lt;&#123;<br>  (e: &#x27;update&#x27;, value: number): void<br>  (e: &#x27;close&#x27;): void<br>&#125;&gt;()<br><br>const displayName = computed(() =&gt; user.value.name.toUpperCase())<br><br>function handleUpdate() &#123;<br>  emit(&#x27;update&#x27;, 42)<br>&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="应用领域"><a href="#应用领域" class="headerlink" title="应用领域"></a>应用领域</h2><p>Vue3 作为一个完整的前端框架生态，覆盖了从单页应用到服务端渲染、从 Web 到移动端的广泛场景。</p>
+<h3 id="单页应用（SPA）"><a href="#单页应用（SPA）" class="headerlink" title="单页应用（SPA）"></a>单页应用（SPA）</h3><p>这是 Vue3 最经典的使用场景。配合 Vue Router 4 实现前端路由，Pinia（Vue3 官方推荐的状态管理库，替代 Vuex）管理全局状态，可以构建功能完整的单页应用。</p>
+<p>典型项目类型：企业后台管理系统、数据大屏、电商平台前台。</p>
+<h3 id="服务端渲染（SSR）与静态站点生成（SSG）"><a href="#服务端渲染（SSR）与静态站点生成（SSG）" class="headerlink" title="服务端渲染（SSR）与静态站点生成（SSG）"></a>服务端渲染（SSR）与静态站点生成（SSG）</h3><p>Nuxt 3 是基于 Vue3 的全栈框架，深度集成 SSR 和 SSG 能力。它自动处理服务端渲染的复杂性，让开发者像写普通 Vue 组件一样构建 SEO 友好的应用。</p>
+<p>适用场景：内容型网站、博客、文档站、营销落地页。</p>
+<h3 id="移动端与跨平台"><a href="#移动端与跨平台" class="headerlink" title="移动端与跨平台"></a>移动端与跨平台</h3><p>uni-app 支持用 Vue3 语法同时开发微信小程序、支付宝小程序、H5 和 App（iOS&#x2F;Android）。Ionic + Vue3 则适合构建高质量的混合移动应用。</p>
+<h3 id="桌面端应用"><a href="#桌面端应用" class="headerlink" title="桌面端应用"></a>桌面端应用</h3><p>Electron + Vue3（通过 electron-vite 等工具链）可以将 Vue3 应用打包为跨平台桌面程序。Tauri + Vue3 是近年流行的替代方案，用 Rust 作为后端，应用体积更小、性能更好。</p>
+<h3 id="UI-组件库生态"><a href="#UI-组件库生态" class="headerlink" title="UI 组件库生态"></a>UI 组件库生态</h3><p>Vue3 生态中有丰富的成熟组件库可供选择：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">组件库</th>
+<th align="left">定位</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Element Plus</td>
+<td align="left">PC 端桌面组件库，Element UI 的 Vue3 版本</td>
+<td align="left">企业后台管理、数据密集型应用</td>
+</tr>
+<tr>
+<td align="left">Ant Design Vue</td>
+<td align="left">Ant Design 的 Vue 实现，设计规范成熟</td>
+<td align="left">中后台系统、企业应用</td>
+</tr>
+<tr>
+<td align="left">Vant 4</td>
+<td align="left">移动端组件库，轻量高性能</td>
+<td align="left">移动 H5、微信小程序</td>
+</tr>
+<tr>
+<td align="left">Vuetify 3</td>
+<td align="left">Material Design 风格组件库</td>
+<td align="left">面向消费者的 Web 应用</td>
+</tr>
+<tr>
+<td align="left">Naive UI</td>
+<td align="left">使用 TypeScript 编写，主题定制能力强</td>
+<td align="left">需要深度定制主题的项目</td>
+</tr>
+<tr>
+<td align="left">shadcn-vue</td>
+<td align="left">基于 Radix UI 和 Tailwind，可复制代码的组件集</td>
+<td align="left">注重 UI 独特性的项目</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2 id="发展历史"><a href="#发展历史" class="headerlink" title="发展历史"></a>发展历史</h2><p>Vue.js 从一个个人项目发展为全球前三的前端框架，每一次重大版本的背后都有清晰的工程需求驱动。</p>
+<h3 id="起源（2013-2014）"><a href="#起源（2013-2014）" class="headerlink" title="起源（2013 - 2014）"></a>起源（2013 - 2014）</h3><p>Vue.js 由尤雨溪在 Google 任职期间创建。2013 年，他在 Angular 的开发体验上进行探索，希望提取其中最喜欢的部分——即数据驱动的视图更新机制，同时去掉他认为过于繁重的部分。</p>
+<p>2014 年 2 月，Vue.js 0.8.0 公开发布，此后陆续得到 Laravel 社区的关注，逐渐在 JavaScript 社区打响知名度。</p>
+<h3 id="Vue-1-x-时代（2015）"><a href="#Vue-1-x-时代（2015）" class="headerlink" title="Vue 1.x 时代（2015）"></a>Vue 1.x 时代（2015）</h3><p>2015 年 10 月，Vue 1.0 正式发布，代号 Evangelion（新世纪福音战士）。同年，Vue Router（2015.08）、Vuex（2015.11）、Vue CLI（2015.12）相继发布，标志着 Vue 从一个视图层库发展为一个完整的渐进式框架。</p>
+<h3 id="Vue-2-x-时代（2016-2020）"><a href="#Vue-2-x-时代（2016-2020）" class="headerlink" title="Vue 2.x 时代（2016 - 2020）"></a>Vue 2.x 时代（2016 - 2020）</h3><p>2016 年 10 月，Vue 2.0 发布，引入虚拟 DOM 方案（借鉴 React），支持服务端渲染（SSR），性能大幅提升。</p>
+<p>Vue 2 时代是 Vue 生态最快速扩张的阶段：Element UI 等组件库兴起，Nuxt.js 出现，Vue 成为全球 GitHub Star 最多的前端框架之一。</p>
+<p>2019 年 2 月，Vue 2.6 发布，代号 Macross，这是 Vue 2 最后一个重要版本，承前启后。</p>
+<h3 id="Vue-3-0-发布（2020）"><a href="#Vue-3-0-发布（2020）" class="headerlink" title="Vue 3.0 发布（2020）"></a>Vue 3.0 发布（2020）</h3><p>Vue3 的开发始于 2018 年底，历时约两年，经历了 30+ 个 RFC（Request for Comments）、2600+ 次提交、99 位贡献者的 628 个 PR。</p>
+<p>2020 年 9 月 18 日，Vue 3.0 正式发布，代号 One Piece（海贼王）。核心改变：</p>
+<ul>
+<li>响应式系统基于 <code>Proxy</code> 重写</li>
+<li>引入 Composition API</li>
+<li>全面支持 TypeScript</li>
+<li>新增 Fragment、Teleport、Suspense</li>
+<li>支持 Tree-shaking，包体积显著缩减</li>
+</ul>
+<h3 id="生态完善阶段（2021-2022）"><a href="#生态完善阶段（2021-2022）" class="headerlink" title="生态完善阶段（2021 - 2022）"></a>生态完善阶段（2021 - 2022）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">时间</th>
+<th align="left">版本 &#x2F; 事件</th>
+<th align="left">里程碑意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">2021-08</td>
+<td align="left">Vue 3.2</td>
+<td align="left"><code>&lt;script setup&gt;</code> 语法糖正式稳定，<code>&lt;style&gt; v-bind</code> 支持动态 CSS 绑定，成为最受欢迎的 Vue 3 版本之一</td>
+</tr>
+<tr>
+<td align="left">2022-02</td>
+<td align="left">Vue 3 成为默认版本</td>
+<td align="left">vue.js 官网和 npm 上 <code>vue</code> 包的默认版本从 2 切换为 3，标志着 Vue3 生态正式主导</td>
+</tr>
+<tr>
+<td align="left">2022-05</td>
+<td align="left">Pinia 成为官方推荐</td>
+<td align="left">Vuex 5 计划搁置，Pinia 成为 Vue3 官方推荐的状态管理库</td>
+</tr>
+<tr>
+<td align="left">2022</td>
+<td align="left">Vue 3.3</td>
+<td align="left">增强泛型组件支持，改进 <code>defineProps</code> 的类型推导，TypeScript 体验大幅提升</td>
+</tr>
+</tbody></table></div>
+<h3 id="持续优化阶段（2023-至今）"><a href="#持续优化阶段（2023-至今）" class="headerlink" title="持续优化阶段（2023 - 至今）"></a>持续优化阶段（2023 - 至今）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">时间</th>
+<th align="left">版本</th>
+<th align="left">重要特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">2023-12</td>
+<td align="left">Vue 3.4</td>
+<td align="left">重写模板解析器（性能提升约 2 倍）、响应式系统优化（减少无效计算触发）、<code>defineModel</code> 宏正式稳定（简化 v-model 双向绑定）</td>
+</tr>
+<tr>
+<td align="left">2024-09</td>
+<td align="left">Vue 3.5</td>
+<td align="left">响应式 Props 解构正式稳定（无需 toRef 即可解构保持响应式）、<code>useTemplateRef</code> 新 API、SSR 懒加载水合（Lazy Hydration）</td>
+</tr>
+<tr>
+<td align="left">2025（开发中）</td>
+<td align="left">Vue 3.6</td>
+<td align="left">集成 Alien Signals 响应式系统（依赖追踪内存减少约 14%）、Vapor Mode 进入 Alpha（完全跳过虚拟 DOM，包体积从 50KB 降至约 6KB，10 万组件挂载时间约 100ms）</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>Vapor Mode</strong> 是 Vue3 未来最重要的技术方向：通过编译时静态分析，将模板直接编译为精准的原生 DOM 操作代码，完全绕过虚拟 DOM 的创建和 diff 过程。它与现有虚拟 DOM 模式可以共存，并支持渐进式迁移。目前仅支持 <code>&lt;script setup&gt;</code> 组合式 API，选项式 API 不适用。</p>
+</blockquote>
+<hr>
+<h2 id="Vue3-在三大框架中的定位"><a href="#Vue3-在三大框架中的定位" class="headerlink" title="Vue3 在三大框架中的定位"></a>Vue3 在三大框架中的定位</h2><p>Vue3、React 和 Angular 是目前前端开发的三大主流框架，了解各自定位有助于做出更合适的技术选型。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">Vue3</th>
+<th align="left">React 18+</th>
+<th align="left">Angular 17+</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">定位</td>
+<td align="left">渐进式框架，官方提供路由和状态管理</td>
+<td align="left">UI 库，生态由社区主导</td>
+<td align="left">完整框架，一切都有官方解决方案</td>
+</tr>
+<tr>
+<td align="left">语法风格</td>
+<td align="left">单文件组件（.vue），模板语法直观</td>
+<td align="left">JSX，JavaScript 中写 HTML</td>
+<td align="left">组件 + 模板 + 装饰器，工程化程度高</td>
+</tr>
+<tr>
+<td align="left">学习曲线</td>
+<td align="left">较平缓，模板语法接近 HTML</td>
+<td align="left">中等，需理解 JSX 和 Hooks 心智模型</td>
+<td align="left">较陡，概念多（模块、依赖注入、RxJS）</td>
+</tr>
+<tr>
+<td align="left">TypeScript</td>
+<td align="left">核心库 TS 重写，支持良好</td>
+<td align="left">良好，需要 @types&#x2F;react</td>
+<td align="left">默认 TypeScript，深度集成</td>
+</tr>
+<tr>
+<td align="left">性能</td>
+<td align="left">优秀，细粒度响应式，精确更新</td>
+<td align="left">良好，React 19 Compiler 进一步优化</td>
+<td align="left">良好，Signals 机制持续改进</td>
+</tr>
+<tr>
+<td align="left">适用规模</td>
+<td align="left">中小型到大型项目均适合</td>
+<td align="left">各类规模，超大型项目有成熟案例</td>
+<td align="left">大型企业级项目，团队规范要求高</td>
+</tr>
+<tr>
+<td align="left">中国市场占有率</td>
+<td align="left">最高，大量企业使用</td>
+<td align="left">高</td>
+<td align="left">较低</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p>在国内前端生态中，Vue3 的使用率最高，Element Plus、Ant Design Vue 等中文文档完善的组件库极大降低了企业采用门槛。如果你的目标是国内就业市场，Vue3 是最值得优先掌握的框架之一。</p>
+</blockquote>
+<hr>
+<h2 id="Vue3-的局限性"><a href="#Vue3-的局限性" class="headerlink" title="Vue3 的局限性"></a>Vue3 的局限性</h2><p>了解 Vue3 的边界，可以帮助你做出更理性的技术判断。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th align="left">局限</th>
+<th align="left">具体表现</th>
+<th align="left">应对建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Options API 与 Composition API 并存带来的决策成本</td>
+<td align="left">两套 API 风格共存，团队需约定统一规范，否则代码风格不一致</td>
+<td align="left">新项目统一使用 <code>&lt;script setup&gt;</code> + Composition API</td>
+</tr>
+<tr>
+<td align="left">响应式数据的 .value 心智负担</td>
+<td align="left"><code>ref</code> 在脚本中需要 <code>.value</code>，在模板中自动解包，初学者容易混淆</td>
+<td align="left">使用 Volar 插件，IDE 会给出提示；养成习惯后不再困扰</td>
+</tr>
+<tr>
+<td align="left">大型应用状态管理复杂度</td>
+<td align="left">Pinia 对超大型、高并发场景的状态管理支持不如 Redux 成熟</td>
+<td align="left">超大型应用可评估 Pinia + 模块化拆分方案</td>
+</tr>
+<tr>
+<td align="left">服务端渲染水合成本</td>
+<td align="left">SSR 页面需要”水合”（Hydration），在低端设备上初始化耗时较长</td>
+<td align="left">Vue 3.5 引入 Lazy Hydration，Vue 3.6 的 Vapor Mode 将进一步改善</td>
+</tr>
+<tr>
+<td align="left">国际化生态丰富度</td>
+<td align="left">相比 React，Vue 的英文社区活跃度和 Stack Overflow 资源略少</td>
+<td align="left">官方文档质量极高，中文文档完整，优先查阅官方文档</td>
+</tr>
+</tbody></table></div>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/852511471/"><span>上一篇</span><strong>Tensors, Linear Layers and Why Init Is Not Trivia</strong></a>
+    
+    
+      <a href="/posts/1823148091/"><span>下一篇</span><strong>LangChain：编排 LLM 的积木箱</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/3435504910/">
+          <small>2025-01-30</small>
+          <strong>React 简介</strong>
+        </a>
+      
+        <a href="/posts/2471344728/">
+          <small>2025-01-11</small>
+          <strong>TypeScript + Vue3 实战</strong>
+        </a>
+      
+        <a href="/posts/1900282217/">
+          <small>2024-12-09</small>
+          <strong>TypeScript 简介</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

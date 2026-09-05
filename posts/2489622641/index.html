@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>TypeScript 综合项目实战 · 小黑程序员</title>
+  <meta name="description" content="本教程通过一个完整的项目案例，综合运用 TypeScript 的各种特性。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/2489622641/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="TypeScript 综合项目实战">
+  <meta property="og:description" content="本教程通过一个完整的项目案例，综合运用 TypeScript 的各种特性。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/2489622641/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2024-12-28T16:00:00.000Z">
+  
+  <meta property="article:tag" content="实战, TypeScript">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TypeScript 综合项目实战">
+  <meta name="twitter:description" content="本教程通过一个完整的项目案例，综合运用 TypeScript 的各种特性。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"TypeScript 综合项目实战","description":"本教程通过一个完整的项目案例，综合运用 TypeScript 的各种特性。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/2489622641/","datePublished":"2024-12-28T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/2489622641/"},"keywords":"实战, TypeScript"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Spring-Boot/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Spring Boot</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Elasticsearch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Elasticsearch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Vector-Search/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vector Search</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/TensorRT/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TensorRT</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangChain/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangChain</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Context-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Context Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/">前端交互</a>
+      
+        <a class="chip" href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">TypeScript</a>
+      
+      <time datetime="2024-12-28T16:00:00.000Z">2024-12-29</time>
+      <span>14910 字 · 约 37 分钟</span>
+    </div>
+    <h1>TypeScript 综合项目实战</h1>
+    <p class="lede">本教程通过一个完整的项目案例，综合运用 TypeScript 的各种特性。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/%E5%AE%9E%E6%88%98/">#实战</a>
+        
+          <a href="/tags/TypeScript/">#TypeScript</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>本教程通过一个完整的项目案例，综合运用 TypeScript 的各种特性。</p>
+<p>从项目搭建到实际开发，完整展示 TypeScript 在实际项目中的应用。<img src="E:\blog_hexo\xiaohei-blog\source\img\image-20260905221807368.png" alt="image-20260905221807368" loading="lazy" decoding="async"></p>
+<h2 id="为什么需要综合项目实战"><a href="#为什么需要综合项目实战" class="headerlink" title="为什么需要综合项目实战"></a>为什么需要综合项目实战</h2><p>学习 TypeScript 语法后，需要通过实际项目来巩固知识。</p>
+<p>本教程展示一个完整的任务管理系统，涵盖前端、后端和类型定义。</p>
+<p>通过这个项目，可以掌握 TypeScript 在实际开发中的最佳实践。</p>
+<blockquote>
+<p><strong>项目目标：</strong>创建任务管理系统，包含任务创建、查询、更新、删除功能。</p>
+</blockquote>
+<hr>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><p>使用 Monorepo 风格组织项目结构。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python">task-manager/<br>├── src/<br>│   ├── types/                 <span class="hljs-comment"># 类型定义</span><br>│   │   ├── task.ts           <span class="hljs-comment"># 任务类型</span><br>│   │   ├── api.ts            <span class="hljs-comment"># API 类型</span><br>│   │   └── index.ts          <span class="hljs-comment"># 类型导出</span><br>│   │<br>│   ├── services/             <span class="hljs-comment"># 服务层</span><br>│   │   ├── taskService.ts   <span class="hljs-comment"># 任务服务</span><br>│   │   └── index.ts<br>│   │<br>│   ├── components/           <span class="hljs-comment"># React 组件</span><br>│   │   ├── TaskList.tsx     <span class="hljs-comment"># 任务列表</span><br>│   │   ├── TaskItem.tsx     <span class="hljs-comment"># 任务项</span><br>│   │   ├── TaskForm.tsx     <span class="hljs-comment"># 任务表单</span><br>│   │   └── index.ts<br>│   │<br>│   ├── hooks/                <span class="hljs-comment"># 自定义 Hooks</span><br>│   │   ├── useTasks.ts      <span class="hljs-comment"># 任务状态管理</span><br>│   │   └── index.ts<br>│   │<br>│   ├── App.tsx               <span class="hljs-comment"># 主应用</span><br>│   ├── App.css               <span class="hljs-comment"># 样式</span><br>│   └── main.tsx              <span class="hljs-comment"># 入口文件</span><br>│<br>├── index.html<br>├── package.json<br>├── tsconfig.json<br>└── vite.config.ts<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>目录划分：</strong>按功能划分目录，类型定义、服务层、组件分离。</p>
+</blockquote>
+<hr>
+<h2 id="类型定义"><a href="#类型定义" class="headerlink" title="类型定义"></a>类型定义</h2><p>首先定义项目的核心类型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs python">// 任务状态枚举<br>export <span class="hljs-built_in">type</span> TaskStatus = <span class="hljs-string">&quot;pending&quot;</span> | <span class="hljs-string">&quot;in-progress&quot;</span> | <span class="hljs-string">&quot;completed&quot;</span>;<br><br>// 任务优先级枚举<br>export <span class="hljs-built_in">type</span> TaskPriority = <span class="hljs-string">&quot;low&quot;</span> | <span class="hljs-string">&quot;medium&quot;</span> | <span class="hljs-string">&quot;high&quot;</span>;<br><br>// 任务接口定义<br>export interface Task &#123;<br>    <span class="hljs-built_in">id</span>: string;               // 任务ID<br>    title: string;            // 任务标题<br>    description?: string;      // 任务描述（可选）<br>    status: TaskStatus;       // 任务状态<br>    priority: TaskPriority;   // 任务优先级<br>    createdAt: string;        // 创建时间<br>    updatedAt: string;         // 更新时间<br>    dueDate?: string;         // 截止日期（可选）<br>    tags?: string[];          // 标签（可选）<br>&#125;<br><br>// 创建任务的输入类型<br>export interface CreateTaskInput &#123;<br>    title: string;<br>    description?: string;<br>    priority: TaskPriority;<br>    dueDate?: string;<br>    tags?: string[];<br>&#125;<br><br>// 更新任务的输入类型<br>export interface UpdateTaskInput &#123;<br>    title?: string;<br>    description?: string;<br>    status?: TaskStatus;<br>    priority?: TaskPriority;<br>    dueDate?: string;<br>    tags?: string[];<br>&#125;<br><br>// 任务过滤选项<br>export interface TaskFilter &#123;<br>    status?: TaskStatus;<br>    priority?: TaskPriority;<br>    search?: string;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>类型分层：</strong>将输入类型、输出类型、过滤类型分开定义，便于维护。</p>
+</blockquote>
+<hr>
+<h2 id="API-类型定义"><a href="#API-类型定义" class="headerlink" title="API 类型定义"></a>API 类型定义</h2><p>定义 API 相关的类型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python">// 通用 API 响应类型<br>export interface ApiResponse&lt;T&gt; &#123;<br>    success: boolean;<br>    data?: T;<br>    error?: string;<br>    message?: string;<br>&#125;<br><br>// 分页元数据<br>export interface PaginationMeta &#123;<br>    total: number;<br>    page: number;<br>    pageSize: number;<br>    totalPages: number;<br>&#125;<br><br>// 分页响应类型<br>export interface PaginatedResponse&lt;T&gt; &#123;<br>    items: T[];<br>    meta: PaginationMeta;<br>&#125;<br><br>// 请求错误类型<br>export interface ApiError &#123;<br>    code: string;<br>    message: string;<br>    details?: Record&lt;string, string&gt;;<br>&#125;<br><br>// HTTP 方法类型<br>export <span class="hljs-built_in">type</span> HttpMethod = <span class="hljs-string">&quot;GET&quot;</span> | <span class="hljs-string">&quot;POST&quot;</span> | <span class="hljs-string">&quot;PUT&quot;</span> | <span class="hljs-string">&quot;PATCH&quot;</span> | <span class="hljs-string">&quot;DELETE&quot;</span>;<br><br>// 任务相关的 API 端点<br>export interface TaskEndpoints &#123;<br>    getAll: <span class="hljs-string">&quot;/api/tasks&quot;</span>;<br>    getById: <span class="hljs-string">&quot;/api/tasks/:id&quot;</span>;<br>    create: <span class="hljs-string">&quot;/api/tasks&quot;</span>;<br>    update: <span class="hljs-string">&quot;/api/tasks/:id&quot;</span>;<br>    delete: <span class="hljs-string">&quot;/api/tasks/:id&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>API 类型：</strong>统一的响应格式和错误处理类型，便于前后端对接。</p>
+</blockquote>
+<hr>
+<h2 id="任务服务层"><a href="#任务服务层" class="headerlink" title="任务服务层"></a>任务服务层</h2><p>实现任务管理的业务逻辑。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><code class="hljs python">// 导入类型定义<br><span class="hljs-keyword">import</span> &#123;<br>    Task,<br>    CreateTaskInput,<br>    UpdateTaskInput,<br>    TaskFilter,<br>    TaskStatus,<br>    TaskPriority<br>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../types/task&quot;</span>;<br><br>// 生成唯一ID<br>function generateId(): string &#123;<br>    <span class="hljs-keyword">return</span> Date.now().toString(<span class="hljs-number">36</span>) + Math.random().toString(<span class="hljs-number">36</span>).substr(<span class="hljs-number">2</span>);<br>&#125;<br><br>// 模拟数据库（内存存储）<br>let tasks: Task[] = [<br>    &#123;<br>        <span class="hljs-built_in">id</span>: <span class="hljs-string">&quot;1&quot;</span>,<br>        title: <span class="hljs-string">&quot;学习 TypeScript&quot;</span>,<br>        description: <span class="hljs-string">&quot;掌握 TypeScript 基础和高级特性&quot;</span>,<br>        status: <span class="hljs-string">&quot;completed&quot;</span>,<br>        priority: <span class="hljs-string">&quot;high&quot;</span>,<br>        createdAt: new Date().toISOString(),<br>        updatedAt: new Date().toISOString(),<br>        tags: [<span class="hljs-string">&quot;学习&quot;</span>, <span class="hljs-string">&quot;TypeScript&quot;</span>]<br>    &#125;,<br>    &#123;<br>        <span class="hljs-built_in">id</span>: <span class="hljs-string">&quot;2&quot;</span>,<br>        title: <span class="hljs-string">&quot;开发任务管理系统&quot;</span>,<br>        description: <span class="hljs-string">&quot;使用 React + TypeScript 开发&quot;</span>,<br>        status: <span class="hljs-string">&quot;in-progress&quot;</span>,<br>        priority: <span class="hljs-string">&quot;high&quot;</span>,<br>        createdAt: new Date().toISOString(),<br>        updatedAt: new Date().toISOString(),<br>        tags: [<span class="hljs-string">&quot;项目&quot;</span>, <span class="hljs-string">&quot;实战&quot;</span>]<br>    &#125;<br>];<br><br>// 任务服务类<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskService</span> &#123;<br>    // 获取所有任务<br>    getAll(<span class="hljs-built_in">filter</span>?: TaskFilter): Task[] &#123;<br>        let result = [...tasks];<br><br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">filter</span>) &#123;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">filter</span>.status) &#123;<br>                result = result.<span class="hljs-built_in">filter</span>(t =&gt; t.status === <span class="hljs-built_in">filter</span>.status);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">filter</span>.priority) &#123;<br>                result = result.<span class="hljs-built_in">filter</span>(t =&gt; t.priority === <span class="hljs-built_in">filter</span>.priority);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">filter</span>.search) &#123;<br>                const search = <span class="hljs-built_in">filter</span>.search.toLowerCase();<br>                result = result.<span class="hljs-built_in">filter</span>(t =&gt;<br>                    t.title.toLowerCase().includes(search) ||<br>                    t.description?.toLowerCase().includes(search)<br>                );<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    // 根据ID获取任务<br>    getById(<span class="hljs-built_in">id</span>: string): Task | undefined &#123;<br>        <span class="hljs-keyword">return</span> tasks.find(t =&gt; t.<span class="hljs-built_in">id</span> === <span class="hljs-built_in">id</span>);<br>    &#125;<br><br>    // 创建任务<br>    create(<span class="hljs-built_in">input</span>: CreateTaskInput): Task &#123;<br>        const now = new Date().toISOString();<br>        const task: Task = &#123;<br>            <span class="hljs-built_in">id</span>: generateId(),<br>            title: <span class="hljs-built_in">input</span>.title,<br>            description: <span class="hljs-built_in">input</span>.description,<br>            status: <span class="hljs-string">&quot;pending&quot;</span>,<br>            priority: <span class="hljs-built_in">input</span>.priority,<br>            createdAt: now,<br>            updatedAt: now,<br>            dueDate: <span class="hljs-built_in">input</span>.dueDate,<br>            tags: <span class="hljs-built_in">input</span>.tags<br>        &#125;;<br><br>        tasks.push(task);<br>        <span class="hljs-keyword">return</span> task;<br>    &#125;<br><br>    // 更新任务<br>    update(<span class="hljs-built_in">id</span>: string, <span class="hljs-built_in">input</span>: UpdateTaskInput): Task | null &#123;<br>        const index = tasks.findIndex(t =&gt; t.<span class="hljs-built_in">id</span> === <span class="hljs-built_in">id</span>);<br>        <span class="hljs-keyword">if</span> (index === -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> null;<br><br>        const task = tasks[index];<br>        const updated: Task = &#123;<br>            ...task,<br>            ...<span class="hljs-built_in">input</span>,<br>            updatedAt: new Date().toISOString()<br>        &#125;;<br><br>        tasks[index] = updated;<br>        <span class="hljs-keyword">return</span> updated;<br>    &#125;<br><br>    // 删除任务<br>    delete(<span class="hljs-built_in">id</span>: string): boolean &#123;<br>        const index = tasks.findIndex(t =&gt; t.<span class="hljs-built_in">id</span> === <span class="hljs-built_in">id</span>);<br>        <span class="hljs-keyword">if</span> (index === -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> false;<br><br>        tasks.splice(index, <span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">return</span> true;<br>    &#125;<br><br>    // 更新任务状态<br>    updateStatus(<span class="hljs-built_in">id</span>: string, status: TaskStatus): Task | null &#123;<br>        <span class="hljs-keyword">return</span> this.update(<span class="hljs-built_in">id</span>, &#123; status &#125;);<br>    &#125;<br>&#125;<br><br>// 导出服务实例<br>export const taskService = new TaskService();<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>服务层：</strong>业务逻辑集中在服务层，便于测试和维护。</p>
+</blockquote>
+<hr>
+<h2 id="自定义钩子"><a href="#自定义钩子" class="headerlink" title="自定义钩子"></a>自定义钩子</h2><p>使用 Hook 管理任务状态。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><code class="hljs python">// 导入 React Hooks 和类型<br><span class="hljs-keyword">import</span> &#123; useState, useEffect, useCallback &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>;<br><span class="hljs-keyword">import</span> &#123;<br>    Task,<br>    CreateTaskInput,<br>    UpdateTaskInput,<br>    TaskFilter,<br>    TaskStatus,<br>    TaskPriority<br>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../types/task&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; taskService &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../services/taskService&quot;</span>;<br><br>// Hook 返回的状态类型<br>interface UseTasksReturn &#123;<br>    tasks: Task[];<br>    loading: boolean;<br>    error: string | null;<br>    <span class="hljs-built_in">filter</span>: TaskFilter;<br>    // 操作方法<br>    createTask: (<span class="hljs-built_in">input</span>: CreateTaskInput) =&gt; Promise&lt;void&gt;;<br>    updateTask: (<span class="hljs-built_in">id</span>: string, <span class="hljs-built_in">input</span>: UpdateTaskInput) =&gt; Promise&lt;void&gt;;<br>    deleteTask: (<span class="hljs-built_in">id</span>: string) =&gt; Promise&lt;void&gt;;<br>    updateStatus: (<span class="hljs-built_in">id</span>: string, status: TaskStatus) =&gt; Promise&lt;void&gt;;<br>    setFilter: (<span class="hljs-built_in">filter</span>: TaskFilter) =&gt; void;<br>    refresh: () =&gt; void;<br>&#125;<br><br>// 初始化默认过滤器<br>const defaultFilter: TaskFilter = &#123;&#125;;<br><br>export function useTasks(): UseTasksReturn &#123;<br>    // 任务列表状态<br>    const [tasks, setTasks] = useState&lt;Task[]&gt;([]);<br>    // 加载状态<br>    const [loading, setLoading] = useState(true);<br>    // 错误状态<br>    const [error, setError] = useState&lt;string | null&gt;(null);<br>    // 过滤条件<br>    const [<span class="hljs-built_in">filter</span>, setFilter] = useState&lt;TaskFilter&gt;(defaultFilter);<br><br>    // 加载任务列表<br>    const loadTasks = useCallback(() =&gt; &#123;<br>        setLoading(true);<br>        setError(null);<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            const data = taskService.getAll(<span class="hljs-built_in">filter</span>);<br>            setTasks(data);<br>        &#125; catch (err) &#123;<br>            setError(err instanceof Error ? err.message : <span class="hljs-string">&quot;加载失败&quot;</span>);<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            setLoading(false);<br>        &#125;<br>    &#125;, [<span class="hljs-built_in">filter</span>]);<br><br>    // 初始加载和过滤器变化时重新加载<br>    useEffect(() =&gt; &#123;<br>        loadTasks();<br>    &#125;, [loadTasks]);<br><br>    // 创建任务<br>    const createTask = useCallback(<span class="hljs-keyword">async</span> (<span class="hljs-built_in">input</span>: CreateTaskInput) =&gt; &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            taskService.create(<span class="hljs-built_in">input</span>);<br>            loadTasks();<br>        &#125; catch (err) &#123;<br>            setError(err instanceof Error ? err.message : <span class="hljs-string">&quot;创建失败&quot;</span>);<br>        &#125;<br>    &#125;, [loadTasks]);<br><br>    // 更新任务<br>    const updateTask = useCallback(<span class="hljs-keyword">async</span> (<span class="hljs-built_in">id</span>: string, <span class="hljs-built_in">input</span>: UpdateTaskInput) =&gt; &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            taskService.update(<span class="hljs-built_in">id</span>, <span class="hljs-built_in">input</span>);<br>            loadTasks();<br>        &#125; catch (err) &#123;<br>            setError(err instanceof Error ? err.message : <span class="hljs-string">&quot;更新失败&quot;</span>);<br>        &#125;<br>    &#125;, [loadTasks]);<br><br>    // 删除任务<br>    const deleteTask = useCallback(<span class="hljs-keyword">async</span> (<span class="hljs-built_in">id</span>: string) =&gt; &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            taskService.delete(<span class="hljs-built_in">id</span>);<br>            loadTasks();<br>        &#125; catch (err) &#123;<br>            setError(err instanceof Error ? err.message : <span class="hljs-string">&quot;删除失败&quot;</span>);<br>        &#125;<br>    &#125;, [loadTasks]);<br><br>    // 更新任务状态<br>    const updateStatus = useCallback(<span class="hljs-keyword">async</span> (<span class="hljs-built_in">id</span>: string, status: TaskStatus) =&gt; &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            taskService.updateStatus(<span class="hljs-built_in">id</span>, status);<br>            loadTasks();<br>        &#125; catch (err) &#123;<br>            setError(err instanceof Error ? err.message : <span class="hljs-string">&quot;状态更新失败&quot;</span>);<br>        &#125;<br>    &#125;, [loadTasks]);<br><br>    // 刷新任务列表<br>    const refresh = useCallback(() =&gt; &#123;<br>        loadTasks();<br>    &#125;, [loadTasks]);<br><br>    <span class="hljs-keyword">return</span> &#123;<br>        tasks,<br>        loading,<br>        error,<br>        <span class="hljs-built_in">filter</span>,<br>        createTask,<br>        updateTask,<br>        deleteTask,<br>        updateStatus,<br>        setFilter,<br>        refresh<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>自定义 Hook：</strong>将状态管理和业务逻辑封装在 Hook 中，组件更简洁。</p>
+</blockquote>
+<hr>
+<h2 id="React-组件"><a href="#React-组件" class="headerlink" title="React 组件"></a>React 组件</h2><p>使用 Hook 创建任务列表组件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><code class="hljs python">// 导入 React 和自定义 Hook<br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; useTasks &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../hooks/useTasks&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Task, TaskStatus, TaskPriority &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../types/task&quot;</span>;<br><br>// 任务项组件 Props<br>interface TaskItemProps &#123;<br>    task: Task;<br>    onStatusChange: (<span class="hljs-built_in">id</span>: string, status: TaskStatus) =&gt; void;<br>    onDelete: (<span class="hljs-built_in">id</span>: string) =&gt; void;<br>&#125;<br><br>// 任务项组件<br>const TaskItem: React.FC&lt;TaskItemProps&gt; = (&#123;<br>    task,<br>    onStatusChange,<br>    onDelete<br>&#125;) =&gt; &#123;<br>    // 状态样式映射<br>    const statusStyles: Record&lt;TaskStatus, string&gt; = &#123;<br>        <span class="hljs-string">&quot;pending&quot;</span>: <span class="hljs-string">&quot;status-pending&quot;</span>,<br>        <span class="hljs-string">&quot;in-progress&quot;</span>: <span class="hljs-string">&quot;status-progress&quot;</span>,<br>        <span class="hljs-string">&quot;completed&quot;</span>: <span class="hljs-string">&quot;status-completed&quot;</span><br>    &#125;;<br><br>    // 优先级样式映射<br>    const priorityLabels: Record&lt;TaskPriority, string&gt; = &#123;<br>        <span class="hljs-string">&quot;low&quot;</span>: <span class="hljs-string">&quot;低&quot;</span>,<br>        <span class="hljs-string">&quot;medium&quot;</span>: <span class="hljs-string">&quot;中&quot;</span>,<br>        <span class="hljs-string">&quot;high&quot;</span>: <span class="hljs-string">&quot;高&quot;</span><br>    &#125;;<br><br>    <span class="hljs-keyword">return</span> (<br>        &lt;div className=&#123;`task-item $&#123;statusStyles[task.status]&#125;`&#125;&gt;<br>            &lt;div className=<span class="hljs-string">&quot;task-content&quot;</span>&gt;<br>                &lt;h3 className=<span class="hljs-string">&quot;task-title&quot;</span>&gt;&#123;task.title&#125;&lt;/h3&gt;<br>                &#123;task.description &amp;&amp; (<br>                    &lt;p className=<span class="hljs-string">&quot;task-description&quot;</span>&gt;&#123;task.description&#125;&lt;/p&gt;<br>                )&#125;<br>                &lt;div className=<span class="hljs-string">&quot;task-meta&quot;</span>&gt;<br>                    &lt;span className=&#123;`priority priority-$&#123;task.priority&#125;`&#125;&gt;<br>                        &#123;priorityLabels[task.priority]&#125;<br>                    &lt;/span&gt;<br>                    &lt;span className=<span class="hljs-string">&quot;task-date&quot;</span>&gt;<br>                        &#123;new Date(task.createdAt).toLocaleDateString()&#125;<br>                    &lt;/span&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>            &lt;div className=<span class="hljs-string">&quot;task-actions&quot;</span>&gt;<br>                &lt;select<br>                    value=&#123;task.status&#125;<br>                    onChange=&#123;(e) =&gt; onStatusChange(task.<span class="hljs-built_in">id</span>, e.target.value <span class="hljs-keyword">as</span> TaskStatus)&#125;<br>                    className=<span class="hljs-string">&quot;status-select&quot;</span><br>                &gt;<br>                    &lt;option value=<span class="hljs-string">&quot;pending&quot;</span>&gt;待处理&lt;/option&gt;<br>                    &lt;option value=<span class="hljs-string">&quot;in-progress&quot;</span>&gt;进行中&lt;/option&gt;<br>                    &lt;option value=<span class="hljs-string">&quot;completed&quot;</span>&gt;已完成&lt;/option&gt;<br>                &lt;/select&gt;<br>                &lt;button<br>                    onClick=&#123;() =&gt; onDelete(task.<span class="hljs-built_in">id</span>)&#125;<br>                    className=<span class="hljs-string">&quot;delete-btn&quot;</span><br>                &gt;<br>                    删除<br>                &lt;/button&gt;<br>            &lt;/div&gt;<br>        &lt;/div&gt;<br>    );<br>&#125;;<br><br>// 任务列表组件<br>export const TaskList: React.FC = () =&gt; &#123;<br>    // 使用自定义 Hook 获取任务状态<br>    const &#123;<br>        tasks,<br>        loading,<br>        error,<br>        updateStatus,<br>        deleteTask<br>    &#125; = useTasks();<br><br>    // 渲染加载状态<br>    <span class="hljs-keyword">if</span> (loading) &#123;<br>        <span class="hljs-keyword">return</span> &lt;div className=<span class="hljs-string">&quot;loading&quot;</span>&gt;加载中...&lt;/div&gt;;<br>    &#125;<br><br>    // 渲染错误状态<br>    <span class="hljs-keyword">if</span> (error) &#123;<br>        <span class="hljs-keyword">return</span> &lt;div className=<span class="hljs-string">&quot;error&quot;</span>&gt;错误: &#123;error&#125;&lt;/div&gt;;<br>    &#125;<br><br>    // 渲染空状态<br>    <span class="hljs-keyword">if</span> (tasks.length === <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div className=<span class="hljs-string">&quot;empty&quot;</span>&gt;<br>                &lt;p&gt;暂无任务&lt;/p&gt;<br>                &lt;p&gt;点击上方按钮创建新任务&lt;/p&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br><br>    // 渲染任务列表<br>    <span class="hljs-keyword">return</span> (<br>        &lt;div className=<span class="hljs-string">&quot;task-list&quot;</span>&gt;<br>            &#123;tasks.<span class="hljs-built_in">map</span>(task =&gt; (<br>                &lt;TaskItem<br>                    key=&#123;task.<span class="hljs-built_in">id</span>&#125;<br>                    task=&#123;task&#125;<br>                    onStatusChange=&#123;updateStatus&#125;<br>                    onDelete=&#123;deleteTask&#125;<br>                /&gt;<br>            ))&#125;<br>        &lt;/div&gt;<br>    );<br>&#125;;<br><br>export default TaskList;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>组件拆分：</strong>将 TaskItem 拆分为独立组件，代码更清晰。</p>
+</blockquote>
+<hr>
+<h2 id="主应用组件"><a href="#主应用组件" class="headerlink" title="主应用组件"></a>主应用组件</h2><p>整合所有组件，组成完整的应用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><code class="hljs python">// 导入 React 和类型<br><span class="hljs-keyword">import</span> React, &#123; useState &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; TaskList &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./components/TaskList&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; useTasks &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./hooks/useTasks&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; CreateTaskInput, TaskPriority &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./types/task&quot;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;./App.css&quot;</span>;<br><br>// 任务表单组件 Props<br>interface TaskFormProps &#123;<br>    onSubmit: (<span class="hljs-built_in">input</span>: CreateTaskInput) =&gt; void;<br>&#125;<br><br>// 任务表单组件<br>const TaskForm: React.FC&lt;TaskFormProps&gt; = (&#123; onSubmit &#125;) =&gt; &#123;<br>    // 表单状态<br>    const [title, setTitle] = useState(<span class="hljs-string">&quot;&quot;</span>);<br>    const [description, setDescription] = useState(<span class="hljs-string">&quot;&quot;</span>);<br>    const [priority, setPriority] = useState&lt;TaskPriority&gt;(<span class="hljs-string">&quot;medium&quot;</span>);<br><br>    // 提交处理<br>    const handleSubmit = (e: React.FormEvent) =&gt; &#123;<br>        e.preventDefault();<br><br>        <span class="hljs-keyword">if</span> (!title.trim()) &#123;<br>            alert(<span class="hljs-string">&quot;请输入任务标题&quot;</span>);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br><br>        onSubmit(&#123;<br>            title: title.trim(),<br>            description: description.trim() || undefined,<br>            priority<br>        &#125;);<br><br>        // 重置表单<br>        setTitle(<span class="hljs-string">&quot;&quot;</span>);<br>        setDescription(<span class="hljs-string">&quot;&quot;</span>);<br>        setPriority(<span class="hljs-string">&quot;medium&quot;</span>);<br>    &#125;;<br><br>    <span class="hljs-keyword">return</span> (<br>        &lt;form onSubmit=&#123;handleSubmit&#125; className=<span class="hljs-string">&quot;task-form&quot;</span>&gt;<br>            &lt;<span class="hljs-built_in">input</span><br>                <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;text&quot;</span><br>                value=&#123;title&#125;<br>                onChange=&#123;(e) =&gt; setTitle(e.target.value)&#125;<br>                placeholder=<span class="hljs-string">&quot;输入任务标题&quot;</span><br>                className=<span class="hljs-string">&quot;form-input&quot;</span><br>            /&gt;<br>            &lt;<span class="hljs-built_in">input</span><br>                <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;text&quot;</span><br>                value=&#123;description&#125;<br>                onChange=&#123;(e) =&gt; setDescription(e.target.value)&#125;<br>                placeholder=<span class="hljs-string">&quot;输入任务描述（可选）&quot;</span><br>                className=<span class="hljs-string">&quot;form-input&quot;</span><br>            /&gt;<br>            &lt;select<br>                value=&#123;priority&#125;<br>                onChange=&#123;(e) =&gt; setPriority(e.target.value <span class="hljs-keyword">as</span> TaskPriority)&#125;<br>                className=<span class="hljs-string">&quot;form-select&quot;</span><br>            &gt;<br>                &lt;option value=<span class="hljs-string">&quot;low&quot;</span>&gt;低优先级&lt;/option&gt;<br>                &lt;option value=<span class="hljs-string">&quot;medium&quot;</span>&gt;中优先级&lt;/option&gt;<br>                &lt;option value=<span class="hljs-string">&quot;high&quot;</span>&gt;高优先级&lt;/option&gt;<br>            &lt;/select&gt;<br>            &lt;button <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;submit&quot;</span> className=<span class="hljs-string">&quot;submit-btn&quot;</span>&gt;<br>                添加任务<br>            &lt;/button&gt;<br>        &lt;/form&gt;<br>    );<br>&#125;;<br><br>// 主应用组件<br>const App: React.FC = () =&gt; &#123;<br>    // 使用自定义 Hook<br>    const &#123; createTask, error &#125; = useTasks();<br><br>    // 渲染错误提示<br>    const renderError = () =&gt; &#123;<br>        <span class="hljs-keyword">if</span> (!error) <span class="hljs-keyword">return</span> null;<br>        <span class="hljs-keyword">return</span> &lt;div className=<span class="hljs-string">&quot;app-error&quot;</span>&gt;&#123;error&#125;&lt;/div&gt;;<br>    &#125;;<br><br>    <span class="hljs-keyword">return</span> (<br>        &lt;div className=<span class="hljs-string">&quot;app&quot;</span>&gt;<br>            &lt;header className=<span class="hljs-string">&quot;app-header&quot;</span>&gt;<br>                &lt;h1&gt;TypeScript 任务管理系统&lt;/h1&gt;<br>                &lt;p&gt;综合实战项目&lt;/p&gt;<br>            &lt;/header&gt;<br><br>            &#123;renderError()&#125;<br><br>            &lt;main className=<span class="hljs-string">&quot;app-main&quot;</span>&gt;<br>                &lt;TaskForm onSubmit=&#123;createTask&#125; /&gt;<br>                &lt;TaskList /&gt;<br>            &lt;/main&gt;<br><br>            &lt;footer className=<span class="hljs-string">&quot;app-footer&quot;</span>&gt;<br>                &lt;p&gt;Powered by TypeScript + React&lt;/p&gt;<br>            &lt;/footer&gt;<br>        &lt;/div&gt;<br>    );<br>&#125;;<br><br>export default App;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>组件组合：</strong>通过组合简单的组件构建复杂的 UI。</p>
+</blockquote>
+<hr>
+<h2 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h2><p>项目的 TypeScript 和构建配置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;<br>    <span class="hljs-string">&quot;compilerOptions&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;target&quot;</span>: <span class="hljs-string">&quot;ES2020&quot;</span>,<br>        <span class="hljs-string">&quot;useDefineForClassFields&quot;</span>: true,<br>        <span class="hljs-string">&quot;lib&quot;</span>: [<span class="hljs-string">&quot;ES2020&quot;</span>, <span class="hljs-string">&quot;DOM&quot;</span>, <span class="hljs-string">&quot;DOM.Iterable&quot;</span>],<br>        <span class="hljs-string">&quot;module&quot;</span>: <span class="hljs-string">&quot;ESNext&quot;</span>,<br>        <span class="hljs-string">&quot;skipLibCheck&quot;</span>: true,<br><br>        <span class="hljs-string">&quot;moduleResolution&quot;</span>: <span class="hljs-string">&quot;bundler&quot;</span>,<br>        <span class="hljs-string">&quot;allowImportingTsExtensions&quot;</span>: true,<br>        <span class="hljs-string">&quot;resolveJsonModule&quot;</span>: true,<br>        <span class="hljs-string">&quot;isolatedModules&quot;</span>: true,<br>        <span class="hljs-string">&quot;noEmit&quot;</span>: true,<br>        <span class="hljs-string">&quot;jsx&quot;</span>: <span class="hljs-string">&quot;react-jsx&quot;</span>,<br><br>        <span class="hljs-string">&quot;strict&quot;</span>: true,<br>        <span class="hljs-string">&quot;noUnusedLocals&quot;</span>: true,<br>        <span class="hljs-string">&quot;noUnusedParameters&quot;</span>: true,<br>        <span class="hljs-string">&quot;noFallthroughCasesInSwitch&quot;</span>: true<br>    &#125;,<br>    <span class="hljs-string">&quot;include&quot;</span>: [<span class="hljs-string">&quot;src&quot;</span>],<br>    <span class="hljs-string">&quot;references&quot;</span>: [&#123; <span class="hljs-string">&quot;path&quot;</span>: <span class="hljs-string">&quot;./tsconfig.node.json&quot;</span> &#125;]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>严格模式：</strong>启用 strict 获得最完整的类型检查。</p>
+</blockquote>
+<hr>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li><strong>类型优先：</strong>先定义类型，再编写实现代码</li>
+<li><strong>接口 vs 类型：</strong>对象类型用接口，联合类型用类型别名</li>
+<li><strong>分层架构：</strong>类型、服务、组件分层组织</li>
+<li><strong>Hook 封装：</strong>业务逻辑封装在 Hook 中</li>
+</ul>
+<blockquote>
+<p><strong>最佳实践：</strong>类型定义是 TypeScript 项目的基础，要认真设计。</p>
+</blockquote>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这个综合项目，我们实践了 TypeScript 的核心概念。</p>
+<ul>
+<li><strong>类型定义：</strong>Task、CreateTaskInput、TaskFilter 等接口</li>
+<li><strong>服务层：</strong>TaskService 封装业务逻辑</li>
+<li><strong>自定义 Hook：</strong>useTasks 管理状态</li>
+<li><strong>React 组件：</strong>类型安全的组件开发</li>
+<li><strong>项目配置：</strong>严格的 TypeScript 配置</li>
+</ul>
+<blockquote>
+<p><strong>建议：</strong>多参与实际项目，在实践中加深对 TypeScript 的理解。</p>
+</blockquote>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/1549573844/"><span>上一篇</span><strong>TypeScript + Node.js 实战</strong></a>
+    
+    
+      <a href="/posts/2566351504/"><span>下一篇</span><strong>TypeScript 基础类型</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/1139111529/">
+          <small>2025-02-19</small>
+          <strong>React 博客项目</strong>
+        </a>
+      
+        <a href="/posts/2991262990/">
+          <small>2025-01-17</small>
+          <strong>TypeScript + React 实战</strong>
+        </a>
+      
+        <a href="/posts/2471344728/">
+          <small>2025-01-11</small>
+          <strong>TypeScript + Vue3 实战</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
