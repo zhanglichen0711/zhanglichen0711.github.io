@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Dockerfile 与镜像构建 · 小黑程序员</title>
+  <meta name="description" content="分层缓存、多阶段构建、.dockerignore，把镜像从几百 MB 压到几十 MB。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/348910091/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="Dockerfile 与镜像构建">
+  <meta property="og:description" content="分层缓存、多阶段构建、.dockerignore，把镜像从几百 MB 压到几十 MB。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/348910091/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-01-24T16:00:00.000Z">
+  
+  <meta property="article:tag" content="Docker, Dockerfile">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dockerfile 与镜像构建">
+  <meta name="twitter:description" content="分层缓存、多阶段构建、.dockerignore，把镜像从几百 MB 压到几十 MB。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Dockerfile 与镜像构建","description":"分层缓存、多阶段构建、.dockerignore，把镜像从几百 MB 压到几十 MB。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/348910091/","datePublished":"2025-01-24T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/348910091/"},"keywords":"Docker, Dockerfile"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/">工程化与运维</a>
+      
+        <a class="chip" href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">Docker</a>
+      
+      <time datetime="2025-01-24T16:00:00.000Z">2025-01-25</time>
+      <span>2429 字 · 约 6 分钟</span>
+    </div>
+    <h1>Dockerfile 与镜像构建</h1>
+    <p class="lede">分层缓存、多阶段构建、.dockerignore，把镜像从几百 MB 压到几十 MB。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/Docker/">#Docker</a>
+        
+          <a href="/tags/Dockerfile/">#Dockerfile</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>前面两篇用的一直是现成镜像（<code>python:3.11-slim</code>）。但真实项目里总要把<strong>自己的代码</strong>做成镜像——这时就得写 Dockerfile：一份描述”这个镜像该怎么一步步构建”的配方文件。这篇讲透 Dockerfile 的写法，重点是两个决定镜像质量和构建速度的关键机制：<strong>分层缓存</strong>和<strong>多阶段构建</strong>。</p>
+<h2 id="一份最小-Dockerfile"><a href="#一份最小-Dockerfile" class="headerlink" title="一份最小 Dockerfile"></a>一份最小 Dockerfile</h2><p>以 FastAPI 服务为例，一个能跑的 Dockerfile 长这样：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim<br><span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> requirements.txt .</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span><br><span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;uvicorn&quot;</span>, <span class="hljs-string">&quot;main:app&quot;</span>, <span class="hljs-string">&quot;--host&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;--port&quot;</span>, <span class="hljs-string">&quot;8000&quot;</span>]</span><br></code></pre></td></tr></table></figure>
+
+<p>逐行看每条指令做了什么：</p>
+<ul>
+<li><code>FROM</code>：指定基础镜像。一切构建都从某个现成镜像开始，选 slim 变体（去掉编译器和文档）能让体积小很多。</li>
+<li><code>WORKDIR</code>：设定容器内的工作目录，后续指令都在这个目录下执行，等价于 <code>cd</code>。</li>
+<li><code>COPY requirements.txt .</code>：把依赖清单复制进镜像。</li>
+<li><code>RUN</code>：构建时执行的命令——这里装依赖。<strong>RUN 里的命令会真实跑一次，结果作为新的一层固化进镜像。</strong></li>
+<li><code>COPY . .</code>：把项目代码复制进去。</li>
+<li><code>CMD</code>：容器启动时执行的命令。注意它和 <code>RUN</code> 的区别——<code>RUN</code> 在构建时执行一次，<code>CMD</code> 在每次启动容器时执行。</li>
+</ul>
+<p>构建并运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker build -t my-api:1.0 .<br>docker run -d -p 8000:8000 my-api:1.0<br></code></pre></td></tr></table></figure>
+
+<h2 id="分层与缓存：COPY-的顺序是门学问"><a href="#分层与缓存：COPY-的顺序是门学问" class="headerlink" title="分层与缓存：COPY 的顺序是门学问"></a>分层与缓存：COPY 的顺序是门学问</h2><p>镜像由一层层文件系统叠加而成，<strong>每一行指令生成一层</strong>。这个设计带来了缓存机制：构建时如果某一层没有变化，Docker 会直接复用上次构建的缓存，跳过执行。</p>
+<p>关键在于：<strong>只要某一层变了，它后面的所有层都会失效重建</strong>。所以要把”不常变的放前面，常变的放后面”：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">COPY</span><span class="language-bash"> requirements.txt .      <span class="hljs-comment"># 依赖清单不常变</span></span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> pip install -r requirements.txt   <span class="hljs-comment"># 这层很耗时，放前面</span></span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> . .                     <span class="hljs-comment"># 代码天天变，放最后</span></span><br></code></pre></td></tr></table></figure>
+
+<p>如果反过来把 <code>COPY . .</code> 放在 <code>RUN pip install</code> 前面，那每次改一行代码，整个依赖安装都要重跑一遍——本地开发时一次 build 可能要等几分钟，全部浪费在装依赖上。</p>
+<p>一个小细节：<code>COPY . .</code> 会把构建上下文（默认是 Dockerfile 所在目录）整个拷进去，包括 <code>node_modules</code>、<code>__pycache__</code>、<code>.git</code> 这些垃圾。用 <code>.dockerignore</code> 文件排除，作用和 <code>.gitignore</code> 一样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dockerignore">__pycache__/<br>*.pyc<br>.git/<br>.venv/<br>node_modules/<br></code></pre></td></tr></table></figure>
+
+<h2 id="多阶段构建：镜像瘦身的核心手段"><a href="#多阶段构建：镜像瘦身的核心手段" class="headerlink" title="多阶段构建：镜像瘦身的核心手段"></a>多阶段构建：镜像瘦身的核心手段</h2><p>编译型项目（Go、Java、前端打包）有一个痛点：构建时需要完整的编译工具链，但运行根本用不上。多阶段构建解决它——<strong>用第一个阶段做”重活”，只把产物拷进第二个精简阶段</strong>：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># 阶段一：构建</span><br><span class="hljs-keyword">FROM</span> node:<span class="hljs-number">20</span>-alpine AS builder<br><span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> package*.json .</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> npm ci</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span><br><span class="hljs-keyword">RUN</span><span class="language-bash"> npm run build        <span class="hljs-comment"># 产出 dist/</span></span><br><br><span class="hljs-comment"># 阶段二：运行</span><br><span class="hljs-keyword">FROM</span> nginx:alpine<br><span class="hljs-keyword">COPY</span><span class="language-bash"> --from=builder /app/dist /usr/share/nginx/html</span><br></code></pre></td></tr></table></figure>
+
+<p>最终镜像只包含 nginx 和静态文件，node 工具链一点没带进来。Python 项目同样适用：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim AS builder<br><span class="hljs-keyword">RUN</span><span class="language-bash"> pip install --prefix=/install -r requirements.txt</span><br><br><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim<br><span class="hljs-keyword">COPY</span><span class="language-bash"> --from=builder /install /usr/local</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span><br><span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;uvicorn&quot;</span>, <span class="hljs-string">&quot;main:app&quot;</span>, <span class="hljs-string">&quot;--host&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;--port&quot;</span>, <span class="hljs-string">&quot;8000&quot;</span>]</span><br></code></pre></td></tr></table></figure>
+
+<p>多阶段构建的意义不只是体积——<strong>镜像越小，拉取越快、攻击面越小、启动越快</strong>。一个常见的反例是图省事直接 <code>FROM python:3.11</code>（不带 slim），镜像凭空多出几百 MB 的编译器和文档，里面还有一堆用不到的库，既不省事也不安全。</p>
+<h2 id="构建时最常见的三个坑"><a href="#构建时最常见的三个坑" class="headerlink" title="构建时最常见的三个坑"></a>构建时最常见的三个坑</h2><p><strong>坑一：进程监听的地址。</strong> 服务在容器里监听 <code>127.0.0.1</code>，端口映射出去了宿主机也访问不到——容器内要监听 <code>0.0.0.0</code>。上面的 <code>CMD</code> 里 <code>--host 0.0.0.0</code> 就是这个原因。</p>
+<p><strong>坑二：时区。</strong> 官方镜像默认 UTC 时间，国内服务打印的日志比北京时间慢 8 小时。在 Dockerfile 里加：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">ENV</span> TZ=Asia/Shanghai<br><span class="hljs-keyword">RUN</span><span class="language-bash"> <span class="hljs-built_in">ln</span> -snf /usr/share/zoneinfo/<span class="katex-error" title="ParseError: KaTeX parse error: Expected &#x27;EOF&#x27;, got &#x27;&amp;&#x27; at position 19: …/etc/localtime &amp;̲&amp; echo " style="color:#cc0000">TZ /etc/localtime &amp;&amp; echo </span>TZ &gt; /etc/timezone</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>坑三：用 root 跑应用。</strong> 镜像默认以 root 运行，一旦容器被攻破，攻击者就是宿主机 root。生产环境要建普通用户再切换：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">RUN</span><span class="language-bash"> useradd -m appuser</span><br><span class="hljs-keyword">USER</span> appuser<br></code></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Dockerfile 的核心是把”环境构建过程”变成可复现的代码：依赖清单先拷、代码后拷以吃满分层缓存；多阶段构建把编译工具链挡在最终镜像之外；<code>.dockerignore</code> 控制构建上下文大小。下一篇讲数据卷与网络——容器怎么持久化数据、容器之间怎么通信，这是从”单容器能跑”走向”多服务协作”的关键。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/1817551796/"><span>上一篇</span><strong>输出约束：让模型稳定输出 JSON</strong></a>
+    
+    
+      <a href="/posts/2681215202/"><span>下一篇</span><strong>React 教程</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2998301478/">
+          <small>2025-09-07</small>
+          <strong>GitHub Actions 构建并推送 Docker 镜像</strong>
+        </a>
+      
+        <a href="/posts/1911118507/">
+          <small>2025-03-31</small>
+          <strong>Docker 生产实践：镜像瘦身与健康检查</strong>
+        </a>
+      
+        <a href="/posts/3169119536/">
+          <small>2025-03-18</small>
+          <strong>容器化 LLM 服务：GPU 与推理镜像</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

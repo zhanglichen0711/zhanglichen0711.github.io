@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>GitHub Actions Secrets 与多环境部署 · 小黑程序员</title>
+  <meta name="description" content="密钥分级存放、环境隔离部署，别让生产密钥流进测试流水线。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/2885240156/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="GitHub Actions Secrets 与多环境部署">
+  <meta property="og:description" content="密钥分级存放、环境隔离部署，别让生产密钥流进测试流水线。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/2885240156/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-08-27T16:00:00.000Z">
+  
+  <meta property="article:tag" content="GitHub Actions, Secrets">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GitHub Actions Secrets 与多环境部署">
+  <meta name="twitter:description" content="密钥分级存放、环境隔离部署，别让生产密钥流进测试流水线。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"GitHub Actions Secrets 与多环境部署","description":"密钥分级存放、环境隔离部署，别让生产密钥流进测试流水线。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/2885240156/","datePublished":"2025-08-27T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/2885240156/"},"keywords":"GitHub Actions, Secrets"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/">工程化与运维</a>
+      
+        <a class="chip" href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">GitHub Actions</a>
+      
+      <time datetime="2025-08-27T16:00:00.000Z">2025-08-28</time>
+      <span>2695 字 · 约 7 分钟</span>
+    </div>
+    <h1>GitHub Actions Secrets 与多环境部署</h1>
+    <p class="lede">密钥分级存放、环境隔离部署，别让生产密钥流进测试流水线。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/GitHub-Actions/">#GitHub Actions</a>
+        
+          <a href="/tags/Secrets/">#Secrets</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>CI&#x2F;CD 里最不能出错的就是密钥管理——一旦 API Key、部署令牌被打印进日志或写进仓库历史，等于把钥匙挂在了门口。前面几篇零星提到 Secrets，这篇系统讲清楚：<strong>密钥怎么存、怎么用、怎么按环境隔离</strong>，以及”测试环境部署”和”生产环境部署”在同一套流水线里怎么安全地分开。</p>
+<h2 id="Secrets-的分级存放"><a href="#Secrets-的分级存放" class="headerlink" title="Secrets 的分级存放"></a>Secrets 的分级存放</h2><p>GitHub 提供三个层级的 Secrets 存放位置，按需选择：</p>
+<p><strong>Repository secrets（仓库级）</strong>：仓库 Settings → Secrets and variables → Actions。整个仓库的 workflow 都能用。</p>
+<p><strong>Environment secrets（环境级）</strong>：挂在 Environment（如 <code>test</code>、<code>prod</code>）下的密钥，<strong>只有明确指定该环境的 job 才能访问</strong>。这是多环境隔离的关键。</p>
+<p><strong>Organization secrets（组织级）</strong>：组织下所有仓库共享（企业场景用），个人项目用不到。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 在 job 里指定环境，就能用该环境的 secrets</span><br><span class="hljs-attr">jobs:</span><br>  <span class="hljs-attr">deploy-prod:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">environment:</span> <span class="hljs-string">prod</span>          <span class="hljs-comment"># 关联 prod 环境</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">部署</span><br>        <span class="hljs-attr">env:</span><br>          <span class="hljs-attr">PROD_TOKEN:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">secrets.PROD_DEPLOY_TOKEN</span> <span class="hljs-string">&#125;&#125;</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">./deploy.sh</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="环境：不只是密钥容器"><a href="#环境：不只是密钥容器" class="headerlink" title="环境：不只是密钥容器"></a>环境：不只是密钥容器</h2><p>GitHub 的 <strong>Environment</strong> 概念比”密钥分组”更有用，它自带保护机制：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">jobs:</span><br>  <span class="hljs-attr">deploy-prod:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">prod</span><br>      <span class="hljs-attr">url:</span> <span class="hljs-string">https://api.example.com</span>    <span class="hljs-comment"># 部署完显示在 Actions 页面的链接</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;部署到生产&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>在仓库 Settings → Environments 里，每个 Environment 可以配置：</p>
+<ul>
+<li><strong>required reviewers</strong>：生产部署前必须指定的人批准；</li>
+<li><strong>wait timer</strong>：部署前的等待时间（冷静期）；</li>
+<li><strong>deployment branches</strong>：只有特定分支（如 main、release&#x2F;*）能部署到这个环境。</li>
+</ul>
+<p>这些保护对生产环境意义重大：**”误点部署”和”分支不合规部署”被机制挡住**，而不是靠人的细心。测试环境（test）可以放开随便部署，生产环境（prod）加审批——环境的”信任等级”不同，管控力度就该不同。</p>
+<h2 id="多环境流水线的典型形态"><a href="#多环境流水线的典型形态" class="headerlink" title="多环境流水线的典型形态"></a>多环境流水线的典型形态</h2><p>一条完整的”测试 → 生产”流水线通常长这样：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">Deploy</span><br><br><span class="hljs-attr">on:</span><br>  <span class="hljs-attr">push:</span><br>    <span class="hljs-attr">branches:</span> [<span class="hljs-string">main</span>]<br><br><span class="hljs-attr">jobs:</span><br>  <span class="hljs-attr">test:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">run:</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;跑测试&quot;</span><br><br>  <span class="hljs-attr">deploy-test:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">needs:</span> <span class="hljs-string">test</span><br>    <span class="hljs-attr">environment:</span> <span class="hljs-string">test</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">部署测试环境</span><br>        <span class="hljs-attr">env:</span><br>          <span class="hljs-attr">ENV:</span> <span class="hljs-string">test</span><br>          <span class="hljs-attr">TOKEN:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">secrets.TEST_TOKEN</span> <span class="hljs-string">&#125;&#125;</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">./deploy.sh</span> <span class="hljs-string">--env</span> <span class="hljs-string">test</span><br><br>  <span class="hljs-attr">deploy-prod:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">needs:</span> <span class="hljs-string">deploy-test</span>          <span class="hljs-comment"># 测试环境部署成功才轮到生产</span><br>    <span class="hljs-attr">environment:</span> <span class="hljs-string">prod</span>           <span class="hljs-comment"># 生产环境的密钥 + 审批保护</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">部署生产环境</span><br>        <span class="hljs-attr">env:</span><br>          <span class="hljs-attr">ENV:</span> <span class="hljs-string">prod</span><br>          <span class="hljs-attr">TOKEN:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">secrets.PROD_TOKEN</span> <span class="hljs-string">&#125;&#125;</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">./deploy.sh</span> <span class="hljs-string">--env</span> <span class="hljs-string">prod</span><br></code></pre></td></tr></table></figure>
+
+<p>三个 job 层层递进：测试通过 → 部署测试环境 → 测试环境 OK → 部署生产（生产环境若配了审批人，会在这里停下来等人批准）。<strong>每个环境用各自的 Secret</strong>，测试流程永远碰不到生产密钥。</p>
+<h2 id="密钥安全红线"><a href="#密钥安全红线" class="headerlink" title="密钥安全红线"></a>密钥安全红线</h2><p>把 GitHub 官方文档和自己的教训浓缩成几条红线：</p>
+<p><strong>红线一：别把密钥写进 YAML。</strong> <code>run: curl -H &quot;Authorization: token sk-xxxx&quot;</code> 这种写死明文的行为，等于把密钥提交进仓库历史——<strong>即使后来删掉，历史里还躺着</strong>。</p>
+<p><strong>红线二：别用 echo 打印密钥。</strong> GitHub 会尝试给日志里的 secret 打码，但<strong>自己 echo 出来打码并不可靠</strong>（比如密钥被拆成多段打印就躲过了打码）。任何密钥都只赋值给环境变量，让命令&#x2F;脚本内部读取，不要主动打印。</p>
+<p><strong>红线三：部署脚本里别有 <code>set -x</code>。</strong> <code>set -x</code> 会把执行的每条命令（含变量值）打出来，密钥随之泄露。脚本里检查一下有没有这个坑。</p>
+<p><strong>红线四：推送的镜像别带密钥。</strong> Docker build 时把密钥作为构建参数（<code>--build-arg</code>）会<strong>留在镜像层里</strong>，任何人拉镜像都能提取。正确姿势是用 BuildKit 的 secret 挂载（<code>RUN --mount=type=secret</code>），或运行时才注入环境变量。</p>
+<p><strong>红线五：轮换意识。</strong> 一旦怀疑密钥泄露（比如误传了含密钥的文件），立即去服务商吊销重建，别抱着”应该没人看到”的侥幸。</p>
+<h2 id="多环境配置-vs-多环境密钥"><a href="#多环境配置-vs-多环境密钥" class="headerlink" title="多环境配置 vs 多环境密钥"></a>多环境配置 vs 多环境密钥</h2><p>环境隔离还有个常见误区要想清楚：**”配置不同”和”密钥不同”要分开管理**。</p>
+<ul>
+<li>非敏感的<strong>配置</strong>（模型名、开关、URL）可以放环境变量，甚至用 Environment 的 Variables 管理，进 workflow 时用 <code>vars.XXX</code> 读取；</li>
+<li>敏感的<strong>密钥</strong>（token、密码）一律 Secrets。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">env:</span><br>  <span class="hljs-attr">LLM_MODEL:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">vars.LLM_MODEL</span> <span class="hljs-string">&#125;&#125;</span>      <span class="hljs-comment"># 环境变量，非敏感</span><br>  <span class="hljs-attr">LLM_API_KEY:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">secrets.LLM_API_KEY</span> <span class="hljs-string">&#125;&#125;</span> <span class="hljs-comment"># 密钥</span><br></code></pre></td></tr></table></figure>
+
+<p>分清楚的好处是审计方便：Secrets 列表里每个都是真密钥，不会有”其实是个普通配置”的噪音。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Secrets 分仓库级&#x2F;环境级存放，多环境部署靠 <code>environment</code> 关联密钥与保护机制；测试通过 → 测试环境 → 生产环境的链式 job 是最典型形态，层层递进、密钥互不可见。红线记住五条：不写进 YAML、不 echo、不 set -x、build 不嵌密钥、泄露就轮换。下一篇把 CI 推向下一个层次：构建 Docker 镜像并推送镜像仓库，这是”代码合并即部署”流水线里的核心一环。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/232737413/"><span>上一篇</span><strong>实战：把一组工具封装成 Agent 服务</strong></a>
+    
+    
+      <a href="/posts/98107650/"><span>下一篇</span><strong>Agent 工程化：可靠性、成本与安全</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/1790984732/">
+          <small>2025-09-21</small>
+          <strong>实战：Hexo 博客自动发布流水线</strong>
+        </a>
+      
+        <a href="/posts/2998301478/">
+          <small>2025-09-07</small>
+          <strong>GitHub Actions 构建并推送 Docker 镜像</strong>
+        </a>
+      
+        <a href="/posts/1022135682/">
+          <small>2025-08-15</small>
+          <strong>GitHub Actions 依赖缓存与常用 Action</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>检索过滤：权限、时效与版本隔离 · 小黑程序员</title>
+  <meta name="description" content="检索到不该看的文档，比检索不到更危险。权限必须在检索层过滤，而不是指望模型自觉。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/2769194034/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="检索过滤：权限、时效与版本隔离">
+  <meta property="og:description" content="检索到不该看的文档，比检索不到更危险。权限必须在检索层过滤，而不是指望模型自觉。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/2769194034/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-03-30T16:00:00.000Z">
+  
+  <meta property="article:tag" content="RAG, 权限">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="检索过滤：权限、时效与版本隔离">
+  <meta name="twitter:description" content="检索到不该看的文档，比检索不到更危险。权限必须在检索层过滤，而不是指望模型自觉。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"检索过滤：权限、时效与版本隔离","description":"检索到不该看的文档，比检索不到更危险。权限必须在检索层过滤，而不是指望模型自觉。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/2769194034/","datePublished":"2025-03-30T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/2769194034/"},"keywords":"RAG, 权限"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/">大模型应用</a>
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">RAG</a>
+      
+      <time datetime="2025-03-30T16:00:00.000Z">2025-03-31</time>
+      <span>3466 字 · 约 9 分钟</span>
+    </div>
+    <h1>检索过滤：权限、时效与版本隔离</h1>
+    <p class="lede">检索到不该看的文档，比检索不到更危险。权限必须在检索层过滤，而不是指望模型自觉。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/RAG/">#RAG</a>
+        
+          <a href="/tags/%E6%9D%83%E9%99%90/">#权限</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>RAG 做到一定阶段，会遇到一个比”召回准不准”更严重的问题：<strong>召回了不该召回的内容。</strong> 用户 A 的问题命中了用户 B 的私有文档，模型”流利地”把别人的机密回答了出来——这在多租户知识库里是安全事故，不是质量问题。这篇讲 RAG 生产化的关键一课：<strong>检索过滤——权限、时效与版本隔离，必须在检索这一层做掉，而不是指望模型不泄露。</strong></p>
+<h2 id="为什么不能指望”模型自觉”"><a href="#为什么不能指望”模型自觉”" class="headerlink" title="为什么不能指望”模型自觉”"></a>为什么不能指望”模型自觉”</h2><p>有人会觉得：给系统提示加一句”不要泄露其他用户的数据”，模型不就不会答了吗？这是把安全建立在模型的自觉上——而模型没有”自觉”可言：</p>
+<ul>
+<li>模型分不清哪些文档是 A 的、哪些是 B 的——文档里不会自己标”我是 B 的机密”；</li>
+<li>检索阶段如果就把 B 的文档喂进了上下文，生成阶段模型只会把它当成正常资料使用；</li>
+<li>提示词能加权重，但挡不住”恰好相关的私有文档”被正常引用。</li>
+</ul>
+<p><strong>正确的做法是让不该出现的内容根本到不了模型面前</strong>——在检索这一层，用过滤条件把无权访问的文档直接排除。数据边界是架构问题，不是提示词问题。</p>
+<h2 id="权限过滤：把过滤条件写进检索"><a href="#权限过滤：把过滤条件写进检索" class="headerlink" title="权限过滤：把过滤条件写进检索"></a>权限过滤：把过滤条件写进检索</h2><p>要让检索层做过滤，前提是<strong>每个 chunk 都带权限元数据</strong>（这也是切分篇强调元数据的原因）。给 chunk 打上可见性标签：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">chunk = &#123;<br>    <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;……&quot;</span>,<br>    <span class="hljs-string">&quot;doc_id&quot;</span>: <span class="hljs-string">&quot;doc_2025_003&quot;</span>,<br>    <span class="hljs-string">&quot;visibility&quot;</span>: <span class="hljs-string">&quot;internal&quot;</span>,        <span class="hljs-comment"># 可见范围：public / internal / private</span><br>    <span class="hljs-string">&quot;owner&quot;</span>: <span class="hljs-string">&quot;user_1024&quot;</span>,            <span class="hljs-comment"># 私有文档的属主</span><br>    <span class="hljs-string">&quot;org&quot;</span>: <span class="hljs-string">&quot;org_a&quot;</span>,                  <span class="hljs-comment"># 组织隔离</span><br>    <span class="hljs-string">&quot;allowed_roles&quot;</span>: [<span class="hljs-string">&quot;admin&quot;</span>],      <span class="hljs-comment"># 角色限制（可选）</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>检索时，把当前用户的权限转成<strong>过滤表达式</strong>，让向量库在召回时就排除无权文档。以 Milvus 为例，过滤条件（expr）与向量检索一起执行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">search_docs</span>(<span class="hljs-params">query: <span class="hljs-built_in">str</span>, user: User, top_k: <span class="hljs-built_in">int</span> = <span class="hljs-number">5</span></span>):<br>    <span class="hljs-comment"># 把用户权限翻译成过滤表达式——无权文档在存储层就被排除</span><br>    expr = (<br>        <span class="hljs-string">f&#x27;visibility == &quot;public&quot; || &#x27;</span><br>        <span class="hljs-string">f&#x27;(visibility == &quot;internal&quot; &amp;&amp; org == &quot;<span class="hljs-subst">&#123;user.org&#125;</span>&quot;) || &#x27;</span><br>        <span class="hljs-string">f&#x27;(visibility == &quot;private&quot; &amp;&amp; owner == &quot;<span class="hljs-subst">&#123;user.<span class="hljs-built_in">id</span>&#125;</span>&quot;)&#x27;</span><br>    )<br>    hits = milvus.search(<br>        data=[embed(query)],<br>        <span class="hljs-built_in">filter</span>=expr,          <span class="hljs-comment"># 过滤在向量检索内部完成</span><br>        limit=top_k,<br>    )<br>    <span class="hljs-keyword">return</span> hits<br></code></pre></td></tr></table></figure>
+
+<p>关键点：<strong>过滤是”检索时同步执行”的，而不是”检索后应用层再删”。</strong> 为什么？因为后者意味着 B 的私有文档已经被召回到应用内存里了——如果日志、缓存、调试输出里漏了，照样泄露。<strong>权限的边界要划在存储查询这一层，让无权数据根本不出库。</strong></p>
+<h2 id="时效过滤：别让过期文档当现行标准"><a href="#时效过滤：别让过期文档当现行标准" class="headerlink" title="时效过滤：别让过期文档当现行标准"></a>时效过滤：别让过期文档当现行标准</h2><p>知识库另一个常见事故：文档更新了，旧的还躺在库里，检索时新旧混在一起。规范类文档尤其危险——用户问的是 2025 年的要求，检索却命中了 2023 年的旧版条款。</p>
+<p>解决靠两个元数据配合：<strong>version（版本）与生效时间</strong>。检索时显式限定：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">expr = <span class="hljs-string">&#x27;status == &quot;effective&quot; &amp;&amp; version == &quot;2025-01&quot;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>工程上的常见做法：</p>
+<ul>
+<li>入库时标记每个 chunk 的<strong>生效状态</strong>（effective &#x2F; superseded）与所属版本；</li>
+<li>查询侧<strong>显式选择版本</strong>（系统默认用当前生效版本，特殊场景可查历史版本）；</li>
+<li>旧版本可以保留（用于追溯对比），但默认检索只命中”当前生效”的文档。</li>
+</ul>
+<p>这里有个设计取舍：<strong>保留历史 vs 默认只查现行</strong>。默认应该只查现行（符合用户预期），历史版本按需提供（如”对比 2023 和 2025 版差异”这种查询走专门通道）。</p>
+<h2 id="版本隔离：文档更新时的替换策略"><a href="#版本隔离：文档更新时的替换策略" class="headerlink" title="版本隔离：文档更新时的替换策略"></a>版本隔离：文档更新时的替换策略</h2><p>知识库的文档会迭代：一份规范 v1 被 v2 替代。如果只是把 v2 追加进库而不处理 v1，会出现”同一条款两版并存、检索随机命中”的混乱。正确的版本管理是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">upsert_document</span>(<span class="hljs-params">new_version_chunks: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">dict</span>]</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;文档更新的标准流程：新版本入库 + 旧版本标记失效&quot;&quot;&quot;</span><br>    doc_id = new_version_chunks[<span class="hljs-number">0</span>][<span class="hljs-string">&quot;doc_id&quot;</span>]<br>    <span class="hljs-comment"># 1. 把该 doc 的旧版本全部标记为 superseded</span><br>    milvus.upsert(<br>        [&#123;<span class="hljs-string">&quot;doc_id&quot;</span>: doc_id, <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;superseded&quot;</span>&#125;],<br>        <span class="hljs-built_in">filter</span>=<span class="hljs-string">f&#x27;doc_id == &quot;<span class="hljs-subst">&#123;doc_id&#125;</span>&quot; &amp;&amp; status == &quot;effective&quot;&#x27;</span>,<br>    )<br>    <span class="hljs-comment"># 2. 新版本入库，标记 effective</span><br>    milvus.upsert(new_version_chunks)<br><br>    <span class="hljs-comment"># 幂等性关键：相同 hash 的 chunk 重复写入应被去重/覆盖，</span><br>    <span class="hljs-comment"># 不能让一次重跑产生两份相同数据（系列入库篇详述）</span><br></code></pre></td></tr></table></figure>
+
+<p>删除旧版本时要考虑<strong>引用一致性</strong>：如果用户收藏了基于旧版回答的链接，旧版直接物理删除会让追溯断链。所以常用”软失效”（标记 superseded）而非物理删除——既保证默认检索干净，又保留追溯能力。</p>
+<h2 id="一个完整的过滤设计清单"><a href="#一个完整的过滤设计清单" class="headerlink" title="一个完整的过滤设计清单"></a>一个完整的过滤设计清单</h2><p>把上面串起来，多租户知识库的检索过滤应该是这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_filter</span>(<span class="hljs-params">user: User, kb_version: <span class="hljs-built_in">str</span> | <span class="hljs-literal">None</span> = <span class="hljs-literal">None</span></span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;组装检索过滤表达式：权限 + 时效 + 版本 + 租户&quot;&quot;&quot;</span><br>    clauses = [<br>        <span class="hljs-comment"># 权限：可见性 + 属主 + 组织</span><br>        <span class="hljs-string">f&#x27;(visibility == &quot;public&quot; || &#x27;</span><br>        <span class="hljs-string">f&#x27;(visibility == &quot;internal&quot; &amp;&amp; org == &quot;<span class="hljs-subst">&#123;user.org&#125;</span>&quot;) || &#x27;</span><br>        <span class="hljs-string">f&#x27;(visibility == &quot;private&quot; &amp;&amp; owner == &quot;<span class="hljs-subst">&#123;user.<span class="hljs-built_in">id</span>&#125;</span>&quot;))&#x27;</span>,<br>        <span class="hljs-comment"># 时效：只查生效中</span><br>        <span class="hljs-string">&#x27;status == &quot;effective&quot;&#x27;</span>,<br>    ]<br>    <span class="hljs-comment"># 版本：默认当前生效版本，可按需指定</span><br>    <span class="hljs-keyword">if</span> kb_version:<br>        clauses.append(<span class="hljs-string">f&#x27;kb_version == &quot;<span class="hljs-subst">&#123;kb_version&#125;</span>&quot;&#x27;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot; &amp;&amp; &quot;</span>.join(clauses)<br></code></pre></td></tr></table></figure>
+
+<p><strong>设计检查表：</strong></p>
+<ul>
+<li>每个 chunk 是否带全了权限&#x2F;组织&#x2F;版本&#x2F;状态元数据？（没有元数据就谈不上过滤）</li>
+<li>过滤是否在存储查询层完成，而不是应用层后删？</li>
+<li>文档更新是否走”新入库 + 旧失效”的幂等流程？</li>
+<li>默认检索是否只命中”当前生效 + 有权访问”的数据？</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>检索过滤是 RAG 生产化的分水岭：权限、时效、版本隔离都必须在<strong>检索层</strong>完成，让无权或过期的数据根本到不了模型面前。做法是给 chunk 打全元数据，把用户权限翻译成过滤表达式随检索执行；文档更新走”新版本入库 + 旧版本失效”的幂等流程。<strong>判断标准：不该出现的文档，在存储层就被挡住——而不是靠模型自觉、靠应用层补救。</strong></p>
+<p>下一篇讲检索之后的环节：上下文组装。召回的片段怎么拼进提示词，直接影响模型是”照着答”还是”被带偏”。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/1911118507/"><span>上一篇</span><strong>Docker 生产实践：镜像瘦身与健康检查</strong></a>
+    
+    
+      <a href="/posts/3508449625/"><span>下一篇</span><strong>RAG 混合检索与 rerank</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/3390242430/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/1585705281/">
+          <small>2026-01-06</small>
+          <strong>Milvus 简介：向量数据库在 RAG 里的位置</strong>
+        </a>
+      
+        <a href="/posts/228283361/">
+          <small>2025-12-17</small>
+          <strong>实战：给 RAG 服务搭建观测体系</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

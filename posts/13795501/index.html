@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Redis 实战：AI 问答的会话与 FAQ 缓存 · 小黑程序员</title>
+  <meta name="description" content="把会话存储、FAQ 缓存、热度榜、限流放进同一个 AI 问答服务，看 Redis 全角色协同。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/13795501/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="Redis 实战：AI 问答的会话与 FAQ 缓存">
+  <meta property="og:description" content="把会话存储、FAQ 缓存、热度榜、限流放进同一个 AI 问答服务，看 Redis 全角色协同。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/13795501/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2024-06-18T16:00:00.000Z">
+  
+  <meta property="article:tag" content="实战, 缓存, Redis, AI">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Redis 实战：AI 问答的会话与 FAQ 缓存">
+  <meta name="twitter:description" content="把会话存储、FAQ 缓存、热度榜、限流放进同一个 AI 问答服务，看 Redis 全角色协同。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Redis 实战：AI 问答的会话与 FAQ 缓存","description":"把会话存储、FAQ 缓存、热度榜、限流放进同一个 AI 问答服务，看 Redis 全角色协同。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/13795501/","datePublished":"2024-06-18T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/13795501/"},"keywords":"实战, 缓存, Redis, AI"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/">数据与存储</a>
+      
+        <a class="chip" href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">Redis</a>
+      
+      <time datetime="2024-06-18T16:00:00.000Z">2024-06-19</time>
+      <span>3376 字 · 约 8 分钟</span>
+    </div>
+    <h1>Redis 实战：AI 问答的会话与 FAQ 缓存</h1>
+    <p class="lede">把会话存储、FAQ 缓存、热度榜、限流放进同一个 AI 问答服务，看 Redis 全角色协同。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/%E5%AE%9E%E6%88%98/">#实战</a>
+        
+          <a href="/tags/%E7%BC%93%E5%AD%98/">#缓存</a>
+        
+          <a href="/tags/Redis/">#Redis</a>
+        
+          <a href="/tags/AI/">#AI</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>前九篇把 Redis 的单点能力都过了一遍。这一篇收口：把它们组装进一个真实的 AI 问答服务，看 Redis 同时扮演<strong>会话库、缓存、热榜、限流计数器</strong>四个角色时怎么协同。你会发现前面每个知识点在这里都有落点。</p>
+<h2 id="架构里-Redis-的位置"><a href="#架构里-Redis-的位置" class="headerlink" title="架构里 Redis 的位置"></a>架构里 Redis 的位置</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs text">用户 → Node/FastAPI 网关<br>            │<br>            ▼<br>        Redis（四顶帽子）<br>        ├─ ① 会话存储  session:*<br>        ├─ ② FAQ 缓存  cache:faq:*<br>        ├─ ③ 热榜计数  hot:faq<br>        └─ ④ 限流计数  ratelimit:*<br>            │<br>            ▼<br>        检索(Milvus) + LLM<br>            │<br>            ▼<br>        MySQL（会话与问答的最终落库）<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Redis</strong>：扛住高频读与状态（每次请求都要碰）；</li>
+<li><strong>MySQL</strong>：存需要长期留存的数据（完整对话记录、文档）；</li>
+<li>Redis 丢了能重建（从 MySQL&#x2F;LLM 再攒），MySQL 才是数据归宿。</li>
+</ul>
+<h2 id="①-会话：用-Hash-TTL-管上下文"><a href="#①-会话：用-Hash-TTL-管上下文" class="headerlink" title="① 会话：用 Hash + TTL 管上下文"></a>① 会话：用 Hash + TTL 管上下文</h2><p>多轮对话要记住”最近几轮聊了什么、当前任务到哪一步”。Hash 存会话字段、TTL 控制闲置回收（复用第 5 篇的会话设计）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">save_history</span>(<span class="hljs-params">session_id: <span class="hljs-built_in">str</span>, history: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">dict</span>]</span>):<br>    key = <span class="hljs-string">f&quot;session:<span class="hljs-subst">&#123;session_id&#125;</span>&quot;</span><br>    r.hset(key, <span class="hljs-string">&quot;history&quot;</span>, json.dumps(history, ensure_ascii=<span class="hljs-literal">False</span>))<br>    r.hset(key, <span class="hljs-string">&quot;updated_at&quot;</span>, <span class="hljs-built_in">int</span>(time.time()))<br>    r.expire(key, <span class="hljs-number">1800</span>)            <span class="hljs-comment"># 30 分钟无活跃自动清</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">load_history</span>(<span class="hljs-params">session_id: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">list</span>[<span class="hljs-built_in">dict</span>]:<br>    key = <span class="hljs-string">f&quot;session:<span class="hljs-subst">&#123;session_id&#125;</span>&quot;</span><br>    raw = r.hget(key, <span class="hljs-string">&quot;history&quot;</span>)<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> raw:<br>        <span class="hljs-keyword">return</span> []<br>    r.expire(key, <span class="hljs-number">1800</span>)            <span class="hljs-comment"># 活跃即续期（滑动过期）</span><br>    <span class="hljs-keyword">return</span> json.loads(raw)<br></code></pre></td></tr></table></figure>
+
+<p>多轮上限控制（别让上下文无限膨胀）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">MAX_ROUNDS = <span class="hljs-number">8</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">append_history</span>(<span class="hljs-params">session_id: <span class="hljs-built_in">str</span>, role: <span class="hljs-built_in">str</span>, content: <span class="hljs-built_in">str</span></span>):<br>    history = load_history(session_id)<br>    history.append(&#123;<span class="hljs-string">&quot;role&quot;</span>: role, <span class="hljs-string">&quot;content&quot;</span>: content&#125;)<br>    history = history[-MAX_ROUNDS * <span class="hljs-number">2</span>:]     <span class="hljs-comment"># 只留最近 8 轮（user+assistant）</span><br>    save_history(session_id, history)<br></code></pre></td></tr></table></figure>
+
+<h2 id="②-FAQ-缓存：热问题直答，省一次-LLM"><a href="#②-FAQ-缓存：热问题直答，省一次-LLM" class="headerlink" title="② FAQ 缓存：热问题直答，省一次 LLM"></a>② FAQ 缓存：热问题直答，省一次 LLM</h2><p>FAQ 命中率高的问答（”系统怎么登录””报销流程是什么”）根本不用走检索 + 生成，直接查 FAQ 库。为了快，把高频 FAQ 的答案缓存进 Redis，秒回：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">answer_question</span>(<span class="hljs-params">question: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">dict</span> | <span class="hljs-literal">None</span>:<br>    key = <span class="hljs-string">f&quot;cache:faq:<span class="hljs-subst">&#123;hash_question(question)&#125;</span>&quot;</span><br><br>    <span class="hljs-comment"># 1. 先查缓存</span><br>    cached = r.get(key)<br>    <span class="hljs-keyword">if</span> cached:<br>        r.expire(key, <span class="hljs-number">3600</span>)          <span class="hljs-comment"># 命中即顺带续期</span><br>        <span class="hljs-keyword">return</span> json.loads(cached)<br><br>    <span class="hljs-comment"># 2. miss → 查 FAQ 精确库</span><br>    faq = faq_db.lookup(question)<br>    <span class="hljs-keyword">if</span> faq:<br>        result = &#123;<span class="hljs-string">&quot;answer&quot;</span>: faq[<span class="hljs-string">&quot;answer&quot;</span>], <span class="hljs-string">&quot;source&quot;</span>: <span class="hljs-string">&quot;faq&quot;</span>, <span class="hljs-string">&quot;kb&quot;</span>: <span class="hljs-string">&quot;faq&quot;</span>&#125;<br>        r.<span class="hljs-built_in">set</span>(key, json.dumps(result, ensure_ascii=<span class="hljs-literal">False</span>), ex=<span class="hljs-number">3600</span>)<br>        <span class="hljs-keyword">return</span> result<br>    <span class="hljs-comment"># 3. 连 FAQ 都没有 → 走 RAG 检索 + LLM（略）</span><br>    <span class="hljs-keyword">return</span> run_rag(question)<br></code></pre></td></tr></table></figure>
+
+<p>FAQ 缓存的价值：<strong>热问题命中时零 LLM 调用、零向量检索，毫秒级返回</strong>——用户日常最高频的问题全部被这一层接住。</p>
+<h2 id="③-热榜：动态决定”谁值得缓存”"><a href="#③-热榜：动态决定”谁值得缓存”" class="headerlink" title="③ 热榜：动态决定”谁值得缓存”"></a>③ 热榜：动态决定”谁值得缓存”</h2><p>问题不是每个都该缓存 1 小时——冷门问题缓存占内存还不命中。用 ZSet 记录每个问题的热度，<strong>热度高的才长缓存，热度低的短缓存或不缓存</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">after_answered</span>(<span class="hljs-params">question: <span class="hljs-built_in">str</span></span>):<br>    h = hash_question(question)<br>    r.zincrby(<span class="hljs-string">&quot;hot:faq&quot;</span>, <span class="hljs-number">1</span>, h)           <span class="hljs-comment"># 热度 +1</span><br>    <span class="hljs-comment"># 动态调整：热度 ≥ 5 的问题缓存 1 小时，否则 5 分钟</span><br>    score = r.zscore(<span class="hljs-string">&quot;hot:faq&quot;</span>, h) <span class="hljs-keyword">or</span> <span class="hljs-number">0</span><br>    ttl = <span class="hljs-number">3600</span> <span class="hljs-keyword">if</span> score &gt;= <span class="hljs-number">5</span> <span class="hljs-keyword">else</span> <span class="hljs-number">300</span><br>    r.expire(<span class="hljs-string">f&quot;cache:faq:<span class="hljs-subst">&#123;h&#125;</span>&quot;</span>, ttl)<br><br><span class="hljs-comment"># 排行榜：展示最热问题（运营能看到用户在问什么）</span><br>top = r.zrevrange(<span class="hljs-string">&quot;hot:faq&quot;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">9</span>, withscores=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这体现了前面 ZSet 的价值：<strong>热度数据既服务缓存策略，又服务运营分析</strong>，一份数据两个用途。</p>
+<h2 id="④-限流：网关多实例也有效"><a href="#④-限流：网关多实例也有效" class="headerlink" title="④ 限流：网关多实例也有效"></a>④ 限流：网关多实例也有效</h2><p>每个用户每分钟最多问 30 次，用 Redis 的原子自增做滑动窗口计数（多实例共享同一份计数，第 9 篇的 Redis 存储版限流在这里落地）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">check_rate_limit</span>(<span class="hljs-params">user_id: <span class="hljs-built_in">str</span>, limit: <span class="hljs-built_in">int</span> = <span class="hljs-number">30</span>, window: <span class="hljs-built_in">int</span> = <span class="hljs-number">60</span></span>) -&gt; <span class="hljs-built_in">bool</span>:<br>    key = <span class="hljs-string">f&quot;ratelimit:<span class="hljs-subst">&#123;user_id&#125;</span>:<span class="hljs-subst">&#123;<span class="hljs-built_in">int</span>(time.time()) // window&#125;</span>&quot;</span><br>    count = r.incr(key)<br>    <span class="hljs-keyword">if</span> count == <span class="hljs-number">1</span>:<br>        r.expire(key, window + <span class="hljs-number">1</span>)        <span class="hljs-comment"># 首次创建才设过期，避免每次重置</span><br>    <span class="hljs-keyword">return</span> count &lt;= limit<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 网关每个问答请求前校验</span><br><span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> check_rate_limit(user_id):<br>    <span class="hljs-keyword">return</span> JSONResponse(&#123;<span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;请求过于频繁，请稍后再试&quot;</span>&#125;, status_code=<span class="hljs-number">429</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="全链路一次问答，Redis-做了哪些事"><a href="#全链路一次问答，Redis-做了哪些事" class="headerlink" title="全链路一次问答，Redis 做了哪些事"></a>全链路一次问答，Redis 做了哪些事</h2><p>一次完整问答的时间线，Redis 的参与一目了然：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">请求进来<br> → 限流计数 +1（④）<br> → 读会话历史（①）<br> → 查 FAQ 缓存，命中？→ 直接返回 + 热度 +1（③）<br> → miss：走检索 + LLM → 答案写 FAQ 缓存（动态 TTL ③）<br> → 追加会话历史（①）<br></code></pre></td></tr></table></figure>
+
+<p>四个角色全程无数据库参与——<strong>MySQL 只负责异步落盘完整记录</strong>。这就是 Redis 在 AI 服务里的典型存在方式：把高频、短暂、可重建的状态全部顶在内存层，让慢的那一层（检索、LLM、MySQL）只处理真正必要的工作。</p>
+<h2 id="上线检查清单"><a href="#上线检查清单" class="headerlink" title="上线检查清单"></a>上线检查清单</h2><ul>
+<li><input disabled="" type="checkbox"> 会话&#x2F;FAQ 的 key 全部带过期，避免”只写不删”的内存泄漏</li>
+<li><input disabled="" type="checkbox"> 会话只留最近 N 轮，防止上下文无限膨胀烧 token</li>
+<li><input disabled="" type="checkbox"> Redis 开 AOF（会话丢失可接受 1 秒窗口）</li>
+<li><input disabled="" type="checkbox"> 限流窗口值、FAQ TTL 做成配置而非硬编码</li>
+<li><input disabled="" type="checkbox"> 监控：内存占用、命中率、慢命令（<code>SLOWLOG</code>）</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>一个 AI 问答服务的 Redis 侧，本质是<strong>四套键的协同</strong>：<code>session:*</code>（会话，Hash+TTL）、<code>cache:faq:*</code>（缓存，动态 TTL）、<code>hot:faq</code>（热度，ZSet）、<code>ratelimit:*</code>（限流，原子计数）。每一套都只用最基础的类型与命令，组合起来就把”高频访问”这件事从数据库和 LLM 身上整个卸了下来。</p>
+<p>Redis 十一篇到此收官。回看系列：定位 → 类型 → 键 → 队列 → 对象 → 集合 → 缓存失效 → 一致性 → 锁 → 持久化 → 实战，是一条”从认识 Redis 到用它扛住 AI 服务”的完整路径。愿你设计的每一个缓存，都经得起高并发和重启。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2903805563/"><span>上一篇</span><strong>Node.js API 网关</strong></a>
+    
+    
+      <a href="/posts/2670699669/"><span>下一篇</span><strong>Node.js 调用 LLM 与流式转发</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/4198743953/">
+          <small>2026-03-12</small>
+          <strong>Milvus 实战：搭建企业知识库检索服务</strong>
+        </a>
+      
+        <a href="/posts/1686365115/">
+          <small>2026-03-02</small>
+          <strong>实战：搭一层生产级 LLM 安全防线</strong>
+        </a>
+      
+        <a href="/posts/228283361/">
+          <small>2025-12-17</small>
+          <strong>实战：给 RAG 服务搭建观测体系</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

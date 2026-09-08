@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>结构化提示：角色、上下文与任务 · 小黑程序员</title>
+  <meta name="description" content="散文式提示靠运气，结构化提示靠设计。角色定视角、上下文定信息、任务定动作、格式定契约。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/893496592/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="结构化提示：角色、上下文与任务">
+  <meta property="og:description" content="散文式提示靠运气，结构化提示靠设计。角色定视角、上下文定信息、任务定动作、格式定契约。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/893496592/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-01-12T16:00:00.000Z">
+  
+  <meta property="article:tag" content="Prompt, 提示工程">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="结构化提示：角色、上下文与任务">
+  <meta name="twitter:description" content="散文式提示靠运气，结构化提示靠设计。角色定视角、上下文定信息、任务定动作、格式定契约。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"结构化提示：角色、上下文与任务","description":"散文式提示靠运气，结构化提示靠设计。角色定视角、上下文定信息、任务定动作、格式定契约。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/893496592/","datePublished":"2025-01-12T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/893496592/"},"keywords":"Prompt, 提示工程"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/">大模型应用</a>
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">Prompt-Engineering</a>
+      
+      <time datetime="2025-01-12T16:00:00.000Z">2025-01-13</time>
+      <span>2504 字 · 约 6 分钟</span>
+    </div>
+    <h1>结构化提示：角色、上下文与任务</h1>
+    <p class="lede">散文式提示靠运气，结构化提示靠设计。角色定视角、上下文定信息、任务定动作、格式定契约。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/Prompt/">#Prompt</a>
+        
+          <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/">#提示工程</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>上一篇把提示拆成了四件套：角色、上下文、任务、输出要求。这一篇深入讲前三件的写法——因为大多数人写提示的问题不是”信息不够”，而是<strong>信息揉成一团</strong>。一段几百字的散文式提示，角色、背景、要求全混在一起，模型要自己从中”悟”出优先级。而结构化提示的哲学是：<strong>把每一类信息放到它该在的位置，让模型不用猜。</strong></p>
+<h2 id="为什么散文式提示不可靠"><a href="#为什么散文式提示不可靠" class="headerlink" title="为什么散文式提示不可靠"></a>为什么散文式提示不可靠</h2><p>先看一段典型的散文式提示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">我们公司要做知识库问答，之前试过一些方案都不太好用。<br>文档主要是技术规范，用户会问很细的问题。<br>你帮我看看怎么切分比较好，最好能给出代码。<br>对了我们用的是向量数据库，要能支持权限过滤，<br>切分的时候注意不要把条款给切断了，那个很重要。<br>还有输出最好能直接能用……<br></code></pre></td></tr></table></figure>
+
+<p>信息全在里面，但模型要自己排序：”最重要的约束是什么？”答案藏在”那个很重要”这种模糊措辞里。<strong>散文的致命问题是信息没有优先级——模型只能按出现顺序和措辞强弱猜测重要性，而猜测就是不稳定性的来源。</strong></p>
+<p>结构化提示解决的就是这个：<strong>让信息自带结构，让约束自带优先级。</strong></p>
+<h2 id="角色：不是角色扮演，是视角限定"><a href="#角色：不是角色扮演，是视角限定" class="headerlink" title="角色：不是角色扮演，是视角限定"></a>角色：不是角色扮演，是视角限定</h2><p>很多人把”角色”理解成让模型演戏，其实它在工程上的作用是<strong>限定续写的知识视角和表达风格</strong>。同一个任务，不同角色设定会导出完全不同的输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text"># 弱角色：没有视角<br>请解释这段规范的&quot;防水等级&quot;条款。<br><br># 强角色：限定视角<br>你是一位建筑规范审查工程师，负责核对施工方案是否符合规范要求。<br>请解读这段&quot;防水等级&quot;条款，说明：什么情况适用这个等级、<br>验收时要检查哪些指标。<br></code></pre></td></tr></table></figure>
+
+<p>区别不只是”看起来专业”，而是<strong>续写空间的收窄</strong>。没有角色的提示，模型可能在”科普解释”和”工程解读”之间随机摇摆；有了角色，它默认往”工程师会怎么分析”的方向走。</p>
+<p>角色设定的两个实用技巧：</p>
+<p><strong>技巧一：角色要能回答”凭什么”。</strong> 不是”你是一位专家”（空泛），而是”你是一位负责 XX 系统验收的工程师，处理过 XX 类问题”——背景越具体，模型调用的知识框架越明确。</p>
+<p><strong>技巧二：角色与任务匹配，别滥用。</strong> 让模型”扮演”某个角色不是为了好玩，是为了任务需要。如果只是做个文本格式化，不需要角色；角色是<strong>用它的知识视角来服务任务</strong>时才加。</p>
+<h2 id="上下文：给模型”足够少”的信息"><a href="#上下文：给模型”足够少”的信息" class="headerlink" title="上下文：给模型”足够少”的信息"></a>上下文：给模型”足够少”的信息</h2><p>上下文是四件套里最容易被误用的——有人觉得给得越多越好，把整本手册塞进 prompt。实际上上下文的原则是：<strong>只给模型完成任务需要的信息，多给的部分全是噪音。</strong></p>
+<p>判断信息该不该进上下文，用这个标准：<strong>模型产出时，用不用得着这条信息？</strong></p>
+<ul>
+<li>用不着的 → 别给（比如公司历史、项目背景故事），给了只会稀释注意力；</li>
+<li>用得着但可以检索的 → 别硬塞，留给 RAG（后面系列会讲）；</li>
+<li>用得着且必须给定的 → 给，而且要<strong>结构化地给</strong>（见下）。</li>
+</ul>
+<p>上下文的结构化有两层意思。第一层是”分块标注”，让模型知道哪段信息是干什么的：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">【任务】把下面的用户问题改写为适合检索规范库的查询<br>【规范背景】本库收录建筑防水工程验收规范，检索按条文编号组织<br>【用户原话】屋面漏水了应该怎么处理？<br>【要求】改写后的查询应使用规范中可能出现的术语，输出不超过 20 字<br></code></pre></td></tr></table></figure>
+
+<p>第二层是”只给相关的”——如果上下文来自检索，只拼最相关的几段而不是全部。<strong>上下文长度和质量是两回事，一个塞满噪音的长上下文，不如一段精准的短上下文。</strong></p>
+<h2 id="任务：动词要具体，边界要清楚"><a href="#任务：动词要具体，边界要清楚" class="headerlink" title="任务：动词要具体，边界要清楚"></a>任务：动词要具体，边界要清楚</h2><p>任务描述是提示的心脏。写得模糊，前面所有结构都白搭。两个常见问题：</p>
+<p><strong>问题一：动词太泛。</strong> “分析一下这段文字”——分析什么？从什么角度？产出什么形式？改成”提取这段规范中的强制条款，列出：条款编号、适用场景、违规后果”，模型才知道要干什么。</p>
+<p><strong>问题二：没有边界。</strong> 模型最怕的不是”做不了”，而是”不知道做到哪算完”。给任务加边界：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">【任务】判断用户问题属于哪一类<br>【类别】闲聊 / 查规范 / 对比条款 / 要整改建议<br>【边界】只从上述四类中选择，不确定时选&quot;闲聊&quot;，不要自己发明新类别<br></code></pre></td></tr></table></figure>
+
+<p>这个”不确定时选什么”的兜底，是任务边界里最容易被忽略、却最能稳定输出的部分——<strong>模型在模糊地带的行为，必须由你定义，而不是让它自由发挥。</strong></p>
+<h2 id="组装一份结构化提示"><a href="#组装一份结构化提示" class="headerlink" title="组装一份结构化提示"></a>组装一份结构化提示</h2><p>把四件套按固定模板组装，让它成为你团队的”标准提示骨架”：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">你是一位&#123;角色&#125;。&#123;一句话说明你处理过的相关任务&#125;<br><br>【背景】&#123;任务发生的业务场景，一两句&#125;<br>【资料】&#123;模型必须依据的内容，如规范片段&#125;<br>【任务】&#123;要做什么，动词具体&#125;<br>【要求】<br>- &#123;输出格式，如 JSON / 列表 / 一段话&#125;<br>- &#123;质量约束，如&quot;只依据资料&quot;&quot;不确定就拒绝&quot;&#125;<br>- &#123;边界，如&quot;不要输出与任务无关的内容&quot;&#125;<br><br>【输出示例】<br>&#123;给出一个符合要求的例子，下一篇详讲&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这套骨架的价值不只是单次输出更稳，更重要的是<strong>可复用、可维护</strong>：同一类任务用同一套模板，改的是变量而不是结构。等系列后面讲”把提示当代码管理”时你会发现，模板化是提示工程化的前提。</p>
+<h2 id="踩过的坑：结构化不等于话痨"><a href="#踩过的坑：结构化不等于话痨" class="headerlink" title="踩过的坑：结构化不等于话痨"></a>踩过的坑：结构化不等于话痨</h2><p>结构化提示最常见的翻车，是把结构写成了冗长的排比——每个要求都换着花样说三遍。模型对”重复”很敏感：同一约束出现多次，它可能理解为”这条很重要”（加大权重），也可能因为互相矛盾的措辞而困惑。<strong>同一个约束只写一次，写在它该在的位置。</strong> 结构是为了减少噪音，不是为了增加字数。</p>
+<p>判断你的提示是不是”结构清晰而非啰嗦”：把它打印出来，去掉所有分隔符和标题，如果剩下的信息仍有逻辑顺序、没有重复，就是合格的；如果去掉结构后变成一坨互相矛盾的话，说明结构只是装饰，信息本身还没理清。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>结构化提示的核心是让信息自带位置和优先级：角色限定知识视角、上下文只给够用的信息、任务动词具体且带边界。散文式提示把判断责任丢给模型，结构化提示把判断责任拿回自己手里——<strong>每减少一分模型的猜测，就增加一分输出的稳定。</strong></p>
+<p>下一篇讲四件套里威力最大也最被低估的一件：示例。为什么”给三个例子”常常胜过”写三百字描述”，以及 few-shot 的正确打开方式。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/3046212988/"><span>上一篇</span><strong>Docker 核心概念与常用命令</strong></a>
+    
+    
+      <a href="/posts/2471344728/"><span>下一篇</span><strong>TypeScript + Vue3 实战</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/4093603351/">
+          <small>2025-02-10</small>
+          <strong>把提示当代码管理：版本与评测</strong>
+        </a>
+      
+        <a href="/posts/3284716324/">
+          <small>2025-02-03</small>
+          <strong>思维链：引导模型一步步推理</strong>
+        </a>
+      
+        <a href="/posts/1817551796/">
+          <small>2025-01-27</small>
+          <strong>输出约束：让模型稳定输出 JSON</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

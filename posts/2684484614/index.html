@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>RAG 评测：命中率、引用与拒答 · 小黑程序员</title>
+  <meta name="description" content="RAG 不能只靠感觉调。三层测试：单测、评测集、线上 trace，把&#39;坏了&#39;变成可定位的指标。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/2684484614/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="RAG 评测：命中率、引用与拒答">
+  <meta property="og:description" content="RAG 不能只靠感觉调。三层测试：单测、评测集、线上 trace，把&#39;坏了&#39;变成可定位的指标。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/2684484614/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-04-20T16:00:00.000Z">
+  
+  <meta property="article:tag" content="评测, RAG">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RAG 评测：命中率、引用与拒答">
+  <meta name="twitter:description" content="RAG 不能只靠感觉调。三层测试：单测、评测集、线上 trace，把&#39;坏了&#39;变成可定位的指标。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"RAG 评测：命中率、引用与拒答","description":"RAG 不能只靠感觉调。三层测试：单测、评测集、线上 trace，把'坏了'变成可定位的指标。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/2684484614/","datePublished":"2025-04-20T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/2684484614/"},"keywords":"评测, RAG"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/">大模型应用</a>
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">RAG</a>
+      
+      <time datetime="2025-04-20T16:00:00.000Z">2025-04-21</time>
+      <span>3856 字 · 约 10 分钟</span>
+    </div>
+    <h1>RAG 评测：命中率、引用与拒答</h1>
+    <p class="lede">RAG 不能只靠感觉调。三层测试：单测、评测集、线上 trace，把&#39;坏了&#39;变成可定位的指标。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/%E8%AF%84%E6%B5%8B/">#评测</a>
+        
+          <a href="/tags/RAG/">#RAG</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>做 RAG 最怕听到的话是”最近回答好像变差了”——“好像”意味着无法定位、无法验证、无法回归。RAG 是个多环节系统（切分→检索→组装→生成），任何一环悄悄变差，都会表现为”回答变差”，但<strong>不评测就永远不知道是哪一环</strong>。这篇讲 RAG 评测的落地：三层测试结构，把”感觉能用”变成”数据证明能用”。</p>
+<h2 id="RAG-评测为什么不能只靠”人眼看”"><a href="#RAG-评测为什么不能只靠”人眼看”" class="headerlink" title="RAG 评测为什么不能只靠”人眼看”"></a>RAG 评测为什么不能只靠”人眼看”</h2><p>直觉上，评测就是”拿问题问系统，人看答得好不好”。这在早期可行，但一旦开始迭代（换 embedding、改切分、调提示），问题就来了：</p>
+<ul>
+<li><strong>人看的主观性</strong>：同一个回答，两个人评分可能差很多；</li>
+<li><strong>无法回归</strong>：上周改了个参数，这周怎么知道整体是变好还是变坏？</li>
+<li><strong>无法定位</strong>：回答变差，是检索漏了？还是模型没用好上下文？人眼看不出是哪一环。</li>
+</ul>
+<p>RAG 评测的目标不是”打分”，而是<strong>把系统的每个环节变成可量化、可回归、可定位的指标</strong>。标准做法是三层测试。</p>
+<h2 id="第一层：纯逻辑单测——测”确定性的环节”"><a href="#第一层：纯逻辑单测——测”确定性的环节”" class="headerlink" title="第一层：纯逻辑单测——测”确定性的环节”"></a>第一层：纯逻辑单测——测”确定性的环节”</h2><p>RAG 里有几个环节是确定性的，可以直接写单测：</p>
+<ul>
+<li><strong>意图分类</strong>：给定问题，应该路由到哪条路径；</li>
+<li><strong>过滤逻辑</strong>：给定用户权限，检索表达式是否正确排除无权文档；</li>
+<li><strong>上下文组装</strong>：给定召回结果，拼接是否带来源、是否超预算。</li>
+</ul>
+<p>这些环节没有”模型发挥”的成分，可以用传统单测覆盖：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">test_acl_filter_excludes_private_docs</span>():<br>    user = User(<span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;u1&quot;</span>, org=<span class="hljs-string">&quot;org_a&quot;</span>)<br>    expr = build_filter(user)<br>    <span class="hljs-comment"># 应只包含 public + 本 org + 本人 private 文档</span><br>    <span class="hljs-keyword">assert</span> <span class="hljs-string">&#x27;visibility == &quot;public&quot;&#x27;</span> <span class="hljs-keyword">in</span> expr<br>    <span class="hljs-keyword">assert</span> <span class="hljs-string">&#x27;owner == &quot;u1&quot;&#x27;</span> <span class="hljs-keyword">in</span> expr<br>    <span class="hljs-keyword">assert</span> <span class="hljs-string">&#x27;org_a&#x27;</span> <span class="hljs-keyword">in</span> expr<br></code></pre></td></tr></table></figure>
+
+<p>第一层测试的价值：<strong>把确定性的部分锁死</strong>，让 RAG 的工程地基（路由、过滤、组装）不会悄悄被改坏。</p>
+<h2 id="第二层：评测集——测”模型环节的质量”"><a href="#第二层：评测集——测”模型环节的质量”" class="headerlink" title="第二层：评测集——测”模型环节的质量”"></a>第二层：评测集——测”模型环节的质量”</h2><p>模型环节（检索命中率、回答质量）不能用单测，要用<strong>评测集</strong>：一组固定的”问题→期望结果”，每次改动后跑一遍，看指标变化。</p>
+<p>RAG 评测集的核心指标分两块：</p>
+<p><strong>检索质量指标（只看检索，不看生成）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">eval_retrieval</span>(<span class="hljs-params">test_cases, retriever</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;召回评测：命中的正确 chunk 是否在召回结果里&quot;&quot;&quot;</span><br>    results = []<br>    <span class="hljs-keyword">for</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">in</span> test_cases:<br>        hits = retriever(<span class="hljs-keyword">case</span>[<span class="hljs-string">&quot;question&quot;</span>])<br>        hit_doc_ids = &#123;h[<span class="hljs-string">&quot;doc_id&quot;</span>] <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> hits&#125;<br>        expected = <span class="hljs-built_in">set</span>(<span class="hljs-keyword">case</span>[<span class="hljs-string">&quot;expected_doc_ids&quot;</span>])<br>        <span class="hljs-comment"># 命中率：期望文档有多少被召回了</span><br>        recall = <span class="hljs-built_in">len</span>(expected &amp; hit_doc_ids) / <span class="hljs-built_in">len</span>(expected) <span class="hljs-keyword">if</span> expected <span class="hljs-keyword">else</span> <span class="hljs-number">1.0</span><br>        results.append(&#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-keyword">case</span>[<span class="hljs-string">&quot;question&quot;</span>], <span class="hljs-string">&quot;recall&quot;</span>: recall&#125;)<br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-string">&quot;avg_recall&quot;</span>: mean(r[<span class="hljs-string">&quot;recall&quot;</span>] <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> results)&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>生成质量指标（结合生成看答案）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">eval_generation</span>(<span class="hljs-params">test_cases, rag_answer</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;生成评测：答案对错 + 引用 + 拒答&quot;&quot;&quot;</span><br>    metrics = &#123;<span class="hljs-string">&quot;correct&quot;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&quot;cited&quot;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&quot;rejected_ok&quot;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&quot;total&quot;</span>: <span class="hljs-built_in">len</span>(test_cases)&#125;<br>    <span class="hljs-keyword">for</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">in</span> test_cases:<br>        answer = rag_answer(<span class="hljs-keyword">case</span>[<span class="hljs-string">&quot;question&quot;</span>])<br>        <span class="hljs-comment"># 1. 答案正确性（有标准答案时比对）</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">case</span>.get(<span class="hljs-string">&quot;expected_answer&quot;</span>):<br>            metrics[<span class="hljs-string">&quot;correct&quot;</span>] += judge_match(answer, <span class="hljs-keyword">case</span>[<span class="hljs-string">&quot;expected_answer&quot;</span>])<br>        <span class="hljs-comment"># 2. 引用是否有效（关键结论应指向期望文档）</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">case</span>.get(<span class="hljs-string">&quot;requires_citation&quot;</span>):<br>            metrics[<span class="hljs-string">&quot;cited&quot;</span>] += citation_valid(answer, <span class="hljs-keyword">case</span>[<span class="hljs-string">&quot;expected_doc_ids&quot;</span>])<br>    <span class="hljs-keyword">return</span> metrics<br></code></pre></td></tr></table></figure>
+
+<p>三层评测题的构成（对应最小闭环的三条底线）：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>题型</th>
+<th>测什么</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>命中题</td>
+<td>找得回来</td>
+<td>“屋面防水等级怎么定？” → 期望命中规范文档</td>
+</tr>
+<tr>
+<td>拒答题</td>
+<td>知道边界</td>
+<td>“文档里没有的问题” → 期望答”未找到”而非编造</td>
+</tr>
+<tr>
+<td>溯源题</td>
+<td>引用正确</td>
+<td>“4.2 条要求什么” → 期望引用指向 4.2 所在文档</td>
+</tr>
+</tbody></table></div>
+<p><strong>评测集不是一次建完的</strong>：每次线上发现一个答错的 case，就把它加进评测集（连同正确答案）——这是 RAG 的”回归测试”生长机制，和”修 bug 先加测试”是同一个工程习惯。</p>
+<h2 id="第三层：线上-trace——测”真实流量下的表现”"><a href="#第三层：线上-trace——测”真实流量下的表现”" class="headerlink" title="第三层：线上 trace——测”真实流量下的表现”"></a>第三层：线上 trace——测”真实流量下的表现”</h2><p>评测集是”人工构造的题”，线上流量是”真实的用户问题”——两者都要看。第三层是<strong>线上观测</strong>：给每次线上请求打 trace，记录关键信息，供事后分析：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 每次 RAG 请求记录（结构化日志 / trace 平台）</span><br>trace = &#123;<br>    <span class="hljs-string">&quot;request_id&quot;</span>: <span class="hljs-string">&quot;9f2c8a1e&quot;</span>,<br>    <span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;屋面漏了怎么处理&quot;</span>,        <span class="hljs-comment"># 原问题</span><br>    <span class="hljs-string">&quot;rewritten_query&quot;</span>: <span class="hljs-string">&quot;屋面防水层渗漏 维修&quot;</span>,  <span class="hljs-comment"># 改写后（若有）</span><br>    <span class="hljs-string">&quot;retrieved&quot;</span>: [                          <span class="hljs-comment"># 召回了什么</span><br>        &#123;<span class="hljs-string">&quot;doc_id&quot;</span>: <span class="hljs-string">&quot;doc_2025_003&quot;</span>, <span class="hljs-string">&quot;section&quot;</span>: <span class="hljs-string">&quot;4.2&quot;</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">0.82</span>&#125;,<br>    ],<br>    <span class="hljs-string">&quot;model&quot;</span>: <span class="hljs-string">&quot;qwen-plus&quot;</span>,<br>    <span class="hljs-string">&quot;answer&quot;</span>: <span class="hljs-string">&quot;...&quot;</span>,                        <span class="hljs-comment"># 生成结果</span><br>    <span class="hljs-string">&quot;latency_ms&quot;</span>: <span class="hljs-number">812</span>,<br>    <span class="hljs-string">&quot;tokens&quot;</span>: &#123;<span class="hljs-string">&quot;input&quot;</span>: <span class="hljs-number">1520</span>, <span class="hljs-string">&quot;output&quot;</span>: <span class="hljs-number">380</span>&#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>线上 trace 解决评测集解决不了的两件事：</p>
+<ol>
+<li>**发现”没想到的坏案例”**：评测集的题是你想到的，线上问题是用户想到的——定期从 trace 里挖”低分回答”补充评测集；</li>
+<li><strong>定位环节</strong>：用户说某次回答不对，翻 trace 能看出是”检索没召到”还是”召到了但模型没用对”——<strong>trace 是 RAG 归因的第一现场</strong>。</li>
+</ol>
+<p>（这套 trace 体系的完整实现在工程化版块的可观测系列讲过——Langfuse 就是干这个的，这里不重复。）</p>
+<h2 id="三层测试怎么配合"><a href="#三层测试怎么配合" class="headerlink" title="三层测试怎么配合"></a>三层测试怎么配合</h2><p>三层不是互相替代，是各管一段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">单测（确定性环节）  → 每次代码改动跑，秒级，锁死工程地基<br>评测集（模型环节）  → 每次检索/切分/提示改动跑，分钟级，防回归<br>线上 trace（真实流量）→ 持续采集，定期分析，喂给评测集<br></code></pre></td></tr></table></figure>
+
+<p><strong>工作流的节奏：</strong> 任何改动（换 embedding、改切分参数、调提示）上线前，先跑评测集，指标不降才允许上线；上线后靠 trace 观察真实表现，发现新坏案例就补进评测集。这样形成一个闭环：<strong>改动 → 评测集验证 → 上线 → trace 发现问题 → 补评测集 → 下次改动有据可依。</strong></p>
+<h2 id="评测里要小心的坑"><a href="#评测里要小心的坑" class="headerlink" title="评测里要小心的坑"></a>评测里要小心的坑</h2><p><strong>坑一：评测题和线上分布脱节。</strong> 评测集全是”规范文档里能找到答案”的题，那命中率自然高——但线上大量是模糊问题、闲聊。<strong>评测集要覆盖真实分布</strong>，包括该拒答的、该路由的边界题。</p>
+<p><strong>坑二：只测答案对错，不测引用。</strong> RAG 和普通问答最大的区别是”可溯源”——不测引用，就可能在”答对了但出处是编的”上翻车，这恰恰是最危险的情况。</p>
+<p><strong>坑三：评测集被”背下来”。</strong> 如果评测集长期不变，系统的改动可能只是在”拟合评测题”而非提升真实能力。定期混入新题、保留一部分”未见过的 holdout 题”，防止过拟合评测集。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>RAG 评测三层结构：纯逻辑单测锁死确定性环节（路由&#x2F;过滤&#x2F;组装）、评测集量化模型环节（召回命中率&#x2F;答案正确&#x2F;引用&#x2F;拒答）、线上 trace 覆盖真实流量并持续喂给评测集。<strong>RAG 从”感觉能用”到”数据证明能用”，靠的就是这套三层体系</strong>——每次改动前跑评测集防回归，线上靠 trace 发现新问题补进评测集。</p>
+<p>下一篇进入 RAG 的工程化收尾：怎么把 RAG 包成一个稳定可维护的服务——分层架构、并发控制、缓存与超时。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/183693549/"><span>上一篇</span><strong>Kubernetes 核心对象：Pod 与 Deployment</strong></a>
+    
+    
+      <a href="/posts/2842351578/"><span>下一篇</span><strong>入库流水线：解析、清洗与质量门禁</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/3390242430/">
+          <small>2026-05-26</small>
+          <strong>MySQL 笔记：约束、联表和分析函数怎么接到知识库</strong>
+        </a>
+      
+        <a href="/posts/1585705281/">
+          <small>2026-01-06</small>
+          <strong>Milvus 简介：向量数据库在 RAG 里的位置</strong>
+        </a>
+      
+        <a href="/posts/228283361/">
+          <small>2025-12-17</small>
+          <strong>实战：给 RAG 服务搭建观测体系</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

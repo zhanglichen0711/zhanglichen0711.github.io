@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Node.js 鉴权与限流 · 小黑程序员</title>
+  <meta name="description" content="网关的两道闸：jsonwebtoken 校验身份，express-rate-limit 拦高频，防越权防刷爆。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/3664311749/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="Node.js 鉴权与限流">
+  <meta property="og:description" content="网关的两道闸：jsonwebtoken 校验身份，express-rate-limit 拦高频，防越权防刷爆。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/3664311749/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2024-06-26T16:00:00.000Z">
+  
+  <meta property="article:tag" content="JWT, Node.js, 限流">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Node.js 鉴权与限流">
+  <meta name="twitter:description" content="网关的两道闸：jsonwebtoken 校验身份，express-rate-limit 拦高频，防越权防刷爆。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Node.js 鉴权与限流","description":"网关的两道闸：jsonwebtoken 校验身份，express-rate-limit 拦高频，防越权防刷爆。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/3664311749/","datePublished":"2024-06-26T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/3664311749/"},"keywords":"JWT, Node.js, 限流"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/">后端服务</a>
+      
+        <a class="chip" href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">Node.js</a>
+      
+      <time datetime="2024-06-26T16:00:00.000Z">2024-06-27</time>
+      <span>4126 字 · 约 10 分钟</span>
+    </div>
+    <h1>Node.js 鉴权与限流</h1>
+    <p class="lede">网关的两道闸：jsonwebtoken 校验身份，express-rate-limit 拦高频，防越权防刷爆。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/JWT/">#JWT</a>
+        
+          <a href="/tags/Node-js/">#Node.js</a>
+        
+          <a href="/tags/%E9%99%90%E6%B5%81/">#限流</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>网关暴露在公网，会面对两类攻击：<strong>越权</strong>（拿别人的身份访问）和<strong>刷爆</strong>（脚本高频请求把上游打挂）。对应两道闸：鉴权中间件确认”你是谁”，限流中间件约束”你多快”。这一篇把这两道闸写扎实，全部以 Express 中间件形式落地。</p>
+<h2 id="第一道闸：JWT-鉴权"><a href="#第一道闸：JWT-鉴权" class="headerlink" title="第一道闸：JWT 鉴权"></a>第一道闸：JWT 鉴权</h2><p>Web 服务最主流的无状态认证是 JWT（JSON Web Token）：登录成功后服务端签发一个<strong>签名 token</strong> 给客户端，里面编码用户 ID、角色等信息；后续请求带上它，服务端验签通过即信任内容，<strong>不需要在服务端存会话</strong>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install jsonwebtoken<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// auth.js —— 签发与校验</span><br><span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;jsonwebtoken&#x27;</span>);<br><br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SECRET</span> = process.<span class="hljs-property">env</span>.<span class="hljs-property">JWT_SECRET</span>;      <span class="hljs-comment">// 密钥必须走环境变量</span><br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">signToken</span>(<span class="hljs-params">payload, expiresIn = <span class="hljs-string">&#x27;24h&#x27;</span></span>) &#123;<br>  <span class="hljs-keyword">return</span> jwt.<span class="hljs-title function_">sign</span>(payload, <span class="hljs-variable constant_">SECRET</span>, &#123; expiresIn &#125;);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">verifyToken</span>(<span class="hljs-params">token</span>) &#123;<br>  <span class="hljs-keyword">return</span> jwt.<span class="hljs-title function_">verify</span>(token, <span class="hljs-variable constant_">SECRET</span>);          <span class="hljs-comment">// 验签 + 检查过期，非法直接抛错</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>签发端（登录接口）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&#x27;/auth/login&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> &#123; username, password &#125; = req.<span class="hljs-property">body</span>;<br>  <span class="hljs-keyword">const</span> user = <span class="hljs-title function_">authenticate</span>(username, password);   <span class="hljs-comment">// 查库验证密码</span><br>  <span class="hljs-keyword">if</span> (!user) &#123;<br>    <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">401</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">error</span>: <span class="hljs-string">&#x27;用户名或密码错误&#x27;</span> &#125;);<br>  &#125;<br>  <span class="hljs-comment">// 载荷只放身份信息，不放敏感数据</span><br>  <span class="hljs-keyword">const</span> token = <span class="hljs-title function_">signToken</span>(&#123; <span class="hljs-attr">uid</span>: user.<span class="hljs-property">id</span>, <span class="hljs-attr">role</span>: user.<span class="hljs-property">role</span>, <span class="hljs-attr">dept</span>: user.<span class="hljs-property">dept</span> &#125;);<br>  res.<span class="hljs-title function_">json</span>(&#123; token &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>三个要点：</p>
+<ol>
+<li><strong>载荷里放角色和部门</strong>——后面做数据级权限、给上游透传身份时直接从 token 解，不用再查库；</li>
+<li><strong><code>expiresIn</code> 必须设</strong>——永不过期的 token 等于永久通行证；</li>
+<li><strong>密钥绝不放代码里</strong>——<code>process.env.JWT_SECRET</code> 注入，git 里永远找不到。</li>
+</ol>
+<h2 id="鉴权中间件：网关统一校验"><a href="#鉴权中间件：网关统一校验" class="headerlink" title="鉴权中间件：网关统一校验"></a>鉴权中间件：网关统一校验</h2><p>网关层的鉴权中间件，把”验签 → 挂用户信息 → 放行”做成一步：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// middleware/auth.js</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">requireAuth</span>(<span class="hljs-params">req, res, next</span>) &#123;<br>  <span class="hljs-keyword">const</span> header = req.<span class="hljs-property">headers</span>[<span class="hljs-string">&#x27;authorization&#x27;</span>] || <span class="hljs-string">&#x27;&#x27;</span>;<br>  <span class="hljs-keyword">const</span> token = header.<span class="hljs-title function_">startsWith</span>(<span class="hljs-string">&#x27;Bearer &#x27;</span>) ? header.<span class="hljs-title function_">slice</span>(<span class="hljs-number">7</span>) : <span class="hljs-literal">null</span>;<br><br>  <span class="hljs-keyword">if</span> (!token) &#123;<br>    <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">401</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">error</span>: <span class="hljs-string">&#x27;缺少登录凭证&#x27;</span> &#125;);<br>  &#125;<br>  <span class="hljs-keyword">try</span> &#123;<br>    req.<span class="hljs-property">user</span> = <span class="hljs-title function_">verifyToken</span>(token);       <span class="hljs-comment">// 挂到 req 上，下游中间件/路由可读</span><br>    <span class="hljs-title function_">next</span>();<br>  &#125; <span class="hljs-keyword">catch</span> &#123;<br>    <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">401</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">error</span>: <span class="hljs-string">&#x27;凭证无效或已过期&#x27;</span> &#125;);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 网关：除了登录，全部接口先过鉴权</span><br>app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&#x27;/auth/login&#x27;</span>, loginHandler);           <span class="hljs-comment">// 白名单：登录本身免鉴权</span><br>app.<span class="hljs-title function_">use</span>(<span class="hljs-string">&#x27;/api&#x27;</span>, requireAuth);                    <span class="hljs-comment">// 其余全拦</span><br>app.<span class="hljs-title function_">use</span>(<span class="hljs-string">&#x27;/api&#x27;</span>, proxyRouter);<br></code></pre></td></tr></table></figure>
+
+<p>带角色&#x2F;部门的权限卡点（比如只有 admin 能访问管理接口）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">requireRole</span>(<span class="hljs-params">...roles</span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">req, res, next</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (!req.<span class="hljs-property">user</span> || !roles.<span class="hljs-title function_">includes</span>(req.<span class="hljs-property">user</span>.<span class="hljs-property">role</span>)) &#123;<br>      <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">403</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">error</span>: <span class="hljs-string">&#x27;权限不足&#x27;</span> &#125;);<br>    &#125;<br>    <span class="hljs-title function_">next</span>();<br>  &#125;;<br>&#125;<br><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/api/admin/stats&#x27;</span>, requireAuth, <span class="hljs-title function_">requireRole</span>(<span class="hljs-string">&#x27;admin&#x27;</span>), handler);<br></code></pre></td></tr></table></figure>
+
+<p>401（没登录）和 403（登录了但没权限）的区别就在这里：前者没通过鉴权，后者过了鉴权但角色不够。</p>
+<h2 id="上游怎么拿到身份：透传"><a href="#上游怎么拿到身份：透传" class="headerlink" title="上游怎么拿到身份：透传"></a>上游怎么拿到身份：透传</h2><p>网关校验通过后，上游服务也需要知道”当前是谁”才能做数据级过滤（比如 RAG 只搜本部门文档）。网关把身份<strong>透传</strong>给上游：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 网关把 req.user 作为请求头传给上游</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">attachUser</span>(<span class="hljs-params">req, res, next</span>) &#123;<br>  <span class="hljs-keyword">if</span> (req.<span class="hljs-property">user</span>) &#123;<br>    req.<span class="hljs-property">headers</span>[<span class="hljs-string">&#x27;x-user-id&#x27;</span>] = req.<span class="hljs-property">user</span>.<span class="hljs-property">uid</span>;<br>    req.<span class="hljs-property">headers</span>[<span class="hljs-string">&#x27;x-user-role&#x27;</span>] = req.<span class="hljs-property">user</span>.<span class="hljs-property">role</span>;<br>    req.<span class="hljs-property">headers</span>[<span class="hljs-string">&#x27;x-user-dept&#x27;</span>] = req.<span class="hljs-property">user</span>.<span class="hljs-property">dept</span>;<br>  &#125;<br>  <span class="hljs-title function_">next</span>();<br>&#125;<br><br>app.<span class="hljs-title function_">use</span>(<span class="hljs-string">&#x27;/api&#x27;</span>, requireAuth, attachUser, proxyRouter);<br></code></pre></td></tr></table></figure>
+
+<p>上游 FastAPI 服务读这几个自定义头拿身份，做权限过滤下推。<strong>注意</strong>：内网之间传身份用自定义头没问题，但网关必须保证这些头是”自己填的”而不是客户端伪造的——所以要让 <code>attachUser</code> <strong>覆盖</strong>掉客户端传的同名头，而不是信任原值。</p>
+<h2 id="第二道闸：限流"><a href="#第二道闸：限流" class="headerlink" title="第二道闸：限流"></a>第二道闸：限流</h2><p>限流防两类问题：恶意脚本刷接口、某个用户异常高频调用拖垮上游。Express 生态用 <code>express-rate-limit</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install express-rate-limit<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> rateLimit = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;express-rate-limit&#x27;</span>);<br><br><span class="hljs-comment">// 全局限流：每个 IP 每分钟最多 120 次</span><br><span class="hljs-keyword">const</span> globalLimiter = <span class="hljs-title function_">rateLimit</span>(&#123;<br>  <span class="hljs-attr">windowMs</span>: <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>,          <span class="hljs-comment">// 窗口：1 分钟</span><br>  <span class="hljs-attr">limit</span>: <span class="hljs-number">120</span>,                   <span class="hljs-comment">// 窗口内最多 120 次</span><br>  <span class="hljs-attr">standardHeaders</span>: <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">legacyHeaders</span>: <span class="hljs-literal">false</span>,<br>&#125;);<br><br><span class="hljs-comment">// 敏感接口更严：登录接口防爆破，每 IP 每分钟 10 次</span><br><span class="hljs-keyword">const</span> loginLimiter = <span class="hljs-title function_">rateLimit</span>(&#123;<br>  <span class="hljs-attr">windowMs</span>: <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>,<br>  <span class="hljs-attr">limit</span>: <span class="hljs-number">10</span>,<br>  <span class="hljs-attr">message</span>: &#123; <span class="hljs-attr">error</span>: <span class="hljs-string">&#x27;尝试过于频繁，请稍后再试&#x27;</span> &#125;,<br>&#125;);<br><br>app.<span class="hljs-title function_">use</span>(<span class="hljs-string">&#x27;/api&#x27;</span>, globalLimiter);<br>app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&#x27;/auth/login&#x27;</span>, loginLimiter, loginHandler);<br></code></pre></td></tr></table></figure>
+
+<p>超限时 <code>express-rate-limit</code> 默认返回 429（Too Many Requests），客户端会收到明确信号。登录接口单独加严是标配——防暴力破解密码。</p>
+<h2 id="分布式的限流：多实例要共享计数"><a href="#分布式的限流：多实例要共享计数" class="headerlink" title="分布式的限流：多实例要共享计数"></a>分布式的限流：多实例要共享计数</h2><p><code>express-rate-limit</code> 默认把计数存在<strong>当前进程内存</strong>里。网关如果部署了多个实例（负载均衡），每个实例各记各的——实际限流上限会被放大 N 倍。多实例必须用<strong>共享存储</strong>（Redis）来计数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install express-rate-limit ioredis<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">RedisStore</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;rate-limit-redis&#x27;</span>).<span class="hljs-property">default</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-title class_">Redis</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;ioredis&#x27;</span>);<br><br><span class="hljs-keyword">const</span> redis = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Redis</span>(process.<span class="hljs-property">env</span>.<span class="hljs-property">REDIS_URL</span>);<br><br><span class="hljs-keyword">const</span> limiter = <span class="hljs-title function_">rateLimit</span>(&#123;<br>  <span class="hljs-attr">windowMs</span>: <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>,<br>  <span class="hljs-attr">limit</span>: <span class="hljs-number">120</span>,<br>  <span class="hljs-attr">store</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisStore</span>(&#123;<br>    <span class="hljs-attr">sendCommand</span>: <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> redis.<span class="hljs-title function_">call</span>(...args),<br>  &#125;),<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>计数落在 Redis 后，无论多少个网关实例，都共享同一套计数——限流才真正有效。这也是网关架构里 Redis 最常见的一个用途。</p>
+<h2 id="限流策略怎么定"><a href="#限流策略怎么定" class="headerlink" title="限流策略怎么定"></a>限流策略怎么定</h2><p>限流不是拍脑袋，先想清楚被保护对象能扛多少：</p>
+<ul>
+<li><strong>登录</strong>：每 IP 每分钟 5~10 次（防爆破）；</li>
+<li><strong>普通查询</strong>：每用户每分钟 60~120 次（人肉操作到不了这个量级）；</li>
+<li><strong>LLM 类接口</strong>：最贵，按 token 消耗或按次严格限，超了返回 429 引导降级；</li>
+<li><strong>静态资源</strong>：一般不限流。</li>
+</ul>
+<p>被限流后给用户合理反馈（429 + 重试时间），而不是直接掐断，体验会好很多。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>鉴权与限流是网关防线上最常驻的两道闸：<strong>JWT 中间件验明身份并把角色挂到请求上（必要时透传给上游做数据过滤），限流中间件按窗口挡住高频请求（多实例要落 Redis 共享计数）</strong>。两道闸都用”挂中间件”的方式接入，路由代码零侵入。</p>
+<p>单点能力都齐了——最后一篇把它们组装起来：一个真实的 Node 网关，把 RAG 问答服务包在身后完整跑通。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/1568947575/"><span>上一篇</span><strong>LLM 推理为什么慢：生成式解码的瓶颈</strong></a>
+    
+    
+      <a href="/posts/2903805563/"><span>下一篇</span><strong>Node.js API 网关</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/1549573844/">
+          <small>2025-01-04</small>
+          <strong>TypeScript + Node.js 实战</strong>
+        </a>
+      
+        <a href="/posts/1632239257/">
+          <small>2024-07-03</small>
+          <strong>Node.js 项目实战：网关与 RAG 服务</strong>
+        </a>
+      
+        <a href="/posts/2903805563/">
+          <small>2024-06-20</small>
+          <strong>Node.js API 网关</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

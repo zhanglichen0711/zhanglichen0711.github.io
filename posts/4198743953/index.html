@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Milvus 实战：搭建企业知识库检索服务 · 小黑程序员</title>
+  <meta name="description" content="把系列知识组装成完整的企业知识库：入库管线、混合检索、权限过滤、精排，一条链路交付。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/4198743953/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="Milvus 实战：搭建企业知识库检索服务">
+  <meta property="og:description" content="把系列知识组装成完整的企业知识库：入库管线、混合检索、权限过滤、精排，一条链路交付。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/4198743953/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2026-03-11T16:00:00.000Z">
+  
+  <meta property="article:tag" content="实战, Milvus, 知识库">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Milvus 实战：搭建企业知识库检索服务">
+  <meta name="twitter:description" content="把系列知识组装成完整的企业知识库：入库管线、混合检索、权限过滤、精排，一条链路交付。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Milvus 实战：搭建企业知识库检索服务","description":"把系列知识组装成完整的企业知识库：入库管线、混合检索、权限过滤、精排，一条链路交付。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/4198743953/","datePublished":"2026-03-11T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/4198743953/"},"keywords":"实战, Milvus, 知识库"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/">数据与存储</a>
+      
+        <a class="chip" href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">Milvus</a>
+      
+      <time datetime="2026-03-11T16:00:00.000Z">2026-03-12</time>
+      <span>5283 字 · 约 13 分钟</span>
+    </div>
+    <h1>Milvus 实战：搭建企业知识库检索服务</h1>
+    <p class="lede">把系列知识组装成完整的企业知识库：入库管线、混合检索、权限过滤、精排，一条链路交付。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/%E5%AE%9E%E6%88%98/">#实战</a>
+        
+          <a href="/tags/Milvus/">#Milvus</a>
+        
+          <a href="/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/">#知识库</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>前 10 篇把 Milvus 的单点能力都过完了。这一篇做收口：把它们组装成一个<strong>能上线的企业知识库检索服务</strong>。从”文档进来”到”用户拿到带出处的回答”，把入库管线、混合检索、权限过滤、精排串成完整链路——你会发现每一篇在这里都有位置，拼起来才是知识库的完整形态。</p>
+<h2 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">入库管线（离线）                        在线检索<br>原始文档 → 解析 → 切片 → 元数据 →       用户提问<br>   embedding + BM25（Milvus 内置）         ↓<br>              ↓                      混合检索（稠密 + BM25）<br>        质量门禁（空块/过短/        + expr 权限过滤<br>         缺元数据/重复块）               ↓<br>              ↓                      Rerank 精排取 TopK<br>        写入 Milvus                 ↓<br>                                  LLM 生成（带出处引用）<br></code></pre></td></tr></table></figure>
+
+<p>两条链路独立跑：<strong>入库管线把文档变成可检索的向量块；在线检索把问题变成带出处的答案</strong>。</p>
+<h2 id="工程目录"><a href="#工程目录" class="headerlink" title="工程目录"></a>工程目录</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs text">kb_retrieval/<br>├── ingest/<br>│   ├── parser.py         # 文档解析（PDF/Word → 文本）<br>│   ├── chunker.py        # 切片策略（条款级/父子块）<br>│   ├── embedder.py       # embedding 封装（BGE-M3）<br>│   ├── quality_gate.py   # 质量门禁四道检查<br>│   └── writer.py         # 写入 Milvus<br>├── api/<br>│   ├── main.py           # FastAPI：检索接口<br>│   ├── auth.py           # 用户身份 → 权限过滤条件<br>│   ├── retriever.py      # 混合检索<br>│   └── reranker.py       # 精排<br>└── config.py<br></code></pre></td></tr></table></figure>
+
+<h2 id="入库管线：文档-→-向量块"><a href="#入库管线：文档-→-向量块" class="headerlink" title="入库管线：文档 → 向量块"></a>入库管线：文档 → 向量块</h2><p><strong>切片 + 元数据</strong>（对应 schema 设计篇的字段）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ingest/chunker.py —— 按条款级切块，保留出处</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">chunk_document</span>(<span class="hljs-params">doc</span>) -&gt; <span class="hljs-built_in">list</span>[<span class="hljs-built_in">dict</span>]:<br>    chunks = []<br>    <span class="hljs-keyword">for</span> clause <span class="hljs-keyword">in</span> split_by_clause(doc.text):      <span class="hljs-comment"># 按条号切</span><br>        chunks.append(&#123;<br>            <span class="hljs-string">&quot;doc_id&quot;</span>: doc.doc_id,<br>            <span class="hljs-string">&quot;title&quot;</span>: doc.title,<br>            <span class="hljs-string">&quot;clause&quot;</span>: clause.no,                   <span class="hljs-comment"># 条号，回答要引用</span><br>            <span class="hljs-string">&quot;version&quot;</span>: doc.version,<br>            <span class="hljs-string">&quot;seq&quot;</span>: <span class="hljs-built_in">len</span>(chunks),<br>            <span class="hljs-string">&quot;text&quot;</span>: clause.text,<br>            <span class="hljs-string">&quot;dept&quot;</span>: doc.dept,                      <span class="hljs-comment"># 权限过滤用</span><br>        &#125;)<br>    <span class="hljs-keyword">return</span> chunks<br></code></pre></td></tr></table></figure>
+
+<p><strong>质量门禁</strong>（呼应 RAG 章节的”四类拦截”——不过关的块不进库）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ingest/quality_gate.py</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">validate</span>(<span class="hljs-params">chunk: <span class="hljs-built_in">dict</span></span>) -&gt; <span class="hljs-built_in">tuple</span>[<span class="hljs-built_in">bool</span>, <span class="hljs-built_in">str</span>]:<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> chunk[<span class="hljs-string">&quot;text&quot;</span>].strip():<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-string">&quot;空块&quot;</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(chunk[<span class="hljs-string">&quot;text&quot;</span>]) &lt; <span class="hljs-number">20</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-string">&quot;过短块&quot;</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> chunk.get(<span class="hljs-string">&quot;clause&quot;</span>) <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> chunk.get(<span class="hljs-string">&quot;dept&quot;</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-string">&quot;缺元数据&quot;</span><br>    <span class="hljs-keyword">if</span> is_duplicate(chunk):<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>, <span class="hljs-string">&quot;重复块&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>, <span class="hljs-string">&quot;ok&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>embedding + 写入</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ingest/embedder.py</span><br><span class="hljs-keyword">from</span> sentence_transformers <span class="hljs-keyword">import</span> SentenceTransformer<br><br>model = SentenceTransformer(<span class="hljs-string">&quot;BAAI/bge-m3&quot;</span>)        <span class="hljs-comment"># 1024 维，多语言</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">embed_batch</span>(<span class="hljs-params">texts: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">str</span>]</span>) -&gt; <span class="hljs-built_in">list</span>[<span class="hljs-built_in">list</span>[<span class="hljs-built_in">float</span>]]:<br>    <span class="hljs-keyword">return</span> model.encode(texts, normalize_embeddings=<span class="hljs-literal">True</span>).tolist()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ingest/writer.py —— 入库：过门禁 → 向量化 → 写入</span><br><span class="hljs-keyword">from</span> pymilvus <span class="hljs-keyword">import</span> MilvusClient<br><br>client = MilvusClient(uri=<span class="hljs-string">&quot;http://localhost:19530&quot;</span>)<br>EMBEDDING_DIM = <span class="hljs-number">1024</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ingest_document</span>(<span class="hljs-params">doc</span>):<br>    chunks = chunk_document(doc)<br>    valid = []<br>    <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> chunks:<br>        ok, reason = validate(c)<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ok:<br>            log_warning(<span class="hljs-string">f&quot;质量门禁拦截 <span class="hljs-subst">&#123;doc.doc_id&#125;</span> <span class="hljs-subst">&#123;c.get(<span class="hljs-string">&#x27;clause&#x27;</span>)&#125;</span>: <span class="hljs-subst">&#123;reason&#125;</span>&quot;</span>)<br>            <span class="hljs-keyword">continue</span><br>        valid.append(c)<br><br>    rows = []<br>    <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> valid:<br>        c[<span class="hljs-string">&quot;embedding&quot;</span>] = embed_batch([c[<span class="hljs-string">&quot;text&quot;</span>]])[<span class="hljs-number">0</span>]   <span class="hljs-comment"># 稠密向量</span><br>        rows.append(c)                                  <span class="hljs-comment"># BM25 稀疏由 Function 自动算</span><br>    client.insert(collection_name=<span class="hljs-string">&quot;kb_specs&quot;</span>, data=rows)<br>    client.flush(collection_name=<span class="hljs-string">&quot;kb_specs&quot;</span>)            <span class="hljs-comment"># 写入后立即可搜</span><br></code></pre></td></tr></table></figure>
+
+<p>入库侧全自动，schema（含 BM25 Function 与索引）按前篇方案在初始化时建好一次。</p>
+<h2 id="在线检索：问题-→-带出处的答案"><a href="#在线检索：问题-→-带出处的答案" class="headerlink" title="在线检索：问题 → 带出处的答案"></a>在线检索：问题 → 带出处的答案</h2><p><strong>身份 → 权限过滤</strong>（对应权限下推篇）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># api/auth.py</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_expr</span>(<span class="hljs-params">user: <span class="hljs-built_in">dict</span></span>) -&gt; <span class="hljs-built_in">str</span>:<br>    parts = [<span class="hljs-string">&#x27;is_active == true&#x27;</span>]<br>    parts.append(<span class="hljs-string">f&#x27;dept == &quot;<span class="hljs-subst">&#123;user[<span class="hljs-string">&quot;dept&quot;</span>]&#125;</span>&quot;&#x27;</span>)<br>    <span class="hljs-keyword">if</span> user[<span class="hljs-string">&quot;role&quot;</span>] <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> (<span class="hljs-string">&quot;manager&quot;</span>, <span class="hljs-string">&quot;admin&quot;</span>):<br>        parts.append(<span class="hljs-string">&quot;level &lt;= 1&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot; and &quot;</span>.join(parts)<br></code></pre></td></tr></table></figure>
+
+<p><strong>混合检索 + 精排</strong>（对应混合检索篇与精排篇）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># api/retriever.py</span><br><span class="hljs-keyword">from</span> pymilvus <span class="hljs-keyword">import</span> AnnSearchRequest, RRFRanker<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">hybrid_retrieve</span>(<span class="hljs-params">question: <span class="hljs-built_in">str</span>, user: <span class="hljs-built_in">dict</span>, top_k: <span class="hljs-built_in">int</span> = <span class="hljs-number">6</span></span>):<br>    expr = build_expr(user)<br>    qv = embed_batch([question])[<span class="hljs-number">0</span>]<br><br>    dense_req = AnnSearchRequest(data=[qv], anns_field=<span class="hljs-string">&quot;embedding&quot;</span>,<br>                                 param=&#123;<span class="hljs-string">&quot;metric_type&quot;</span>: <span class="hljs-string">&quot;IP&quot;</span>,<br>                                        <span class="hljs-string">&quot;params&quot;</span>: &#123;<span class="hljs-string">&quot;ef&quot;</span>: <span class="hljs-number">128</span>&#125;&#125;, limit=<span class="hljs-number">20</span>)<br>    sparse_req = AnnSearchRequest(data=[question], anns_field=<span class="hljs-string">&quot;sparse&quot;</span>,<br>                                  param=&#123;<span class="hljs-string">&quot;metric_type&quot;</span>: <span class="hljs-string">&quot;BM25&quot;</span>&#125;, limit=<span class="hljs-number">20</span>)<br>    hits = client.hybrid_search(<br>        collection_name=<span class="hljs-string">&quot;kb_specs&quot;</span>,<br>        reqs=[dense_req, sparse_req],<br>        ranker=RRFRanker(),<br>        limit=<span class="hljs-number">20</span>,<br>        expr=expr,                                    <span class="hljs-comment"># 权限过滤下推</span><br>        output_fields=[<span class="hljs-string">&quot;doc_id&quot;</span>, <span class="hljs-string">&quot;title&quot;</span>, <span class="hljs-string">&quot;clause&quot;</span>, <span class="hljs-string">&quot;version&quot;</span>, <span class="hljs-string">&quot;text&quot;</span>],<br>    )<br>    <span class="hljs-keyword">return</span> rerank(question, hits[<span class="hljs-number">0</span>], keep=top_k)      <span class="hljs-comment"># 精排收窄</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>FastAPI 接口</strong>（对应 FastAPI 系列的结构，服务薄、逻辑在层里）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># api/main.py</span><br><span class="hljs-keyword">from</span> fastapi <span class="hljs-keyword">import</span> FastAPI, Depends<br><br>app = FastAPI(title=<span class="hljs-string">&quot;kb-retrieval&quot;</span>)<br><br><span class="hljs-meta">@app.post(<span class="hljs-params"><span class="hljs-string">&quot;/retrieve&quot;</span></span>)</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">retrieve</span>(<span class="hljs-params">req: AskRequest, user: <span class="hljs-built_in">dict</span> = Depends(<span class="hljs-params">get_current_user</span>)</span>):<br>    top = hybrid_retrieve(req.question, user, top_k=req.top_k <span class="hljs-keyword">or</span> <span class="hljs-number">6</span>)<br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-string">&quot;hits&quot;</span>: top&#125;                              <span class="hljs-comment"># 各条带 doc_id/title/clause/version</span><br><br><span class="hljs-meta">@app.post(<span class="hljs-params"><span class="hljs-string">&quot;/ask&quot;</span>, response_model=Answer</span>)</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">ask</span>(<span class="hljs-params">req: AskRequest, user: <span class="hljs-built_in">dict</span> = Depends(<span class="hljs-params">get_current_user</span>)</span>):<br>    top = hybrid_retrieve(req.question, user)<br>    context = format_context(top)                     <span class="hljs-comment"># 拼编号资料</span><br>    answer = <span class="hljs-keyword">await</span> llm_answer(context, req.question)  <span class="hljs-comment"># 强制带出处回答</span><br>    <span class="hljs-keyword">return</span> Answer(answer=answer, sources=[&#123;k: h[k] <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span><br>                   (<span class="hljs-string">&quot;doc_id&quot;</span>, <span class="hljs-string">&quot;title&quot;</span>, <span class="hljs-string">&quot;clause&quot;</span>, <span class="hljs-string">&quot;version&quot;</span>)&#125; <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> top])<br></code></pre></td></tr></table></figure>
+
+<h2 id="全链路验证"><a href="#全链路验证" class="headerlink" title="全链路验证"></a>全链路验证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 1. 入库一篇文档</span><br>python -m ingest.run --doc GB50204_2015.pdf<br><br><span class="hljs-comment"># 2. 检索：语义问法</span><br>curl -X POST localhost:8000/retrieve -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">$TOKEN</span>&quot;</span> \<br>  -d <span class="hljs-string">&#x27;&#123;&quot;question&quot;:&quot;梁板跨度 2-8m 什么时候可以拆模&quot;&#125;&#x27;</span><br><span class="hljs-comment"># → 命中&quot;拆模强度&quot;相关条款，带 clause 条号</span><br><br><span class="hljs-comment"># 3. 检索：精确问法（验证 BM25 兜底）</span><br>curl -X POST localhost:8000/retrieve -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">$TOKEN</span>&quot;</span> \<br>  -d <span class="hljs-string">&#x27;&#123;&quot;question&quot;:&quot;GB50204 7.1.4&quot;&#125;&#x27;</span><br><span class="hljs-comment"># → 精确命中该条，即便表述与文档不完全一致</span><br><br><span class="hljs-comment"># 4. 权限验证：普通员工搜质量部文档 → 空结果</span><br></code></pre></td></tr></table></figure>
+
+<p>四个验证点全过：语义能召回、精确词能命中、权限有隔离、答案带出处——知识库检索服务闭环。</p>
+<h2 id="上线清单"><a href="#上线清单" class="headerlink" title="上线清单"></a>上线清单</h2><ul>
+<li><input disabled="" type="checkbox"> 初始化脚本建 schema + 索引（dense HNSW + sparse SPARSE_WAND）</li>
+<li><input disabled="" type="checkbox"> 入库管线带质量门禁 + 幂等（重复 doc_id 先删后插）</li>
+<li><input disabled="" type="checkbox"> 权限过滤由服务端身份拼 expr，客户端不可改</li>
+<li><input disabled="" type="checkbox"> rerank 独立服务部署，控制精排延迟</li>
+<li><input disabled="" type="checkbox"> Milvus 备份策略（milvus-backup）+ 监控告警（内存&#x2F;延迟）</li>
+<li><input disabled="" type="checkbox"> 检索评估集跑 Recall@K，量化上线前后效果</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>一个企业知识库检索服务到这里是完整闭环：<strong>入库管线用质量门禁保证数据干净，schema 让权限与出处成为一等公民，混合检索兼顾语义与精确词，expr 把权限下推进数据库，rerank 把最相关的内容送进 LLM，回答强制带出处</strong>——每一层各司其职，从”文档”到”可信答案”全程可控。</p>
+<p>Milvus 十一篇到此收官。回看整个系列：定位 → 上手 → 索引 → schema → 写入 → 过滤 → 混合 → 调优 → 精排 → 运维 → 实战，是一条从”认识向量数据库”到”交付企业知识库”的完整路径。愿你搭的每一个检索系统，都又快、又准、又守得住边界。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/3316085745/"><span>上一篇</span><strong>学 AI 应用，真正能带走的是什么</strong></a>
+    
+    
+      <a href="/posts/1507537554/"><span>下一篇</span><strong>我的学习路线图：从 notes 反推</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/1166434641/">
+          <small>2026-03-05</small>
+          <strong>Milvus 运维：备份、监控与横向扩展</strong>
+        </a>
+      
+        <a href="/posts/1686365115/">
+          <small>2026-03-02</small>
+          <strong>实战：搭一层生产级 LLM 安全防线</strong>
+        </a>
+      
+        <a href="/posts/2998041761/">
+          <small>2026-02-27</small>
+          <strong>Milvus Rerank：用精排把召回变成相关</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>条件分支与循环：把 ReAct 画成图 · 小黑程序员</title>
+  <meta name="description" content="图的力量在条件边：模型决策决定走向。把工具路由、意图分流、失败重试都变成图上的条件分支。">
+  <meta name="author" content="zhanglichen">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zhanglichen0711.github.io/posts/3224751976/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="小黑程序员">
+  <meta property="og:title" content="条件分支与循环：把 ReAct 画成图">
+  <meta property="og:description" content="图的力量在条件边：模型决策决定走向。把工具路由、意图分流、失败重试都变成图上的条件分支。">
+  <meta property="og:url" content="https://zhanglichen0711.github.io/posts/3224751976/">
+  <meta property="og:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  
+  <meta property="article:published_time" content="2025-09-28T16:00:00.000Z">
+  
+  <meta property="article:tag" content="LangGraph, ReAct">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="条件分支与循环：把 ReAct 画成图">
+  <meta name="twitter:description" content="图的力量在条件边：模型决策决定走向。把工具路由、意图分流、失败重试都变成图上的条件分支。">
+  <meta name="twitter:image" content="https://zhanglichen0711.github.io/img/cover.jpg">
+
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="alternate" type="application/atom+xml" title="小黑程序员" href="/atom.xml">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"条件分支与循环：把 ReAct 画成图","description":"图的力量在条件边：模型决策决定走向。把工具路由、意图分流、失败重试都变成图上的条件分支。","image":"https://zhanglichen0711.github.io/img/cover.jpg","url":"https://zhanglichen0711.github.io/posts/3224751976/","datePublished":"2025-09-28T16:00:00.000Z","author":{"@type":"Person","name":"zhanglichen"},"publisher":{"@type":"Organization","name":"小黑程序员"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zhanglichen0711.github.io/posts/3224751976/"},"keywords":"LangGraph, ReAct"}</script>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('xiaohei-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="docs">
+  <div class="progress" id="readProgress" hidden></div>
+  <header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="brand-avatar" src="/img/avatar.jpg" alt="zhanglichen">
+      <span class="brand-text">
+        <span class="brand-name">小黑程序员</span>
+        <span class="brand-sub">zhanglichen</span>
+      </span>
+    </a>
+    
+    <button class="header-search" id="searchOpen" type="button" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="search-ph">搜索笔记、模型、方法…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn" id="wechatOpen" type="button" aria-label="微信" title="微信">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.5 8.2c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zm-3.6 0c.4 0 .7-.3.7-.7s-.3-.8-.7-.8-.8.4-.8.8.4.7.8.7zM12 4C6.8 4 2.5 7.4 2.5 11.6c0 2.4 1.4 4.5 3.6 5.9l-.9 2.7 3.1-1.6c.9.2 1.8.4 2.7.4.3 0 .6 0 .9-.1-.4-.8-.6-1.7-.6-2.6 0-3.6 3.4-6.5 7.6-6.5.3 0 .6 0 .9.1C18.8 6.3 15.7 4 12 4zm10.5 10.3c0-3.2-3.2-5.8-7.1-5.8s-7.1 2.6-7.1 5.8 3.2 5.8 7.1 5.8c.6 0 1.2-.1 1.8-.2l2.4 1.3-.7-2.1c1.8-1.2 3.6-3.1 3.6-4.8zm-9.4-1.1c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6zm4.6 0c-.3 0-.6-.3-.6-.6s.3-.6.6-.6.6.3.6.6-.3.6-.6.6z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/zhanglichen0711" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.4-1.1.6-1.3-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A7.5 7.5 0 1 1 9.5 4 6 6 0 0 0 20 14.5z"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="菜单">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="docs-shell">
+    
+<aside class="sidebar" id="siteNav">
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+        <span class="side-group-name">技术笔记</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="编程基础" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 16l-4-4 4-4M16 8l4 4-4 4M13 5l-2 14"/></svg></span>
+                <span class="side-l1-name">编程基础</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Python/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Python</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Linux/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Linux</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/Data-Science/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Data Science</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="前端交互" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+                <span class="side-l1-name">前端交互</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/Vue3/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Vue3</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/React/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>React</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/TypeScript/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>TypeScript</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="后端服务" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+                <span class="side-l1-name">后端服务</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/FastAPI/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>FastAPI</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1/Node-js/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Node.js</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="数据与存储" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+                <span class="side-l1-name">数据与存储</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/MySQL/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>MySQL</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Redis/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Redis</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%AD%98%E5%82%A8/Milvus/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Milvus</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型训练与微调" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><circle cx="12" cy="12" r="2.2"/><path d="M8 7l3 4M16 7l-3 4M10 14l-2 3M14 14l2 3"/></svg></span>
+                <span class="side-l1-name">模型训练与微调</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Machine-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Machine Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Deep-Learning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Deep Learning</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/NLP/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>NLP</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/PyTorch/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>PyTorch</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Transformer/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Transformer</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E5%BE%AE%E8%B0%83/Fine-tuning/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Fine-tuning</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="模型部署与推理" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2M14 6l4-4 4 4-4 4M12 10l2 2M9 15l-3 3M14 5l5 5"/></svg></span>
+                <span class="side-l1-name">模型部署与推理</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/vLLM/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>vLLM</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Quantization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Quantization</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%8E%A8%E7%90%86/Inference-Optimization/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Inference Optimization</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="大模型应用" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M9 17h6"/></svg></span>
+                <span class="side-l1-name">大模型应用</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/RAG/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>RAG</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Agent/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Agent</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>LangGraph</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Prompt-Engineering/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Prompt Engineering</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Multimodal/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Multimodal</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/Evaluation/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Evaluation</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <button class="side-l1-row " type="button" data-l1="工程化与运维" aria-expanded="false">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+                <span class="side-l1-name">工程化与运维</span>
+                <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="side-l2 ">
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Docker/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Docker</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Kubernetes/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Kubernetes</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/GitHub-Actions/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>GitHub Actions</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Observability/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Observability</span>
+                  </a>
+                
+                  <a class="side-item " href="/categories/%E5%B7%A5%E7%A8%8B%E5%8C%96%E4%B8%8E%E8%BF%90%E7%BB%B4/Safety/">
+                    <span class="side-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="3.5"/></svg></span>
+                    <span>Safety</span>
+                  </a>
+                
+              </div>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+        <span class="side-group-name">行业思考</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E8%A1%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h12v13H6a2 2 0 0 1-2-2V7z"/><path d="M16 10h4v8a2 2 0 0 1-2 2h-2"/><path d="M7 11h6M7 15h4"/></svg></span>
+                <span class="side-l1-name">行业发展</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%B0%B1%E4%B8%9A%E8%B6%8B%E5%8A%BF/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+                <span class="side-l1-name">就业趋势</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/categories/%E5%A6%82%E4%BD%95%E5%AD%A6%E4%B9%A0/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5a3 3 0 0 1 3-2h11v16H8a3 3 0 0 0-3 3V5z"/><path d="M8 3v16"/></svg></span>
+                <span class="side-l1-name">如何学习</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="side-group-wrap">
+      <div class="side-group">
+        <span class="side-group-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="side-group-name">站点建设</span>
+      </div>
+      <div class="side-children">
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/about/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span class="side-l1-name">关于站长</span>
+              </a>
+            
+          </div>
+        
+          
+          
+          
+          <div class="side-l1">
+            
+              <a class="side-l1-row side-l1-link " href="/links/">
+                <span class="side-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.1l1.4-1.4a5 5 0 0 0-7-7L10.6 6"/><path d="M14 11a5 5 0 0 0-7.5-.1L5.1 12.3a5 5 0 0 0 7 7L13.4 18"/></svg></span>
+                <span class="side-l1-name">相关链接</span>
+              </a>
+            
+          </div>
+        
+      </div>
+    </div>
+  
+</aside>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div class="docs-main">
+      <main class="main main-post">
+        
+<article class="article">
+  <header class="article-head">
+    <div class="post-card-meta">
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/">大模型应用</a>
+      
+        <a class="chip" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8/LangGraph/">LangGraph</a>
+      
+      <time datetime="2025-09-28T16:00:00.000Z">2025-09-29</time>
+      <span>4333 字 · 约 11 分钟</span>
+    </div>
+    <h1>条件分支与循环：把 ReAct 画成图</h1>
+    <p class="lede">图的力量在条件边：模型决策决定走向。把工具路由、意图分流、失败重试都变成图上的条件分支。</p>
+    
+      <div class="tag-row">
+        
+          <a href="/tags/LangGraph/">#LangGraph</a>
+        
+          <a href="/tags/ReAct/">#ReAct</a>
+        
+      </div>
+    
+  </header>
+
+  
+  
+    <details class="toc-mobile" id="tocMobile">
+      <summary>目录</summary>
+      <nav id="tocNavMobile"></nav>
+    </details>
+  
+
+  <div class="article-layout">
+    <div class="article-body" id="articleBody">
+      <p>状态篇的 ReAct 图里已经出现了一个条件边（<code>should_continue</code>），这一篇专门讲<strong>条件分支</strong>——它是图相对”链”最核心的增量能力。真实 Agent 的流程从来不是直线：问题不同走不同工具、结果不同走不同分支、失败要重试、完成要退出。<strong>条件边让这些”看情况”的流转显式化</strong>，Agent 的决策逻辑从”藏在代码 if 里”变成”画在图上”。</p>
+<h2 id="条件边的本质：状态-→-路由决策"><a href="#条件边的本质：状态-→-路由决策" class="headerlink" title="条件边的本质：状态 → 路由决策"></a>条件边的本质：状态 → 路由决策</h2><p>回顾一下条件边的写法。一个节点执行完后，调一个”路由函数”，它读状态、返回”下一步走哪条路”：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">route_by_intent</span>(<span class="hljs-params">state: AgentState</span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;意图路由：根据分类决定走哪条处理路径&quot;&quot;&quot;</span><br>    intent = state[<span class="hljs-string">&quot;intent&quot;</span>]<br>    <span class="hljs-keyword">if</span> intent == <span class="hljs-string">&quot;rag&quot;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;rag_chain&quot;</span>        <span class="hljs-comment"># 知识问答 → RAG 流程</span><br>    <span class="hljs-keyword">elif</span> intent == <span class="hljs-string">&quot;tool&quot;</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;tool_agent&quot;</span>       <span class="hljs-comment"># 要调工具 → Agent 流程</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;chat&quot;</span>             <span class="hljs-comment"># 闲聊 → 直接对话</span><br><br><span class="hljs-comment"># 建图：节点 → 条件路由 → 各分支</span><br>workflow.add_conditional_edges(<br>    <span class="hljs-string">&quot;intent_classifier&quot;</span>,          <span class="hljs-comment"># 前一个节点</span><br>    route_by_intent,              <span class="hljs-comment"># 路由函数（读状态，返回分支名）</span><br>    &#123;<br>        <span class="hljs-string">&quot;rag_chain&quot;</span>: <span class="hljs-string">&quot;rag_node&quot;</span>,<br>        <span class="hljs-string">&quot;tool_agent&quot;</span>: <span class="hljs-string">&quot;agent_node&quot;</span>,<br>        <span class="hljs-string">&quot;chat&quot;</span>: <span class="hljs-string">&quot;chat_node&quot;</span>,<br>    &#125;,<br>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>路由函数是纯逻辑</strong>（读状态、返回分支名），不调模型、没有副作用——所以它便宜、快、可单测。复杂的业务分流（意图、场景、用户类型）都应该用这种显式路由，而不是让模型在节点内部”自由决定”。</p>
+<h2 id="三个最常用的条件分支模式"><a href="#三个最常用的条件分支模式" class="headerlink" title="三个最常用的条件分支模式"></a>三个最常用的条件分支模式</h2><p><strong>模式一：工具路由（该调哪个工具）。</strong> 模型决定调用工具后，不同工具可以走不同的处理节点（有的工具要确认、有的要记录、有的直接执行）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">route_tool</span>(<span class="hljs-params">state: AgentState</span>) -&gt; <span class="hljs-built_in">str</span>:<br>    last_call = state[<span class="hljs-string">&quot;messages&quot;</span>][-<span class="hljs-number">1</span>].tool_calls[<span class="hljs-number">0</span>]<br>    tool_name = last_call[<span class="hljs-string">&quot;name&quot;</span>]<br>    <span class="hljs-comment"># 敏感工具走&quot;确认节点&quot;，普通工具直接执行</span><br>    <span class="hljs-keyword">if</span> tool_name <span class="hljs-keyword">in</span> CONFIRM_TOOLS:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;confirm&quot;</span>          <span class="hljs-comment"># 先人工/规则确认</span><br>    <span class="hljs-keyword">if</span> tool_name <span class="hljs-keyword">in</span> AUDIT_TOOLS:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;audit_execute&quot;</span>    <span class="hljs-comment"># 执行 + 强审计</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;execute&quot;</span>              <span class="hljs-comment"># 普通执行</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>模式二：结果分叉（成功&#x2F;失败&#x2F;重试）。</strong> 工具执行的结果决定下一步——失败要重试还是换方案：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">route_on_result</span>(<span class="hljs-params">state: AgentState</span>) -&gt; <span class="hljs-built_in">str</span>:<br>    last_result = state[<span class="hljs-string">&quot;tool_results&quot;</span>][-<span class="hljs-number">1</span>]<br>    <span class="hljs-keyword">if</span> last_result.get(<span class="hljs-string">&quot;success&quot;</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;continue&quot;</span>         <span class="hljs-comment"># 成功 → 继续 Agent 决策</span><br>    <span class="hljs-keyword">if</span> state[<span class="hljs-string">&quot;retries&quot;</span>] &lt; <span class="hljs-number">2</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;retry&quot;</span>            <span class="hljs-comment"># 可重试错误 → 回重试节点</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;recover&quot;</span>              <span class="hljs-comment"># 重试耗尽 → 降级/告知用户</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>模式三：流程结束判断（什么时候停）。</strong> Agent 最常见的分支是”继续还是结束”：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">should_stop</span>(<span class="hljs-params">state: AgentState</span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-keyword">if</span> state[<span class="hljs-string">&quot;steps&quot;</span>] &gt;= MAX_STEPS:      <span class="hljs-comment"># 步数上限</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;timeout_exit&quot;</span>            <span class="hljs-comment"># 走&quot;超时收场&quot;分支（不崩溃）</span><br>    <span class="hljs-keyword">if</span> state.get(<span class="hljs-string">&quot;answer&quot;</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;end&quot;</span>                     <span class="hljs-comment"># 有答案 → 正常结束</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;continue&quot;</span>                    <span class="hljs-comment"># 否则继续循环</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="完整示例：带重试和超时收场的-ReAct-图"><a href="#完整示例：带重试和超时收场的-ReAct-图" class="headerlink" title="完整示例：带重试和超时收场的 ReAct 图"></a>完整示例：带重试和超时收场的 ReAct 图</h2><p>把上面的模式拼成一个更完整的图：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AgentState</span>(<span class="hljs-title class_ inherited__">TypedDict</span>):<br>    messages: Annotated[<span class="hljs-built_in">list</span>, operator.add]<br>    steps: <span class="hljs-built_in">int</span><br>    retries: <span class="hljs-built_in">int</span><br>    answer: <span class="hljs-built_in">str</span><br><br>MAX_STEPS = <span class="hljs-number">8</span><br>MAX_RETRIES = <span class="hljs-number">2</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">agent_node</span>(<span class="hljs-params">state</span>): ...            <span class="hljs-comment"># 决策（同状态篇）</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">execute_tool_node</span>(<span class="hljs-params">state</span>): ...     <span class="hljs-comment"># 执行工具，更新 tool_results</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">retry_node</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;重试节点：把失败信息反馈给模型，让它换参数/换工具再试&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-string">&quot;retries&quot;</span>: state[<span class="hljs-string">&quot;retries&quot;</span>] + <span class="hljs-number">1</span>,<br>            <span class="hljs-string">&quot;messages&quot;</span>: [SystemMessage(content=<span class="hljs-string">&quot;上一个工具调用失败了，请检查参数或换一种方式重试&quot;</span>)]&#125;<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">timeout_exit_node</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;超时收场：不崩溃，优雅告知用户&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-string">&quot;answer&quot;</span>: <span class="hljs-string">&quot;任务步骤过多未能完成，建议拆分为更小的任务或联系人工&quot;</span>&#125;<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">answer_node</span>(<span class="hljs-params">state</span>): ...           <span class="hljs-comment"># 生成最终回答</span><br><br>workflow = StateGraph(AgentState)<br>workflow.add_node(<span class="hljs-string">&quot;agent&quot;</span>, agent_node)<br>workflow.add_node(<span class="hljs-string">&quot;tools&quot;</span>, execute_tool_node)<br>workflow.add_node(<span class="hljs-string">&quot;retry&quot;</span>, retry_node)<br>workflow.add_node(<span class="hljs-string">&quot;timeout_exit&quot;</span>, timeout_exit_node)<br><br>workflow.set_entry_point(<span class="hljs-string">&quot;agent&quot;</span>)<br><br><span class="hljs-comment"># agent 之后：看是否结束（条件边）</span><br>workflow.add_conditional_edges(<span class="hljs-string">&quot;agent&quot;</span>,<br>    <span class="hljs-keyword">lambda</span> s: <span class="hljs-string">&quot;end&quot;</span> <span class="hljs-keyword">if</span> s[<span class="hljs-string">&quot;answer&quot;</span>] <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> has_tool_call(s)<br>               <span class="hljs-keyword">else</span> (<span class="hljs-string">&quot;timeout&quot;</span> <span class="hljs-keyword">if</span> s[<span class="hljs-string">&quot;steps&quot;</span>] &gt;= MAX_STEPS <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;tools&quot;</span>),<br>    &#123;<span class="hljs-string">&quot;tools&quot;</span>: <span class="hljs-string">&quot;tools&quot;</span>, <span class="hljs-string">&quot;timeout&quot;</span>: <span class="hljs-string">&quot;timeout_exit&quot;</span>, <span class="hljs-string">&quot;end&quot;</span>: END&#125;)<br><br><span class="hljs-comment"># tools 之后：看成功还是重试（条件边）</span><br>workflow.add_conditional_edges(<span class="hljs-string">&quot;tools&quot;</span>,<br>    <span class="hljs-keyword">lambda</span> s: <span class="hljs-string">&quot;retry&quot;</span> <span class="hljs-keyword">if</span> tool_failed(s) <span class="hljs-keyword">and</span> s[<span class="hljs-string">&quot;retries&quot;</span>] &lt; MAX_RETRIES<br>               <span class="hljs-keyword">else</span> (<span class="hljs-string">&quot;agent&quot;</span> <span class="hljs-keyword">if</span> tool_failed(s) <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;agent&quot;</span>),<br>    &#123;<span class="hljs-string">&quot;retry&quot;</span>: <span class="hljs-string">&quot;retry&quot;</span>, <span class="hljs-string">&quot;agent&quot;</span>: <span class="hljs-string">&quot;agent&quot;</span>&#125;)<br><br><span class="hljs-comment"># retry 回到 agent 再决策</span><br>workflow.add_edge(<span class="hljs-string">&quot;retry&quot;</span>, <span class="hljs-string">&quot;agent&quot;</span>)<br><br>app = workflow.<span class="hljs-built_in">compile</span>(checkpointer=checkpointer)<br></code></pre></td></tr></table></figure>
+
+<p>这个图把 Agent 工程化的护栏（步数上限、重试上限、优雅收场）都画成了图的节点和边——<strong>每一道护栏都是图上可见的一步</strong>，而不是藏在循环代码里的 if。这让 Agent 的行为结构一目了然，也更容易测试每条路径。</p>
+<h2 id="图的边界：别把图画成意大利面"><a href="#图的边界：别把图画成意大利面" class="headerlink" title="图的边界：别把图画成意大利面"></a>图的边界：别把图画成意大利面</h2><p>条件分支是强大的，但有个反面：<strong>图会越来越复杂</strong>。画图的纪律：</p>
+<ol>
+<li><strong>节点别太碎</strong>：能把”检索 + 过滤”合成一个节点，就别拆成三个——图的可读性优先于”每个函数一个节点”；</li>
+<li><strong>分支别太多</strong>：一个节点后接七八个分支，图就难懂了。能用状态（如统一走一个节点，内部按状态处理）解决的，少用分支；</li>
+<li><strong>命名即文档</strong>：节点名、分支名要能看出业务含义（<code>rag_node</code>、<code>confirm</code>、<code>timeout_exit</code>），别用 <code>node1</code>、<code>node2</code>。</li>
+</ol>
+<p><strong>图的复杂度应该匹配流程的真实复杂度</strong>——流程简单就画简单图，流程复杂就用分支表达清楚，而不是用一大坨 if 把复杂度藏起来。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>条件分支是图相对链的核心增量：路由函数读状态、返回走向，把”看情况”的流转显式画在图上。三种高频模式：工具路由（该调哪个工具&#x2F;要不要确认）、结果分叉（成功&#x2F;重试&#x2F;降级）、结束判断（继续&#x2F;正常结束&#x2F;超时收场）。把护栏（步数上限、重试上限、优雅降级）画成图的节点和边，Agent 行为结构清晰、可测。<strong>画图的纪律：节点别太碎、分支别太多、命名即文档——图的复杂度匹配流程的真实复杂度。</strong> 条件分支让 Agent 图”能转向了”，下一篇给它加”能停下来等人工”的能力——human-in-the-loop。</p>
+
+    </div>
+    
+      <aside class="toc" id="tocBox">
+        <p class="toc-title">本页目录</p>
+        <nav id="tocNav"></nav>
+      </aside>
+    
+  </div>
+
+  <nav class="post-nav">
+    
+      <a href="/posts/2893501257/"><span>上一篇</span><strong>可观测性简介：日志、指标与追踪</strong></a>
+    
+    
+      <a href="/posts/1577051631/"><span>下一篇</span><strong>Agent 落地为什么比 demo 慢</strong></a>
+    
+  </nav>
+</article>
+
+
+  <section class="related">
+    <h2>相关笔记</h2>
+    <div class="related-grid">
+      
+        <a href="/posts/2438049996/">
+          <small>2025-11-21</small>
+          <strong>Agent 可观测：工具调用与中间过程</strong>
+        </a>
+      
+        <a href="/posts/4201415299/">
+          <small>2025-10-13</small>
+          <strong>实战：用 LangGraph 重写 Agent 服务</strong>
+        </a>
+      
+        <a href="/posts/3701507656/">
+          <small>2025-10-06</small>
+          <strong>人工介入与中断恢复：human-in-the-loop</strong>
+        </a>
+      
+    </div>
+  </section>
+
+
+
+
+
+      </main>
+      <footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2026 zhanglichen · 小黑程序员</p>
+    <p class="footer-links">
+      
+        <a href="https://github.com/zhanglichen0711" target="_blank" rel="noopener">GitHub</a>
+      
+      <a href="/atom.xml">RSS</a>
+      <a href="/about/">关于</a>
+    </p>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  <div class="overlay" id="searchModal" role="dialog" aria-modal="true" aria-label="搜索"
+     data-search-url="/search.json" hidden>
+  <div class="overlay-card search-card">
+    <div class="search-bar">
+      <input id="searchInput" type="search" placeholder="搜索笔记、模型、方法…"
+             autocomplete="off" aria-label="搜索关键词">
+      <button class="icon-btn" id="searchClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div id="searchResults" class="search-results" role="listbox" aria-label="搜索结果"></div>
+    <p class="search-tip"><kbd>↑</kbd> <kbd>↓</kbd> 选择 · <kbd>Enter</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+  </div>
+</div>
+
+  <div class="overlay" id="wechatModal" hidden>
+  <div class="overlay-card wechat-card">
+    <button class="icon-btn overlay-close" id="wechatClose" type="button" aria-label="关闭">×</button>
+    <p class="wechat-title">加我微信</p>
+    <img src="/img/wechat-qr.jpg" alt="微信二维码">
+  </div>
+</div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
